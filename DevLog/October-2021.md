@@ -15,3 +15,6 @@
     - Added the use of a build system (in this case, I used Premake)
     - Premake's library can be found [here](https://github.com/premake/premake-core)
     - Also, using the newly added build system, I made a Windows Batch File called "GenerateProjects.bat" which - if the user so desires - will make a Visual Studio 2019 Solution file for which you can view and edit the code
+- Commit "Precompiled Headers"
+    - Ember now uses precompiled headers
+    - The precompiled header was named "empch.h"

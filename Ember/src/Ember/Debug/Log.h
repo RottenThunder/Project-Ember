@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include "spdlog/spdlog.h"
 #include "Ember/Core/Core.h"
 

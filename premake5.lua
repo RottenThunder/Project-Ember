@@ -17,6 +17,9 @@ project "Ember"
 	targetdir ("bin/%{cfg.buildcfg}-x64/%{prj.name}")
 	objdir ("bin-int/%{cfg.buildcfg}-x64/%{prj.name}")
 
+	pchheader "empch.h"
+	pchsource "Ember/src/empch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -36,6 +39,7 @@ project "Ember"
 
 		defines
 		{
+			"EM_PLATFORM_WINDOWS",
 			"EM_BUILD_DLL"
 		}
 
@@ -85,6 +89,11 @@ project "Game"
 		cppdialect "C++20"
 		staticruntime "On"
 		systemversion "latest"
+
+		defines
+		{
+			"EM_PLATFORM_WINDOWS"
+		}
 
 	filter "configurations:Debug"
 		defines "EM_DEBUG"
