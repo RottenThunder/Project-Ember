@@ -13,6 +13,7 @@ project "Ember"
 	location "Ember"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/%{cfg.buildcfg}-x64/%{prj.name}")
 	objdir ("bin-int/%{cfg.buildcfg}-x64/%{prj.name}")
@@ -29,12 +30,18 @@ project "Ember"
 	includedirs
 	{
 		"%{prj.name}/src",
+		"vendor/GLFW/include",
 		"vendor/spdlog/include"
+	}
+
+	links
+	{
+		"vendor/GLFW/lib/glfw3.lib",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
 		cppdialect "C++20"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -50,20 +57,24 @@ project "Ember"
 
 	filter "configurations:Debug"
 		defines "EM_DEBUG"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "EM_RELEASE"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "EM_DIST"
+		runtime "Release"
 		optimize "On"
 
 project "Game"
 	location "Game"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/%{cfg.buildcfg}-x64/%{prj.name}")
 	objdir ("bin-int/%{cfg.buildcfg}-x64/%{prj.name}")
@@ -77,6 +88,7 @@ project "Game"
 	includedirs
 	{
 		"Ember/src",
+		"vendor/GLFW/include",
 		"vendor/spdlog/include"
 	}
 
@@ -87,7 +99,6 @@ project "Game"
 
 	filter "system:windows"
 		cppdialect "C++20"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -97,12 +108,15 @@ project "Game"
 
 	filter "configurations:Debug"
 		defines "EM_DEBUG"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "EM_RELEASE"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "EM_DIST"
+		runtime "Release"
 		optimize "On"

@@ -18,3 +18,8 @@
 - Commit "Precompiled Headers"
     - Ember now uses precompiled headers
     - The precompiled header was named "empch.h"
+
+## Day 5 (19/10/2021)
+- Commit "OpenGL Window!!!"
+    - Used OpenGL to create a cross-platform window to render graphics to
+    - OpenGL's Library can be found [here](https://github.com/glfw/glfw)

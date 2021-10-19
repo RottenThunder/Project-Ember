@@ -8,6 +8,7 @@ namespace Ember
 	public:
 		Application();
 		~Application();
+
 		void Run();
 	};
 

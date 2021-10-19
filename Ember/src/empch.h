@@ -11,6 +11,10 @@
 #include <vector>
 //--------------------------------------------------
 
+//---EMBER INCLUDES---------------------------------
+#include "Ember/Debug/Log.h"
+//--------------------------------------------------
+
 //---PLATFORM SPECIFIC INCLUDES---------------------
 #ifdef EM_PLATFORM_WINDOWS
 #include <Windows.h>

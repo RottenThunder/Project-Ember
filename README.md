@@ -16,11 +16,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
-### Day 1 (15/10/2021)
-- Commit "Logging Support"
-    - Added logging support for the engine
-    - Logging support was added with the help of a third-party library called "spdlog"
-    - spdlog's library can be found [here](https://github.com/gabime/spdlog)
 
 ### Day 2 (16/10/2021)
 - Commit "Added Premake"
@@ -30,3 +25,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Precompiled Headers"
     - Ember now uses precompiled headers
     - The precompiled header was named "empch.h"
+
+### Day 5 (19/10/2021)
+- Commit "OpenGL Window!!!"
+    - Used OpenGL to create a cross-platform window to render graphics to
+    - OpenGL's Library can be found [here](https://github.com/glfw/glfw)
