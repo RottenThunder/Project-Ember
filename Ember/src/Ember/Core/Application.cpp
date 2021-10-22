@@ -1,12 +1,14 @@
 #include "empch.h"
 #include "Application.h"
-#include <GLFW/glfw3.h> // For Testing
 
 namespace Ember
 {
+#define BIND_EVENT_FUNC(x) std::bind(&Application::x, this, std::placeholders::_1)
+
 	Application::Application()
 	{
 		MainWindow = std::unique_ptr<Window>(Window::Create());
+		MainWindow->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
 	}
 
 	Application::~Application()
@@ -14,23 +16,25 @@ namespace Ember
 
 	}
 
+	void Application::OnEvent(Event& e)
+	{
+		EventDispatcher eventDispatcher(e);
+		eventDispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
+
+		EM_LOG_TRACE("{0}", e);
+	}
+
 	void Application::Run()
 	{
-		WindowResizeEvent event(1280, 720);
-		if (event.IsInCategory(EventCategoryApplication))
-		{
-			EM_LOG_TRACE(event);
-		}
-		if (event.IsInCategory(EventCategoryInput))
-		{
-			EM_LOG_TRACE(event);
-		}
-
 		while (Running)
 		{
-			glClearColor(0.9412f, 0.3686f, 0.1059f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
 			MainWindow->OnUpdate();
 		}
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		Running = false;
+		return true;
 	}
 }

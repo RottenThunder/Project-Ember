@@ -17,11 +17,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 2 (16/10/2021)
-- Commit "Precompiled Headers"
-    - Ember now uses precompiled headers
-    - The precompiled header was named "empch.h"
-
 ### Day 5 (19/10/2021)
 - Commit "OpenGL Window!!!"
     - Used OpenGL to create a cross-platform window to render graphics to
@@ -32,3 +27,5 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - Created an Event System to handle events (such as the window resizing and whether a certain key on a keyboard is pressed)
     - Implemented a proper Window Class so making a window on different platforms shouldn't be too hard
     - Note: Events actually do not take effect, so the window does not close when the user presses the close button. A quick fix for this is to close the console window instead
+- Commit "All Events are Dispatching!"
+    - All Events are now dispatching, so the window actually closes now

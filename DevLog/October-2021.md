@@ -29,3 +29,5 @@
     - Created an Event System to handle events (such as the window resizing and whether a certain key on a keyboard is pressed)
     - Implemented a proper Window Class so making a window on different platforms shouldn't be too hard
     - Note: Events actually do not take effect, so the window does not close when the user presses the close button. A quick fix for this is to close the console window instead
+- Commit "All Events are Dispatching!"
+    - All Events are now dispatching, so the window actually closes now

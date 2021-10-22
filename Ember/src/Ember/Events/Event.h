@@ -53,10 +53,7 @@ namespace Ember
 	private:
 		Event& event;
 	public:
-		EventDispatcher(Event& event)
-			: event(event)
-		{
-		}
+		EventDispatcher(Event& e) : event(e) {}
 
 		template<typename T>
 		bool Dispatch(EventFunc<T> func)
