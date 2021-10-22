@@ -21,3 +21,5 @@
 #define EM_FATAL_ASSERT(x, ...) 
 
 #endif // EM_DEBUG
+
+#define BIT(x) (1 << x)

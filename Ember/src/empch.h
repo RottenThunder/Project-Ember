@@ -2,8 +2,10 @@
 //---EMBER'S PRECOMPILED HEADER---------------------
 
 //---UTILITY----------------------------------------
+#include <functional>
 #include <iostream>
 #include <memory>
+#include <sstream>
 //--------------------------------------------------
 
 //---DATA STRUCTURES--------------------------------

@@ -9,6 +9,11 @@ workspace "Ember"
 		"Dist"
 	}
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "vendor/glfw/include"
+
+include "vendor/glfw"
+
 project "Ember"
 	location "Ember"
 	kind "SharedLib"
@@ -30,13 +35,13 @@ project "Ember"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"vendor/GLFW/include",
+		"%{IncludeDir.GLFW}",
 		"vendor/spdlog/include"
 	}
 
 	links
 	{
-		"vendor/GLFW/lib/glfw3.lib",
+		"GLFW",
 		"opengl32.lib"
 	}
 
@@ -88,7 +93,6 @@ project "Game"
 	includedirs
 	{
 		"Ember/src",
-		"vendor/GLFW/include",
 		"vendor/spdlog/include"
 	}
 

@@ -8,6 +8,8 @@ int main()
 {
 	Ember::Log::Init();
 	EM_LOG_DEBUG("Log Initialized!");
+	EM_LOG_WARN("Initializing Ember Engine...");
+	// Mass Initialization Here!!!
 	auto gameApp = Ember::CreateApplication();
 	gameApp->Run();
 	delete gameApp;
