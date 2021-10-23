@@ -16,19 +16,39 @@ namespace Ember
 
 	}
 
+	void Application::Run()
+	{
+		while (Running)
+		{
+			for (Layer* layer : layerStack)
+				layer->OnUpdate();
+
+			MainWindow->OnUpdate();
+		}
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		layerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		layerStack.PushOverlay(layer);
+	}
+
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher eventDispatcher(e);
 		eventDispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
 
 		EM_LOG_TRACE("{0}", e);
-	}
 
-	void Application::Run()
-	{
-		while (Running)
+		for (auto it = layerStack.end(); it != layerStack.begin();)
 		{
-			MainWindow->OnUpdate();
+			(*--it)->OnEvent(e);
+			if (e.handled)
+				break;
 		}
 	}
 

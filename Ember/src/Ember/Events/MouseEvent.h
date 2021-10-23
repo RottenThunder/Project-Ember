@@ -11,10 +11,7 @@ namespace Ember
 		float_t MouseY;
 	public:
 		MouseMovedEvent(float_t mouseX, float_t mouseY)
-		{
-			MouseX = mouseX;
-			MouseY = mouseY;
-		}
+			: MouseX(mouseX), MouseY(mouseY) {}
 
 		inline float_t GetX() const { return MouseX; }
 		inline float_t GetY() const { return MouseY; }
@@ -37,10 +34,7 @@ namespace Ember
 		float_t YOffset;
 	public:
 		MouseScrolledEvent(float_t xOffset, float_t yOffset)
-		{
-			XOffset = xOffset;
-			YOffset = yOffset;
-		}
+			: XOffset(xOffset), YOffset(yOffset) {}
 
 		inline float_t GetXOffset() const { return XOffset; }
 		inline float_t GetYOffset() const { return YOffset; }
@@ -62,9 +56,7 @@ namespace Ember
 		uint16_t Button;
 
 		MouseButtonEvent(uint16_t button)
-		{
-			Button = button;
-		}
+			: Button(button) {}
 	public:
 		inline uint16_t GetMouseButton() const { return Button; }
 
@@ -74,7 +66,8 @@ namespace Ember
 	class EMBER_API MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(uint16_t button) : MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(uint16_t button)
+			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{
@@ -89,7 +82,8 @@ namespace Ember
 	class EMBER_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(uint16_t button) : MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(uint16_t button)
+			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{

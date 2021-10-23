@@ -31,3 +31,8 @@
     - Note: Events actually do not take effect, so the window does not close when the user presses the close button. A quick fix for this is to close the console window instead
 - Commit "All Events are Dispatching!"
     - All Events are now dispatching, so the window actually closes now
+
+## Day 9 (23/10/2021)
+- Commit "Layer Implementation"
+    - Added a way for the engine to create, destroy and store layers
+    - All layers are stored on a layer stack which is a std::vector of layers

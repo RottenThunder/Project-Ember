@@ -17,11 +17,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 5 (19/10/2021)
-- Commit "OpenGL Window!!!"
-    - Used OpenGL to create a cross-platform window to render graphics to
-    - OpenGL's Library can be found [here](https://github.com/glfw/glfw)
-
 ### Day 8 (22/10/2021)
 - Commit "Event System and Proper Window Class"
     - Created an Event System to handle events (such as the window resizing and whether a certain key on a keyboard is pressed)
@@ -29,3 +24,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - Note: Events actually do not take effect, so the window does not close when the user presses the close button. A quick fix for this is to close the console window instead
 - Commit "All Events are Dispatching!"
     - All Events are now dispatching, so the window actually closes now
+
+### Day 9 (23/10/2021)
+- Commit "Layer Implementation"
+    - Added a way for the engine to create, destroy and store layers
+    - All layers are stored on a layer stack which is a std::vector of layers

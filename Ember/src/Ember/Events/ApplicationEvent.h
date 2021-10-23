@@ -12,10 +12,7 @@ namespace Ember
 		uint16_t Height;
 	public:
 		WindowResizeEvent(uint16_t width, uint16_t height)
-		{
-			Width = width;
-			Height = height;
-		}
+			: Width(width), Height(height) {}
 
 		inline uint16_t GetWidth() const { return Width; }
 		inline uint16_t GetHeight() const { return Height; }

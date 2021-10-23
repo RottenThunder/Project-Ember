@@ -10,9 +10,7 @@ namespace Ember
 		uint16_t KeyCode;
 
 		KeyEvent(uint16_t keycode)
-		{
-			KeyCode = keycode;
-		}
+			: KeyCode(keycode) {}
 	public:
 		inline uint16_t GetKeyCode() const { return KeyCode; }
 
@@ -24,10 +22,8 @@ namespace Ember
 	private:
 		uint64_t RepeatCount;
 	public:
-		KeyPressedEvent(uint16_t keycode, uint64_t repeatCount) : KeyEvent(keycode)
-		{
-			RepeatCount = repeatCount;
-		}
+		KeyPressedEvent(uint16_t keycode, uint64_t repeatCount)
+			: KeyEvent(keycode), RepeatCount(repeatCount) {}
 
 		inline uint64_t GetRepeatCount() const { return RepeatCount; }
 
@@ -44,7 +40,8 @@ namespace Ember
 	class EMBER_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(uint16_t keycode) : KeyEvent(keycode) {}
+		KeyReleasedEvent(uint16_t keycode)
+			: KeyEvent(keycode) {}
 
 		std::string ToString() const override
 		{

@@ -31,10 +31,8 @@ namespace Ember
 
 	class EMBER_API Event
 	{
-		friend class EventDispatcher;
-	protected:
-		bool handled = false;
 	public:
+		bool handled = false;
 		virtual EventType GetEventType() const = 0;
 		virtual uint32_t GetCategoryFlags() const = 0;
 		virtual const char* GetName() const = 0;
@@ -53,7 +51,8 @@ namespace Ember
 	private:
 		Event& event;
 	public:
-		EventDispatcher(Event& e) : event(e) {}
+		EventDispatcher(Event& e)
+			: event(e) {}
 
 		template<typename T>
 		bool Dispatch(EventFunc<T> func)
