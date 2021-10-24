@@ -11,8 +11,10 @@ workspace "Ember"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "vendor/glfw/include"
+IncludeDir["GLAD"] = "vendor/glad/include"
 
 include "vendor/glfw"
+include "vendor/glad"
 
 project "Ember"
 	location "Ember"
@@ -36,12 +38,14 @@ project "Ember"
 	{
 		"%{prj.name}/src",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLAD}",
 		"vendor/spdlog/include"
 	}
 
 	links
 	{
 		"GLFW",
+		"GLAD",
 		"opengl32.lib"
 	}
 
@@ -52,7 +56,8 @@ project "Ember"
 		defines
 		{
 			"EM_PLATFORM_WINDOWS",
-			"EM_BUILD_DLL"
+			"EM_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands

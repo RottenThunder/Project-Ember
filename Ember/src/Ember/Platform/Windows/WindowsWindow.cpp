@@ -1,6 +1,7 @@
 #include "empch.h"
 #include "WindowsWindow.h"
 #include "Ember/Events/EventSystem.h"
+#include <glad/glad.h>
 
 namespace Ember
 {
@@ -38,8 +39,8 @@ namespace Ember
 
 		if (!GLFWInitialized)
 		{
-			int success = glfwInit();
-			EM_FATAL_ASSERT(success, "Could not intialize GLFW!");
+			int32_t glfwStatus = glfwInit();
+			EM_FATAL_ASSERT(glfwStatus, "Failed to intialize GLFW!!!");
 
 			glfwSetErrorCallback(GLFWerrorCallback);
 			GLFWInitialized = true;
@@ -47,6 +48,8 @@ namespace Ember
 
 		window = glfwCreateWindow(props.Width, props.Height, windowData.Title.c_str(), NULL, NULL);
 		glfwMakeContextCurrent(window);
+		int32_t gladStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		EM_FATAL_ASSERT(gladStatus, "Failed to Initialize Glad!!!");
 		glfwSetWindowUserPointer(window, &windowData);
 		SetVSync(true);
 

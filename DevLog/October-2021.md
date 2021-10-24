@@ -36,3 +36,8 @@
 - Commit "Layer Implementation"
     - Added a way for the engine to create, destroy and store layers
     - All layers are stored on a layer stack which is a std::vector of layers
+
+## Day 10 (24/10/2021)
+- Commit "Modern OpenGL (Glad)"
+    - Successfully implemented a way for the engine to access all of the modern OpenGL functions using a library called Glad
+    - Glad's Library can be found [here](https://github.com/Dav1dde/glad)
