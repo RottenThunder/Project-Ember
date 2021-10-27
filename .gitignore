@@ -1,5 +1,4 @@
 # Binaries
-bin/
 bin-int/
 
 # Visual Studio files and folder
@@ -8,5 +7,8 @@ bin-int/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+
+# Program Debug Database Files
+**.pdb
 
 # Directories

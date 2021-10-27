@@ -1,11 +1,11 @@
 #pragma once
-#ifdef EM_PLATFORM_WINDOWS
+#ifdef EM_PLATFORM_LINUX
 #include "Ember/Core/Window.h"
 #include <GLFW/glfw3.h>
 
 namespace Ember
 {
-	class WindowsWindow : public Window
+	class LinuxWindow : public Window
 	{
 	private:
 		struct WindowData
@@ -23,8 +23,8 @@ namespace Ember
 		virtual void Init(const WindowProperties& props);
 		virtual void Terminate();
 	public:
-		WindowsWindow(const WindowProperties& props);
-		virtual ~WindowsWindow();
+		LinuxWindow(const WindowProperties& props);
+		virtual ~LinuxWindow();
 
 		inline uint16_t GetWidth() const override { return windowData.Width; }
 		inline uint16_t GetHeight() const override { return windowData.Height; }
@@ -36,4 +36,4 @@ namespace Ember
 		void OnUpdate() override;
 	};
 }
-#endif // EM_PLATFORM_WINDOWS
+#endif // EM_PLATFORM_LINUX

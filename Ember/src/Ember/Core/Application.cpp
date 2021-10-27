@@ -37,6 +37,16 @@ namespace Ember
 		layerStack.PushOverlay(layer);
 	}
 
+	void Application::PopLayer(Layer* layer)
+	{
+		layerStack.PopLayer(layer);
+	}
+
+	void Application::PopOverlay(Layer* layer)
+	{
+		layerStack.PopOverlay(layer);
+	}
+
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher eventDispatcher(e);

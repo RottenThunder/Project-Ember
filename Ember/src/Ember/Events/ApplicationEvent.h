@@ -4,7 +4,6 @@
 
 namespace Ember
 {
-
 	class EMBER_API WindowResizeEvent : public Event
 	{
 	private:

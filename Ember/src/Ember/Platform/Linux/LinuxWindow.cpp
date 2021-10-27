@@ -1,6 +1,6 @@
 #include "empch.h"
-#include "WindowsWindow.h"
-#ifdef EM_PLATFORM_WINDOWS
+#include "LinuxWindow.h"
+#ifdef EM_PLATFORM_LINUX
 #include "Ember/Events/EventSystem.h"
 #include <glad/glad.h>
 
@@ -13,22 +13,22 @@ namespace Ember
 		EM_LOG_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProperties& props)
+	LinuxWindow::LinuxWindow(const WindowProperties& props)
 	{
 		Init(props);
 	}
 
-	WindowsWindow::~WindowsWindow()
+	LinuxWindow::~LinuxWindow()
 	{
 		Terminate();
 	}
 
 	Window* Window::Create(const WindowProperties& props)
 	{
-		return new WindowsWindow(props);
+		return new LinuxWindow(props);
 	}
 
-	void WindowsWindow::Init(const WindowProperties& props)
+	void LinuxWindow::Init(const WindowProperties& props)
 	{
 		windowData.Title = props.Title;
 		windowData.Width = props.Width;
@@ -132,13 +132,13 @@ namespace Ember
 			});
 	}
 
-	void WindowsWindow::Terminate()
+	void LinuxWindow::Terminate()
 	{
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
 
-	void WindowsWindow::OnUpdate()
+	void LinuxWindow::OnUpdate()
 	{
 		glClearColor(0.9412f, 0.3686f, 0.1059f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -146,7 +146,7 @@ namespace Ember
 		glfwPollEvents();
 	}
 
-	void WindowsWindow::SetVSync(bool enable)
+	void LinuxWindow::SetVSync(bool enable)
 	{
 		if (enable)
 			glfwSwapInterval(1);
@@ -156,9 +156,9 @@ namespace Ember
 		windowData.VSync = enable;
 	}
 
-	bool WindowsWindow::IsVSync() const
+	bool LinuxWindow::IsVSync() const
 	{
 		return windowData.VSync;
 	}
 }
-#endif // EM_PLATFORM_WINDOWS
+#endif // EM_PLATFORM_LINUX

@@ -13,8 +13,10 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "vendor/glfw/include"
 IncludeDir["GLAD"] = "vendor/glad/include"
 
-include "vendor/glfw"
-include "vendor/glad"
+group "Dependencies"
+	include "vendor/glfw"
+	include "vendor/glad"
+group ""
 
 project "Ember"
 	location "Ember"
@@ -22,8 +24,8 @@ project "Ember"
 	language "C++"
 	staticruntime "off"
 
-	targetdir ("bin/%{cfg.buildcfg}-x64/%{prj.name}")
-	objdir ("bin-int/%{cfg.buildcfg}-x64/%{prj.name}")
+	targetdir ("bin/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
+	objdir ("bin-int/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
 
 	pchheader "empch.h"
 	pchsource "Ember/src/empch.cpp"
@@ -62,7 +64,24 @@ project "Ember"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/%{cfg.buildcfg}-x64/Game")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/%{cfg.buildcfg}-x64-%{cfg.system}/Game/\"")
+		}
+
+	filter "system:linux"
+		pic "On"
+		cppdialect "C++20"
+		systemversion "latest"
+
+		defines
+		{
+			"EM_PLATFORM_LINUX",
+			"EM_BUILD_DYNAMIC_LIBRARY",
+			"GLFW_INCLUDE_NONE"
+		}
+
+		postbuildcommands
+		{
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/%{cfg.buildcfg}-x64-%{cfg.system}/Game/\"")
 		}
 
 	filter "configurations:Debug"
@@ -86,8 +105,8 @@ project "Game"
 	language "C++"
 	staticruntime "off"
 
-	targetdir ("bin/%{cfg.buildcfg}-x64/%{prj.name}")
-	objdir ("bin-int/%{cfg.buildcfg}-x64/%{prj.name}")
+	targetdir ("bin/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
+	objdir ("bin-int/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
 
 	files
 	{
@@ -113,6 +132,16 @@ project "Game"
 		defines
 		{
 			"EM_PLATFORM_WINDOWS"
+		}
+
+	filter "system:linux"
+		pic "On"
+		cppdialect "C++20"
+		systemversion "latest"
+
+		defines
+		{
+			"EM_PLATFORM_LINUX"
 		}
 
 	filter "configurations:Debug"

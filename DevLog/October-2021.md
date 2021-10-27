@@ -41,3 +41,8 @@
 - Commit "Modern OpenGL (Glad)"
     - Successfully implemented a way for the engine to access all of the modern OpenGL functions using a library called Glad
     - Glad's Library can be found [here](https://github.com/Dav1dde/glad)
+
+## Day 13 (27/10/2021)
+- Commit "Linux Support (Maybe)"
+    - Added a way for the engine to make a window on linux. I have not tried it out on linux though
+    - General quality of life changes

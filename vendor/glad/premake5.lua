@@ -3,8 +3,8 @@ project "GLAD"
 	language "C"
 	staticruntime "off"
 
-	targetdir ("../../bin/%{cfg.buildcfg}-x64/%{prj.name}")
-	objdir ("../../bin-int/%{cfg.buildcfg}-x64/%{prj.name}")
+	targetdir ("../../bin/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
+	objdir ("../../bin-int/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
 
 	files
 	{
