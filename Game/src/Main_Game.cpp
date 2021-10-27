@@ -13,7 +13,7 @@ public:
 	{
 		if (Ember::Input::IsKeyPressed(EM_KEY_W))
 		{
-			EM_LOG_TRACE("W Key was Pressed!");
+			EM_LOG_WARN("W Key was Pressed!");
 		}
 	}
 
@@ -22,7 +22,7 @@ public:
 		if (event.GetEventType() == Ember::EventType::KeyPressed)
 		{
 			Ember::KeyPressedEvent& e = (Ember::KeyPressedEvent&)event;
-			EM_LOG_INFO("{0}", char(e.GetKeyCode()));
+			EM_LOG_WARN("{0}", char(e.GetKeyCode()));
 		}
 	}
 };
