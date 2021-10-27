@@ -17,17 +17,16 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 9 (23/10/2021)
-- Commit "Layer Implementation"
-    - Added a way for the engine to create, destroy and store layers
-    - All layers are stored on a layer stack which is a std::vector of layers
-
 ### Day 10 (24/10/2021)
 - Commit "Modern OpenGL (Glad)"
     - Successfully implemented a way for the engine to access all of the modern OpenGL functions using a library called Glad
     - Glad's Library can be found [here](https://github.com/Dav1dde/glad)
 
-### Day 13 (27/10/2021)
+## Day 13 (27/10/2021)
 - Commit "Linux Support (Maybe)"
     - Added a way for the engine to make a window on linux. I have not tried it out on linux though
     - General quality of life changes
+    - Binaries are now being commited
+- Commit "Input Polling"
+    - Added a way for the engine to poll input from user
+    - Made Ember Key Codes and Mouse Codes (for now they are the same as the glfw key and mouse codes)

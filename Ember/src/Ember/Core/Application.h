@@ -13,6 +13,7 @@ namespace Ember
 		bool Running = true;
 		bool OnWindowClose(WindowCloseEvent& e);
 		LayerStack layerStack;
+		static Application* Instance;
 	public:
 		Application();
 		~Application();
@@ -25,6 +26,10 @@ namespace Ember
 		void PushOverlay(Layer* layer);
 		void PopLayer(Layer* layer);
 		void PopOverlay(Layer* layer);
+
+		inline Window& GetWindow() { return *MainWindow; }
+
+		inline static Application& Get() { return *Instance; }
 	};
 
 	Application* CreateApplication();

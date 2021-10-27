@@ -46,3 +46,7 @@
 - Commit "Linux Support (Maybe)"
     - Added a way for the engine to make a window on linux. I have not tried it out on linux though
     - General quality of life changes
+    - Binaries are now being commited
+- Commit "Input Polling"
+    - Added a way for the engine to poll input from user
+    - Made Ember Key Codes and Mouse Codes (for now they are the same as the glfw key and mouse codes)

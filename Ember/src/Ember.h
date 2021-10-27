@@ -12,8 +12,20 @@
 #include "Ember/Core/Application.h"
 //--------------------------------------------------
 
+//---For Polling Input------------------------------
+#include "Ember/Core/Input.h"
+//--------------------------------------------------
+
+//---To Reference to a Certain Key Code-------------
+#include "Ember/Core/KeyCodes.h"
+//--------------------------------------------------
+
 //---For Creating Layers----------------------------
 #include "Ember/Core/Layer.h"
+//--------------------------------------------------
+
+//---To Reference to a Certain Mouse Button---------
+#include "Ember/Core/MouseButtonCodes.h"
 //--------------------------------------------------
 
 
