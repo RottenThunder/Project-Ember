@@ -1,6 +1,7 @@
 #pragma once
 #ifdef EM_PLATFORM_WINDOWS
 #include "Ember/Core/Window.h"
+#include "Ember/Renderer/GraphicsContext.h"
 #include <GLFW/glfw3.h>
 
 namespace Ember
@@ -17,6 +18,7 @@ namespace Ember
 			bool VSync;
 		};
 
+		GraphicsContext* context;
 		GLFWwindow* window;
 		WindowData windowData;
 

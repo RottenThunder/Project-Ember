@@ -2,7 +2,7 @@
 #include "WindowsWindow.h"
 #ifdef EM_PLATFORM_WINDOWS
 #include "Ember/Events/EventSystem.h"
-#include <glad/glad.h>
+#include "Ember/Platform/OpenGL/OpenGLContext.h"
 
 namespace Ember
 {
@@ -46,9 +46,10 @@ namespace Ember
 		}
 
 		window = glfwCreateWindow(props.Width, props.Height, windowData.Title.c_str(), NULL, NULL);
-		glfwMakeContextCurrent(window);
-		int32_t gladStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		EM_FATAL_ASSERT(gladStatus, "Failed to Initialize Glad!!!");
+
+		context = new OpenGLContext(window);
+		context->Init();
+
 		glfwSetWindowUserPointer(window, &windowData);
 		SetVSync(true);
 
@@ -140,10 +141,8 @@ namespace Ember
 
 	void WindowsWindow::OnUpdate()
 	{
-		glClearColor(0.9412f, 0.3686f, 0.1059f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glfwSwapBuffers(window);
 		glfwPollEvents();
+		context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enable)

@@ -18,9 +18,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
 ### Day 13 (27/10/2021)
-- Commit "Input Polling"
-    - Added a way for the engine to poll input from user
-    - Made Ember Key Codes and Mouse Codes (for now they are the same as the glfw key and mouse codes)
 - Commit "Release Version of Binaries"
     - The Release Version of the Binaries are now being commited
 
@@ -28,3 +25,5 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Maths"
     - Added maths support for the engine using a library called glm
     - glm's library can be found [here](https://github.com/g-truc/glm)
+- Commit "Rendering Context"
+    - Added a layer of abstraction through the form of making a rendering context class
