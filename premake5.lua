@@ -12,6 +12,7 @@ workspace "Ember"
 IncludeDir = {}
 IncludeDir["GLFW"] = "vendor/glfw/include"
 IncludeDir["GLAD"] = "vendor/glad/include"
+IncludeDir["GLM"] = "Ember/vendor/glm"
 
 group "Dependencies"
 	include "vendor/glfw"
@@ -22,6 +23,7 @@ project "Ember"
 	location "Ember"
 	kind "SharedLib"
 	language "C++"
+	cppdialect "C++20"
 	staticruntime "off"
 
 	targetdir ("bin/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
@@ -33,7 +35,9 @@ project "Ember"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs
@@ -41,6 +45,7 @@ project "Ember"
 		"%{prj.name}/src",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
+		"%{IncludeDir.GLM}",
 		"vendor/spdlog/include"
 	}
 
@@ -52,7 +57,6 @@ project "Ember"
 	}
 
 	filter "system:windows"
-		cppdialect "C++20"
 		systemversion "latest"
 
 		defines
@@ -69,7 +73,6 @@ project "Ember"
 
 	filter "system:linux"
 		pic "On"
-		cppdialect "C++20"
 		systemversion "latest"
 
 		defines
@@ -103,6 +106,7 @@ project "Game"
 	location "Game"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++20"
 	staticruntime "off"
 
 	targetdir ("bin/%{cfg.buildcfg}-x64-%{cfg.system}/%{prj.name}")
@@ -117,7 +121,8 @@ project "Game"
 	includedirs
 	{
 		"Ember/src",
-		"vendor/spdlog/include"
+		"vendor/spdlog/include",
+		"%{IncludeDir.GLM}"
 	}
 
 	links
@@ -126,7 +131,6 @@ project "Game"
 	}
 
 	filter "system:windows"
-		cppdialect "C++20"
 		systemversion "latest"
 
 		defines
@@ -136,7 +140,6 @@ project "Game"
 
 	filter "system:linux"
 		pic "On"
-		cppdialect "C++20"
 		systemversion "latest"
 
 		defines

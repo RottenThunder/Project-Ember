@@ -52,3 +52,8 @@
     - Made Ember Key Codes and Mouse Codes (for now they are the same as the glfw key and mouse codes)
 - Commit "Release Version of Binaries"
     - The Release Version of the Binaries are now being commited
+
+## Day 14 (28/10/2021)
+- Commit "Maths"
+    - Added maths support for the engine using a library called glm
+    - glm's library can be found [here](https://github.com/g-truc/glm)
