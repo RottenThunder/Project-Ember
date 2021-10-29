@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "LayerStack.h"
 #include "Ember/Events/EventSystem.h"
+#include "Ember/Platform/OpenGL/Shader.h"
 
 namespace Ember
 {
@@ -16,6 +17,7 @@ namespace Ember
 		LayerStack layerStack;
 
 		uint32_t VertexArray, VertexBuffer, IndexBuffer;
+		std::unique_ptr<Shader> shader;
 	public:
 		Application();
 		~Application();

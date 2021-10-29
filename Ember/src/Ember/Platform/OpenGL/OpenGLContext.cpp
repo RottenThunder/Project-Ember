@@ -17,6 +17,7 @@ namespace Ember
 		int32_t gladStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		EM_FATAL_ASSERT(gladStatus, "Failed to Initialize Glad!!!");
 
+		EM_LOG_WARN("Vendor: {0}", glGetString(GL_VENDOR));
 		EM_LOG_WARN("GPU: {0}", glGetString(GL_RENDERER));
 		EM_LOG_WARN("OpenGL Version: {0}", glGetString(GL_VERSION));
 	}
