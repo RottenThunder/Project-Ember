@@ -16,6 +16,30 @@ namespace Ember
 
 		MainWindow = std::unique_ptr<Window>(Window::Create());
 		MainWindow->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
+
+		glGenVertexArrays(1, &VertexArray);
+		glBindVertexArray(VertexArray);
+
+		glGenBuffers(1, &VertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
+
+		float_t vertices[3 * 3] =
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.0f, 0.5f, 0.0f
+		};
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float_t), nullptr);
+
+		glGenBuffers(1, &IndexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuffer);
+
+		uint32_t indices[3] = { 0, 1, 2 };
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	}
 
 	Application::~Application()
@@ -27,13 +51,21 @@ namespace Ember
 	{
 		while (Running)
 		{
+			glClearColor(0.9412f, 0.3686f, 0.1059f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			glBindVertexArray(VertexArray);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
 			for (Layer* layer : layerStack)
 				layer->OnUpdate();
 
 			MainWindow->OnUpdate();
-			glClearColor(0.9412f, 0.3686f, 0.1059f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
 		}
+
+		glDeleteBuffers(1, &IndexBuffer);
+		glDeleteBuffers(1, &VertexBuffer);
+		glDeleteVertexArrays(1, &VertexArray);
 	}
 
 	void Application::PushLayer(Layer* layer)

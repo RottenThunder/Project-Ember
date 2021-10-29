@@ -9,11 +9,13 @@ namespace Ember
 	class EMBER_API Application
 	{
 	private:
+		static Application* Instance;
 		std::unique_ptr<Window> MainWindow;
 		bool Running = true;
 		bool OnWindowClose(WindowCloseEvent& e);
 		LayerStack layerStack;
-		static Application* Instance;
+
+		uint32_t VertexArray, VertexBuffer, IndexBuffer;
 	public:
 		Application();
 		~Application();

@@ -59,3 +59,7 @@
     - glm's library can be found [here](https://github.com/g-truc/glm)
 - Commit "Rendering Context"
     - Added a layer of abstraction through the form of making a rendering context class
+
+## Day 15 (29/10/2021)
+- Commit "Triangle!!!"
+    - The engine is now tasked to render a (white) triangle on startup

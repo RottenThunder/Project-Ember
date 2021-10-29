@@ -17,13 +17,13 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 13 (27/10/2021)
-- Commit "Release Version of Binaries"
-    - The Release Version of the Binaries are now being commited
-
 ### Day 14 (28/10/2021)
 - Commit "Maths"
     - Added maths support for the engine using a library called glm
     - glm's library can be found [here](https://github.com/g-truc/glm)
 - Commit "Rendering Context"
     - Added a layer of abstraction through the form of making a rendering context class
+
+### Day 15 (29/10/2021)
+- Commit "Triangle!!!"
+    - The engine is now tasked to render a (white) triangle on startup
