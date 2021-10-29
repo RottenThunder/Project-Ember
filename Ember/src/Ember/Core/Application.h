@@ -3,7 +3,8 @@
 #include "Window.h"
 #include "LayerStack.h"
 #include "Ember/Events/EventSystem.h"
-#include "Ember/Platform/OpenGL/Shader.h"
+#include "Ember/Renderer/Shader.h"
+#include "Ember/Renderer/Buffer.h"
 
 namespace Ember
 {
@@ -16,8 +17,10 @@ namespace Ember
 		bool OnWindowClose(WindowCloseEvent& e);
 		LayerStack layerStack;
 
-		uint32_t VertexArray, VertexBuffer, IndexBuffer;
+		uint32_t VertexArray;
 		std::unique_ptr<Shader> shader;
+		std::unique_ptr<VertexBuffer> vertexBuffer;
+		std::unique_ptr<IndexBuffer> indexBuffer;
 	public:
 		Application();
 		~Application();

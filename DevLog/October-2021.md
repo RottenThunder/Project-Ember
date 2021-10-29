@@ -65,3 +65,5 @@
     - The engine is now tasked to render a (white) triangle on startup
 - Commit "Shaders!!!"
     - The engine can now compile and use a shader for objects on the screen
+- Commit "API Abstraction Part 1"
+    - A huge abstraction has begun to support multiple rendering APIs
