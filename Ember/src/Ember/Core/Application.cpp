@@ -9,6 +9,38 @@ namespace Ember
 
 	Application* Application::Instance = nullptr;
 
+	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
+	{
+		switch (type)
+		{
+		case ShaderDataType::Vec:
+			return GL_FLOAT;
+		case ShaderDataType::Vec2:
+			return GL_FLOAT;
+		case ShaderDataType::Vec3:
+			return GL_FLOAT;
+		case ShaderDataType::Vec4:
+			return GL_FLOAT;
+		case ShaderDataType::Mat3:
+			return GL_FLOAT;
+		case ShaderDataType::Mat4:
+			return GL_FLOAT;
+		case ShaderDataType::Int:
+			return GL_INT;
+		case ShaderDataType::Int2:
+			return GL_INT;
+		case ShaderDataType::Int3:
+			return GL_INT;
+		case ShaderDataType::Int4:
+			return GL_INT;
+		case ShaderDataType::Bool:
+			return GL_BOOL;
+		}
+
+		EM_ASSERT(false, "Unknown ShaderDataType!");
+		return 0;
+	}
+
 	Application::Application()
 	{
 		EM_ASSERT(!Instance, "Application already exists!");
@@ -20,19 +52,30 @@ namespace Ember
 		glGenVertexArrays(1, &VertexArray);
 		glBindVertexArray(VertexArray);
 
-		float_t vertices[3 * 3] =
+		float_t vertices[3 * 7] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.0f, 0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+			0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 		};
 
 		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		BufferLayout layout =
+		{
+			{ ShaderDataType::Vec3, "a_Position", false },
+			{ ShaderDataType::Vec4, "a_Colour", false }
+		};
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float_t), nullptr);
+		vertexBuffer->SetLayout(layout);
+
+		uint32_t index = 0;
+		for (const auto& element : vertexBuffer->GetLayout())
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized ? GL_TRUE : GL_FALSE, vertexBuffer->GetLayout().GetStride(), (const void*)element.Offset);
+			index++;
+		}
 
 		uint32_t indices[3] = { 0, 1, 2 };
 		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
@@ -41,12 +84,15 @@ namespace Ember
 			#version 330 core
 
 			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec4 a_Colour;
 
 			out vec3 v_Position;
+			out vec4 v_Colour;
 
 			void main()
 			{
 				v_Position = a_Position;
+				v_Colour = a_Colour;
 				gl_Position = vec4(a_Position, 1.0);
 			}
 		)";
@@ -57,10 +103,12 @@ namespace Ember
 			layout(location = 0) out vec4 Colour;
 
 			in vec3 v_Position;
+			in vec4 v_Colour;
 
 			void main()
 			{
 				Colour = vec4(v_Position * 0.5 + 0.5, 1.0);
+				Colour = v_Colour;
 			}
 		)";
 
@@ -89,9 +137,6 @@ namespace Ember
 			MainWindow->OnUpdate();
 		}
 
-		shader->UnBind();
-		vertexBuffer->UnBind();
-		indexBuffer->UnBind();
 		glDeleteVertexArrays(1, &VertexArray);
 	}
 

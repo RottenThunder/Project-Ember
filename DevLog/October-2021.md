@@ -67,3 +67,7 @@
     - The engine can now compile and use a shader for objects on the screen
 - Commit "API Abstraction Part 1"
     - A huge abstraction has begun to support multiple rendering APIs
+
+## Day 16 (30/10/2021)
+- Commit "API Abstraction Part 2"
+    - Vertex buffer layouts have now been abstracted
