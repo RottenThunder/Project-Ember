@@ -1,7 +1,7 @@
 #include "empch.h"
 #include "Application.h"
 #include "Input.h"
-#include <glad/glad.h>
+#include "Ember/Renderer/Renderer.h"
 
 namespace Ember
 {
@@ -147,16 +147,18 @@ namespace Ember
 	{
 		while (Running)
 		{
-			//glClearColor(0.9412f, 0.3686f, 0.1059f, 1.0f);
-			//glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
 
 			shaderSquare->Bind();
-			squareVertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, squareVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(squareVertexArray);
 
 			shader->Bind();
-			vertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(vertexArray);
+
+			Renderer::EndScene();
 
 			for (Layer* layer : layerStack)
 				layer->OnUpdate();

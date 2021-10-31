@@ -76,3 +76,5 @@
 - Commit "API Abstraction Part 3"
     - Vertex Arrays have now been abstracted
     - The engine can also draw squares now
+- Commit "API Abstraction Part 4"
+    - Draw calls have now been abstracted
