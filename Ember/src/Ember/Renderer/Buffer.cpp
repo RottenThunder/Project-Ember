@@ -16,8 +16,8 @@ namespace Ember
 			return new OpenGLVertexBuffer(vertices, size);
 		}
 
-		EM_FATAL_ASSERT(false, "Unknown RendererAPI!")
-			return nullptr;
+		EM_FATAL_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 
 	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
@@ -31,7 +31,7 @@ namespace Ember
 			return new OpenGLIndexBuffer(indices, count);
 		}
 
-		EM_FATAL_ASSERT(false, "Unknown RendererAPI!")
-			return nullptr;
+		EM_FATAL_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 }

@@ -71,3 +71,8 @@
 ## Day 16 (30/10/2021)
 - Commit "API Abstraction Part 2"
     - Vertex buffer layouts have now been abstracted
+
+## Day 17 (31/10/2021)
+- Commit "API Abstraction Part 3"
+    - Vertex Arrays have now been abstracted
+    - The engine can also draw squares now
