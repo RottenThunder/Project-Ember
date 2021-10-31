@@ -78,3 +78,5 @@
     - The engine can also draw squares now
 - Commit "API Abstraction Part 4"
     - Draw calls have now been abstracted
+- Commit "Main Game Draws Stuff!!!"
+    - All code that was related to rendering was moved into the Game Project

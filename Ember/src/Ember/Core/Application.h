@@ -17,14 +17,6 @@ namespace Ember
 		bool Running = true;
 		bool OnWindowClose(WindowCloseEvent& e);
 		LayerStack layerStack;
-
-		std::shared_ptr<Shader> shader;
-		std::shared_ptr<VertexArray> vertexArray;
-		std::shared_ptr<VertexBuffer> vertexBuffer;
-		std::shared_ptr<IndexBuffer> indexBuffer;
-
-		std::shared_ptr<VertexArray> squareVertexArray;
-		std::shared_ptr<Shader> shaderSquare;
 	public:
 		Application();
 		~Application();
