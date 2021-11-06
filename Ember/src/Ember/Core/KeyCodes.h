@@ -61,10 +61,10 @@
 #define EM_KEY_BACKSPACE          259
 #define EM_KEY_INSERT             260
 #define EM_KEY_DELETE             261
-#define EM_KEY_RIGHT              262
-#define EM_KEY_LEFT               263
-#define EM_KEY_DOWN               264
-#define EM_KEY_UP                 265
+#define EM_KEY_RIGHT_ARROW        262
+#define EM_KEY_LEFT_ARROW         263
+#define EM_KEY_DOWN_ARROW         264
+#define EM_KEY_UP_ARROW           265
 #define EM_KEY_PAGE_UP            266
 #define EM_KEY_PAGE_DOWN          267
 #define EM_KEY_HOME               268

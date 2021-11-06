@@ -5,3 +5,6 @@
     - I have started using the engine to create a game
     - The basic idea for the game is for it to be a 2D grid-based game
     - The grid sytem has been successfully implemented
+- Commit "Game Dev - Moving Player"
+    - A Red Rectangle is drawn and acts as the player
+    - The player can move with WASD or Arrow Keys, in terms of the new grid system

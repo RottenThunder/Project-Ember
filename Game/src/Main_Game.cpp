@@ -1,5 +1,6 @@
 #include <Ember.h>
 #include "Grid.h"
+#include "PlayerPos.h"
 
 class ExampleLayer : public Ember::Layer
 {
@@ -168,14 +169,24 @@ class GameLayer : public Ember::Layer
 {
 private:
 	Grid grid;
+	PlayerPos playerPos;
 	std::array<std::array<std::shared_ptr<Ember::VertexArray>, 10>, 10> squareVertexArray;
 	std::array<std::array<std::shared_ptr<Ember::VertexBuffer>, 10>, 10> squareVertexBuffer;
 	std::array<std::array<std::shared_ptr<Ember::IndexBuffer>, 10>, 10> squareIndexBuffer;
 	std::array<std::array<std::shared_ptr<Ember::Shader>, 10>, 10> squareShader;
+
+	//---PLAYER-----------------------------------------
+	std::shared_ptr<Ember::VertexArray> playerVertexArray;
+	std::shared_ptr<Ember::VertexBuffer> playerVertexBuffer;
+	std::shared_ptr<Ember::IndexBuffer> playerIndexBuffer;
+	std::shared_ptr<Ember::Shader> playerShader;
+	//--------------------------------------------------
 public:
 	GameLayer()
 		: Layer("Game")
 	{
+		//---GRID----------------------------------------------------------------------------------------------------------------------
+
 		grid.InitNewGrid(10, 10);
 
 		for (uint16_t j = 0; j < 10; j++)
@@ -229,6 +240,56 @@ public:
 				squareShader[j][i].reset(new Ember::Shader(vertexSrcSquare, fragmentSrcSquare));
 			}
 		}
+
+		//-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+		//---PLAYER-----------------------------------------
+
+		playerVertexArray.reset(Ember::VertexArray::Create());
+
+		playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
+
+		playerVertexBuffer->SetLayout({
+			{ Ember::ShaderDataType::Vec3, "a_Position", false }
+			});
+
+		playerVertexArray->AddVertexBuffer(playerVertexBuffer);
+
+		uint32_t squareIndices[6] = { 3, 2, 0, 0, 1, 3 };
+		playerIndexBuffer.reset(Ember::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+
+		playerVertexArray->SetIndexBuffer(playerIndexBuffer);
+
+		std::string vertexSrcPlayer = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+
+			void main()
+			{
+				gl_Position = vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string fragmentSrcPlayer = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 Colour;
+
+			void main()
+			{
+				Colour = vec4(1.0, 0.0, 0.0, 1.0);
+			}
+		)";
+
+		playerShader.reset(new Ember::Shader(vertexSrcPlayer, fragmentSrcPlayer));
+
+		//--------------------------------------------------
 	}
 
 	void OnUpdate() override
@@ -238,6 +299,7 @@ public:
 
 		Ember::Renderer::BeginScene();
 
+		//Grid
 		for (uint16_t j = 0; j < 10; j++)
 		{
 			for (uint16_t i = 0; i < 10; i++)
@@ -246,6 +308,10 @@ public:
 				Ember::Renderer::Submit(squareVertexArray[j][i]);
 			}
 		}
+		//----
+
+		playerShader->Bind();
+		Ember::Renderer::Submit(playerVertexArray);
 
 		Ember::Renderer::EndScene();
 	}
@@ -256,6 +322,31 @@ public:
 		{
 			Ember::KeyPressedEvent& e = (Ember::KeyPressedEvent&)event;
 			EM_LOG_WARN("{0}", char(e.GetKeyCode()));
+
+			if (e.GetKeyCode() == EM_KEY_D || e.GetKeyCode() == EM_KEY_RIGHT_ARROW)
+			{
+				playerPos.CurrentPosX += 1;
+			}
+			if (e.GetKeyCode() == EM_KEY_A || e.GetKeyCode() == EM_KEY_LEFT_ARROW)
+			{
+				playerPos.CurrentPosX -= 1;
+			}
+			if (e.GetKeyCode() == EM_KEY_W || e.GetKeyCode() == EM_KEY_UP_ARROW)
+			{
+				playerPos.CurrentPosY -= 1;
+			}
+			if (e.GetKeyCode() == EM_KEY_S || e.GetKeyCode() == EM_KEY_DOWN_ARROW)
+			{
+				playerPos.CurrentPosY += 1;
+			}
+
+			playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
+
+			playerVertexBuffer->SetLayout({
+				{ Ember::ShaderDataType::Vec3, "a_Position", false }
+				});
+
+			playerVertexArray->AddVertexBuffer(playerVertexBuffer);
 		}
 	}
 };

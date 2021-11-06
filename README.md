@@ -3,6 +3,9 @@
 ## About
 Project Ember is an A-Level (Year 12) Computer Science Project that is focused on designing a game that is powered by a game engine. This game engine will be named after the project. Note that this project will only be targeting Windows for the time being, Multi-Platform support will be coming soon!!!
 
+## Licensing
+[BSD 3-Clause License](https://github.com/RottenThunder/Project-Ember/blob/master/LICENSE)
+
 ***
 
 ## Getting Started
@@ -18,8 +21,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
 ### Day 17 (31/10/2021)
-- Commit "API Abstraction Part 4"
-    - Draw calls have now been abstracted
 - Commit "Main Game Draws Stuff!!!"
     - All code that was related to rendering was moved into the Game Project
 
@@ -28,3 +29,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - I have started using the engine to create a game
     - The basic idea for the game is for it to be a 2D grid-based game
     - The grid sytem has been successfully implemented
+- Commit "Game Dev - Moving Player"
+    - A Red Rectangle is drawn and acts as the player
+    - The player can move with WASD or Arrow Keys, in terms of the new grid system
