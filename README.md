@@ -18,10 +18,13 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
 ### Day 17 (31/10/2021)
-- Commit "API Abstraction Part 3"
-    - Vertex Arrays have now been abstracted
-    - The engine can also draw squares now
 - Commit "API Abstraction Part 4"
     - Draw calls have now been abstracted
 - Commit "Main Game Draws Stuff!!!"
     - All code that was related to rendering was moved into the Game Project
+
+### Day 23 (06/11/2021)
+- Commit "Game Dev - Grid System"
+    - I have started using the engine to create a game
+    - The basic idea for the game is for it to be a 2D grid-based game
+    - The grid sytem has been successfully implemented
