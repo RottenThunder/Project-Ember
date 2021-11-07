@@ -4,9 +4,6 @@
 #include "LayerStack.h"
 #include "DeltaTime.h"
 #include "Ember/Events/EventSystem.h"
-#include "Ember/Renderer/Shader.h"
-#include "Ember/Renderer/Buffer.h"
-#include "Ember/Renderer/VertexArray.h"
 
 namespace Ember
 {

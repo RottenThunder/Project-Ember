@@ -12,6 +12,10 @@
 #include "Ember/Core/Application.h"
 //--------------------------------------------------
 
+//---For Creating an Orthographic Camera------------
+#include "Ember/Renderer/OrthographicCamera.h"
+//--------------------------------------------------
+
 //---For Calculating Delta Time---------------------
 #include "Ember/Core/DeltaTime.h"
 //--------------------------------------------------

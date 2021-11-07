@@ -18,9 +18,13 @@ private:
 	std::shared_ptr<Ember::IndexBuffer> triangleIndexBuffer;
 	std::shared_ptr<Ember::Shader> triangleShader;
 	//--------------------------------------------------
+
+	//---CAMERA-----------------------------------------
+	Ember::OrthographicCamera OrthoCamera;
+	//--------------------------------------------------
 public:
 	ExampleLayer()
-		: Layer("Example")
+		: Layer("Example"), OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 
 		//---SQUARE-----------------------------------------
@@ -53,13 +57,15 @@ public:
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Colour;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
 			}
 		)";
 
@@ -112,9 +118,11 @@ public:
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			void main()
 			{
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
 			}
 		)";
 
@@ -141,13 +149,12 @@ public:
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ember::RenderCommand::Clear();
 
-		Ember::Renderer::BeginScene();
+		OrthoCamera.SetPosition({ 0.5f, 0.5f, 0.0f });
+		OrthoCamera.SetRotation(45.0f);
 
-		squareShader->Bind();
-		Ember::Renderer::Submit(squareVertexArray);
-
-		triangleShader->Bind();
-		Ember::Renderer::Submit(triangleVertexArray);
+		Ember::Renderer::BeginScene(OrthoCamera);
+		Ember::Renderer::Submit(squareShader, squareVertexArray);
+		Ember::Renderer::Submit(triangleShader, triangleVertexArray);
 
 		Ember::Renderer::EndScene();
 	}
@@ -183,9 +190,13 @@ private:
 	std::shared_ptr<Ember::IndexBuffer> playerIndexBuffer;
 	std::shared_ptr<Ember::Shader> playerShader;
 	//--------------------------------------------------
+
+	//---CAMERA-----------------------------------------
+	Ember::OrthographicCamera OrthoCamera;
+	//--------------------------------------------------
 public:
 	GameLayer()
-		: Layer("Game")
+		: Layer("Game"), OrthoCamera(-1.6f, 1.6f, -1.0f, 1.0f)
 	{
 		//---GRID----------------------------------------------------------------------------------------------------------------------
 
@@ -218,13 +229,15 @@ public:
 
 				layout(location = 0) in vec3 a_Position;
 
+				uniform mat4 u_ViewProjection;
+
 				out vec3 v_Position;
 				out vec4 v_Colour;
 
 				void main()
 				{
 					v_Position = a_Position;
-					gl_Position = vec4(a_Position, 1.0);
+					gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
 				}
 			)";
 
@@ -275,9 +288,11 @@ public:
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			void main()
 			{
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -304,21 +319,19 @@ public:
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ember::RenderCommand::Clear();
 
-		Ember::Renderer::BeginScene();
+		Ember::Renderer::BeginScene(OrthoCamera);
 
 		//Grid
 		for (uint16_t j = 0; j < 10; j++)
 		{
 			for (uint16_t i = 0; i < 10; i++)
 			{
-				squareShader[j][i]->Bind();
-				Ember::Renderer::Submit(squareVertexArray[j][i]);
+				Ember::Renderer::Submit(squareShader[j][i], squareVertexArray[j][i]);
 			}
 		}
 		//----
 
-		playerShader->Bind();
-		Ember::Renderer::Submit(playerVertexArray);
+		Ember::Renderer::Submit(playerShader, playerVertexArray);
 
 		Ember::Renderer::EndScene();
 	}

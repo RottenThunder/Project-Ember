@@ -12,3 +12,5 @@
 ## Day 24 (07/11/2021)
 - Commit "Delta Time"
     - The engine now calculates and can provide Delta Time for people using the engine
+- Commit "Orthographic Camera"
+    - The Engine can now create an orthographic camera and the camera can be moved freely
