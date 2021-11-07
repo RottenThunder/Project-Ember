@@ -12,6 +12,10 @@
 #include "Ember/Core/Application.h"
 //--------------------------------------------------
 
+//---For Calculating Delta Time---------------------
+#include "Ember/Core/DeltaTime.h"
+//--------------------------------------------------
+
 //---For Polling Input------------------------------
 #include "Ember/Core/Input.h"
 //--------------------------------------------------

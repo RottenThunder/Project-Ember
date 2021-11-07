@@ -8,3 +8,7 @@
 - Commit "Game Dev - Moving Player"
     - A Red Rectangle is drawn and acts as the player
     - The player can move with WASD or Arrow Keys, in terms of the new grid system
+
+## Day 24 (07/11/2021)
+- Commit "Delta Time"
+    - The engine now calculates and can provide Delta Time for people using the engine

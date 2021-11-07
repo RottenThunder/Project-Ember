@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Window.h"
 #include "LayerStack.h"
+#include "DeltaTime.h"
 #include "Ember/Events/EventSystem.h"
 #include "Ember/Renderer/Shader.h"
 #include "Ember/Renderer/Buffer.h"
@@ -17,6 +18,7 @@ namespace Ember
 		bool Running = true;
 		bool OnWindowClose(WindowCloseEvent& e);
 		LayerStack layerStack;
+		long double LastFrameTime = 0.0f;
 	public:
 		Application();
 		~Application();

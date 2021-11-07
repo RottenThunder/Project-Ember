@@ -134,8 +134,10 @@ public:
 		//--------------------------------------------------
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Ember::DeltaTime DT) override
 	{
+		EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
+
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ember::RenderCommand::Clear();
 
@@ -188,6 +190,9 @@ public:
 		//---GRID----------------------------------------------------------------------------------------------------------------------
 
 		grid.InitNewGrid(10, 10);
+
+		playerPos.MaxXPos = 9;
+		playerPos.MaxYPos = 9;
 
 		for (uint16_t j = 0; j < 10; j++)
 		{
@@ -292,8 +297,10 @@ public:
 		//--------------------------------------------------
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Ember::DeltaTime DT) override
 	{
+		EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
+
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ember::RenderCommand::Clear();
 
@@ -325,28 +332,64 @@ public:
 
 			if (e.GetKeyCode() == EM_KEY_D || e.GetKeyCode() == EM_KEY_RIGHT_ARROW)
 			{
-				playerPos.CurrentPosX += 1;
+				if (playerPos.CurrentPosX != playerPos.MaxXPos)
+				{
+					playerPos.CurrentPosX += 1;
+
+					playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
+
+					playerVertexBuffer->SetLayout({
+						{ Ember::ShaderDataType::Vec3, "a_Position", false }
+						});
+
+					playerVertexArray->AddVertexBuffer(playerVertexBuffer);
+				}
 			}
 			if (e.GetKeyCode() == EM_KEY_A || e.GetKeyCode() == EM_KEY_LEFT_ARROW)
 			{
-				playerPos.CurrentPosX -= 1;
+				if (playerPos.CurrentPosX != 0)
+				{
+					playerPos.CurrentPosX -= 1;
+
+					playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
+
+					playerVertexBuffer->SetLayout({
+						{ Ember::ShaderDataType::Vec3, "a_Position", false }
+						});
+
+					playerVertexArray->AddVertexBuffer(playerVertexBuffer);
+				}
 			}
 			if (e.GetKeyCode() == EM_KEY_W || e.GetKeyCode() == EM_KEY_UP_ARROW)
 			{
-				playerPos.CurrentPosY -= 1;
+				if (playerPos.CurrentPosY != 0)
+				{
+					playerPos.CurrentPosY -= 1;
+
+					playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
+
+					playerVertexBuffer->SetLayout({
+						{ Ember::ShaderDataType::Vec3, "a_Position", false }
+						});
+
+					playerVertexArray->AddVertexBuffer(playerVertexBuffer);
+				}
 			}
 			if (e.GetKeyCode() == EM_KEY_S || e.GetKeyCode() == EM_KEY_DOWN_ARROW)
 			{
-				playerPos.CurrentPosY += 1;
+				if (playerPos.CurrentPosY != playerPos.MaxYPos)
+				{
+					playerPos.CurrentPosY += 1;
+
+					playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
+
+					playerVertexBuffer->SetLayout({
+						{ Ember::ShaderDataType::Vec3, "a_Position", false }
+						});
+
+					playerVertexArray->AddVertexBuffer(playerVertexBuffer);
+				}
 			}
-
-			playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX], sizeof(grid.Vertices[playerPos.CurrentPosY][playerPos.CurrentPosX])));
-
-			playerVertexBuffer->SetLayout({
-				{ Ember::ShaderDataType::Vec3, "a_Position", false }
-				});
-
-			playerVertexArray->AddVertexBuffer(playerVertexBuffer);
 		}
 	}
 };

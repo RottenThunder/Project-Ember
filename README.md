@@ -20,10 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 17 (31/10/2021)
-- Commit "Main Game Draws Stuff!!!"
-    - All code that was related to rendering was moved into the Game Project
-
 ### Day 23 (06/11/2021)
 - Commit "Game Dev - Grid System"
     - I have started using the engine to create a game
@@ -32,3 +28,7 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Game Dev - Moving Player"
     - A Red Rectangle is drawn and acts as the player
     - The player can move with WASD or Arrow Keys, in terms of the new grid system
+
+### Day 24 (07/11/2021)
+- Commit "Delta Time"
+    - The engine now calculates and can provide Delta Time for people using the engine

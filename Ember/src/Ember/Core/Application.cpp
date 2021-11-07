@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "Ember/Renderer/Renderer.h"
+#include <GLFW/glfw3.h> //TODO: Find a different way of getting the time than using glfwGetTime()
 
 namespace Ember
 {
@@ -27,8 +28,12 @@ namespace Ember
 	{
 		while (Running)
 		{
+			double time = glfwGetTime(); //TODO: Find Platform Specific Time Functions. For example, Windows = QueryPerformanceCounter()
+			DeltaTime deltaTime = time - LastFrameTime;
+			LastFrameTime = time;
+
 			for (Layer* layer : layerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(deltaTime);
 
 			MainWindow->OnUpdate();
 		}
