@@ -14,3 +14,8 @@
     - The engine now calculates and can provide Delta Time for people using the engine
 - Commit "Orthographic Camera"
     - The Engine can now create an orthographic camera and the camera can be moved freely
+
+## Day 26 (09/11/2021)
+- Commit "Transforms"
+    - Every object rendered in the game engine now has a transform, which means the object can be moved
+    - Game Dev is going good, The player (Red Rectangle) can be moved by keyboard input on a grid-like system. Also a blue rectangle is being rendered, which is going to be an enemy, but no logic is being put on him

@@ -2,57 +2,55 @@
 
 void Grid::InitNewGrid(uint16_t x, uint16_t y)
 {
-	IntervalX = 2 / float(x);
-	IntervalY = 2 / float(y);
+	IntervalX = 2 / float_t(x);
+	IntervalY = 2 / float_t(y);
 
-	for (uint16_t j = 0; j < y; j++)
-	{
-		for (uint16_t i = 0; i < x; i++)
-		{
-			if (i == 0)
-			{
-				//Top-Left
-				Vertices[j][i][0] = -1.0f;
-				Vertices[j][i][1] = 1.0f - (IntervalY * j);
-				Vertices[j][i][2] = 0.0f;
+	//---Top Left Vertices---------------------------
 
-				//Top-Right
-				Vertices[j][i][3] = -1.0f + IntervalX;
-				Vertices[j][i][4] = 1.0f - (IntervalY * j);
-				Vertices[j][i][5] = 0.0f;
+	//Top-Left
+	TopLeftVertices[0] = -1.0f;
+	TopLeftVertices[1] = 1.0f;
+	TopLeftVertices[2] = 0.0f;
 
-				//Bottom-Left
-				Vertices[j][i][6] = -1.0f;
-				Vertices[j][i][7] = 1.0f - IntervalY - (IntervalY * j);
-				Vertices[j][i][8] = 0.0f;
+	//Top-Right
+	TopLeftVertices[3] = -1.0f + IntervalX;
+	TopLeftVertices[4] = 1.0f;
+	TopLeftVertices[5] = 0.0f;
 
-				//Bottom-Right
-				Vertices[j][i][9] = -1.0f + IntervalX;
-				Vertices[j][i][10] = 1.0f - IntervalY - (IntervalY * j);
-				Vertices[j][i][11] = 0.0f;
-			}
-			if (i != 0)
-			{
-				//Top-Left
-				Vertices[j][i][0] = -1.0f + (IntervalX * i);
-				Vertices[j][i][1] = 1.0f - (IntervalY * j);
-				Vertices[j][i][2] = 0.0f;
+	//Bottom-Left
+	TopLeftVertices[6] = -1.0f;
+	TopLeftVertices[7] = 1.0f - IntervalY;
+	TopLeftVertices[8] = 0.0f;
 
-				//Top-Right
-				Vertices[j][i][3] = -1.0f + (IntervalX * (i + 1));
-				Vertices[j][i][4] = 1.0f - (IntervalY * j);
-				Vertices[j][i][5] = 0.0f;
+	//Bottom-Right
+	TopLeftVertices[9] = -1.0f + IntervalX;
+	TopLeftVertices[10] = 1.0f - IntervalY;
+	TopLeftVertices[11] = 0.0f;
 
-				//Bottom-Left
-				Vertices[j][i][6] = -1.0f + (IntervalX * i);
-				Vertices[j][i][7] = 1.0f - IntervalY - (IntervalY * j);
-				Vertices[j][i][8] = 0.0f;
+	//-----------------------------------------------
 
-				//Bottom-Right
-				Vertices[j][i][9] = -1.0f + (IntervalX * (i + 1));
-				Vertices[j][i][10] = 1.0f - IntervalY - (IntervalY * j);
-				Vertices[j][i][11] = 0.0f;
-			}
-		}
-	}
+
+	//---Bottom Right Vertices-----------------------
+
+	//Top-Left
+	BottomRightVertices[0] = 1.0f - IntervalX;
+	BottomRightVertices[1] = -1.0f + IntervalY;
+	BottomRightVertices[2] = 0.0f;
+
+	//Top-Right
+	BottomRightVertices[3] = 1.0f;
+	BottomRightVertices[4] = -1.0f + IntervalY;
+	BottomRightVertices[5] = 0.0f;
+
+	//Bottom-Left
+	BottomRightVertices[6] = 1.0f - IntervalX;
+	BottomRightVertices[7] = -1.0f;
+	BottomRightVertices[8] = 0.0f;
+
+	//Bottom-Right
+	BottomRightVertices[9] = 1.0f;
+	BottomRightVertices[10] = -1.0f;
+	BottomRightVertices[11] = 0.0f;
+
+	//-----------------------------------------------
 }

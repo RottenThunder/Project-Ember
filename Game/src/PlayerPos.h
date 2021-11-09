@@ -1,11 +1,11 @@
 #pragma once
-#include <iostream>
+#include <stdint.h>
 
 class PlayerPos
 {
 public:
-	uint8_t CurrentPosX = 0;
-	uint8_t CurrentPosY = 0;
-	uint8_t MaxXPos;
-	uint8_t MaxYPos;
+	uint8_t CurrentPosX;
+	uint8_t CurrentPosY;
+	uint8_t MaxPosX;
+	uint8_t MaxPosY;
 };
