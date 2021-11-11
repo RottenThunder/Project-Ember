@@ -1,7 +1,8 @@
 #include <Ember.h>
 #include "glm/gtc/matrix_transform.hpp"
-#include "PlayerPos.h"
+#include "EntityPos.h"
 #include "Grid.h"
+#include "Random.h"
 
 class ExampleLayer : public Ember::Layer
 {
@@ -233,7 +234,12 @@ class GameLayer : public Ember::Layer
 {
 private:
 	Grid grid;
+	Random random;
 	PlayerPos playerPos;
+	MonsterPos monsterPos;
+	uint8_t gridX = 30;
+	uint8_t gridY = 30;
+
 	//---BACKGROUND-------------------------------------
 	std::shared_ptr<Ember::VertexArray> backgroundVertexArray;
 	std::shared_ptr<Ember::VertexBuffer> backgroundVertexBuffer;
@@ -255,16 +261,21 @@ private:
 	std::shared_ptr<Ember::VertexBuffer> monsterVertexBuffer;
 	std::shared_ptr<Ember::IndexBuffer> monsterIndexBuffer;
 	std::shared_ptr<Ember::Shader> monsterShader;
+	float_t EventMonsterPositionX = 0.0f;
+	float_t EventMonsterPositionY = 0.0f;
 	//--------------------------------------------------
 
 	//---CAMERA-----------------------------------------
 	Ember::OrthographicCamera OrthoCamera;
+	glm::vec3 CameraPosition;
+	float_t CameraSpeed = 1.0f;
+	float_t CameraZoom = 0.0f;
 	//--------------------------------------------------
 public:
 	GameLayer()
-		: Layer("Game"), OrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f)
+		: Layer("Game"), OrthoCamera(-3.2f, 3.2f, -1.8f, 1.8f), CameraPosition(0.0f)
 	{
-		grid.InitNewGrid(10, 10);
+		grid.InitNewGrid(gridX, gridY);
 
 		//---BACKGROUND-----------------------------------------
 
@@ -335,10 +346,8 @@ public:
 
 		//---PLAYER-----------------------------------------
 
-		playerPos.CurrentPosX = 0;
-		playerPos.CurrentPosY = 0;
-		playerPos.MaxPosX = 9;
-		playerPos.MaxPosY = 9;
+		playerPos.MaxPosX = gridX - 1;
+		playerPos.MaxPosY = gridY - 1;
 
 		playerVertexArray.reset(Ember::VertexArray::Create());
 
@@ -390,6 +399,11 @@ public:
 
 		//---MONSTER----------------------------------------
 
+		monsterPos.CurrentPosX = gridX - 1;
+		monsterPos.CurrentPosY = gridY - 1;
+		monsterPos.MaxPosX = gridX - 1;
+		monsterPos.MaxPosY = gridY - 1;
+
 		monsterVertexArray.reset(Ember::VertexArray::Create());
 
 		monsterVertexBuffer.reset(Ember::VertexBuffer::Create(grid.BottomRightVertices, sizeof(grid.BottomRightVertices)));
@@ -436,12 +450,71 @@ public:
 
 	}
 
+	void CalculateMonstersMovesX()
+	{
+		if ((playerPos.CurrentPosX - monsterPos.CurrentPosX) < 0)
+		{
+			EventMonsterPositionX -= grid.IntervalX;
+			monsterPos.CurrentPosX -= 1;
+		}
+
+		if ((playerPos.CurrentPosX - monsterPos.CurrentPosX) > 0)
+		{
+			EventMonsterPositionX += grid.IntervalX;
+			monsterPos.CurrentPosX += 1;
+		}
+	}
+
+	void CalculateMonstersMovesY()
+	{
+		if ((playerPos.CurrentPosY - monsterPos.CurrentPosY) < 0)
+		{
+			EventMonsterPositionY += grid.IntervalY;
+			monsterPos.CurrentPosY -= 1;
+		}
+
+		if ((playerPos.CurrentPosY - monsterPos.CurrentPosY) > 0)
+		{
+			EventMonsterPositionY -= grid.IntervalY;
+			monsterPos.CurrentPosY += 1;
+		}
+	}
+
 	void OnUpdate(Ember::DeltaTime DT) override
 	{
 		//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
 
+		if (Ember::Input::IsKeyPressed(EM_KEY_LEFT_ARROW))
+		{
+			CameraPosition.x -= CameraSpeed * DT;
+		}
+		if (Ember::Input::IsKeyPressed(EM_KEY_RIGHT_ARROW))
+		{
+			CameraPosition.x += CameraSpeed * DT;
+		}
+		if (Ember::Input::IsKeyPressed(EM_KEY_UP_ARROW))
+		{
+			CameraPosition.y += CameraSpeed * DT;
+		}
+		if (Ember::Input::IsKeyPressed(EM_KEY_DOWN_ARROW))
+		{
+			CameraPosition.y -= CameraSpeed * DT;
+		}
+
+		if (Ember::Input::IsKeyPressed(EM_KEY_Z))
+		{
+			CameraZoom += 0.05f;
+		}
+		if (Ember::Input::IsKeyPressed(EM_KEY_X))
+		{
+			CameraZoom -= 0.05f;
+		}
+
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ember::RenderCommand::Clear();
+
+		OrthoCamera = Ember::OrthographicCamera(-3.2f + CameraZoom, 3.2f - CameraZoom, -1.8f + ((9.0f / 16.0f) * CameraZoom), 1.8f - ((9.0f / 16.0f) * CameraZoom));
+		OrthoCamera.SetPosition(CameraPosition);
 
 		Ember::Renderer::BeginScene(OrthoCamera);
 
@@ -450,7 +523,8 @@ public:
 		glm::mat4 playertransform = glm::translate(glm::mat4(1.0f), glm::vec3(EventPlayerPositionX, EventPlayerPositionY, 0.0f));
 		Ember::Renderer::Submit(playerShader, playerVertexArray, playertransform);
 
-		Ember::Renderer::Submit(monsterShader, monsterVertexArray);
+		glm::mat4 monstertransform = glm::translate(glm::mat4(1.0f), glm::vec3(EventMonsterPositionX, EventMonsterPositionY, 0.0f));
+		Ember::Renderer::Submit(monsterShader, monsterVertexArray, monstertransform);
 
 		Ember::Renderer::EndScene();
 	}
@@ -466,6 +540,7 @@ public:
 				{
 					EventPlayerPositionX += grid.IntervalX;
 					playerPos.CurrentPosX += 1;
+					CalculateMonstersMovesX();
 				}
 			}
 			if (e.GetKeyCode() == EM_KEY_A)
@@ -474,6 +549,7 @@ public:
 				{
 					EventPlayerPositionX -= grid.IntervalX;
 					playerPos.CurrentPosX -= 1;
+					CalculateMonstersMovesX();
 				}
 			}
 			if (e.GetKeyCode() == EM_KEY_W)
@@ -482,6 +558,7 @@ public:
 				{
 					EventPlayerPositionY += grid.IntervalY;
 					playerPos.CurrentPosY -= 1;
+					CalculateMonstersMovesY();
 				}
 			}
 			if (e.GetKeyCode() == EM_KEY_S)
@@ -490,9 +567,15 @@ public:
 				{
 					EventPlayerPositionY -= grid.IntervalY;
 					playerPos.CurrentPosY += 1;
+					CalculateMonstersMovesY();
 				}
 			}
-			EM_LOG_DEBUG("X: {0}, Y: {1}", playerPos.CurrentPosX, playerPos.CurrentPosY);
+			EM_LOG_DEBUG("Player: X: {0}, Y: {1}", playerPos.CurrentPosX, playerPos.CurrentPosY);
+			EM_LOG_DEBUG("Monster: X: {0}, Y: {1}", monsterPos.CurrentPosX, monsterPos.CurrentPosY);
+			if ((playerPos.CurrentPosX == monsterPos.CurrentPosX) && (playerPos.CurrentPosY == monsterPos.CurrentPosY))
+			{
+				EM_LOG_ERROR("GAME OVER!");
+			}
 		}
 	}
 };
