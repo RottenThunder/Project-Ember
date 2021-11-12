@@ -97,6 +97,14 @@ namespace Ember
 				}
 			});
 
+		glfwSetCharCallback(window, [](GLFWwindow* _window, uint32_t keycode)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(_window);
+
+				KeyTypedEvent event(keycode);
+				data.EventCallback(event);
+			});
+
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* _window, int32_t button, int32_t action, int32_t mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(_window);

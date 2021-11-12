@@ -237,8 +237,11 @@ private:
 	Random random;
 	PlayerPos playerPos;
 	MonsterPos monsterPos;
-	uint8_t gridX = 30;
-	uint8_t gridY = 30;
+	uint8_t gridX = 40;
+	uint8_t gridY = 40;
+	glm::vec2 Path = glm::vec2({ 0.0f, 0.0f });
+	bool XMovementPossible = false;
+	bool YMovementPossible = false;
 
 	//---BACKGROUND-------------------------------------
 	std::shared_ptr<Ember::VertexArray> backgroundVertexArray;
@@ -450,30 +453,66 @@ public:
 
 	}
 
-	void CalculateMonstersMovesX()
+	void PathFind()
 	{
-		if ((playerPos.CurrentPosX - monsterPos.CurrentPosX) < 0)
+		Path.x = monsterPos.CurrentPosX - playerPos.CurrentPosX;
+		Path.y = monsterPos.CurrentPosY - playerPos.CurrentPosY;
+		if (Path.x > 0 || Path.x < 0)
+		{
+			XMovementPossible = true;
+		}
+		if (Path.y > 0 || Path.y < 0)
+		{
+			YMovementPossible = true;
+		}
+		if (XMovementPossible == true && YMovementPossible == false)
+		{
+			MonsterMoveX();
+		}
+		if (YMovementPossible == true && XMovementPossible == false)
+		{
+			MonsterMoveY();
+		}
+		if (XMovementPossible == true && YMovementPossible == true)
+		{
+			uint8_t randomDecision = random.GenerateBinaryValue();
+			if (randomDecision == 0)
+			{
+				MonsterMoveX();
+			}
+			if (randomDecision == 1)
+			{
+				MonsterMoveY();
+			}
+		}
+		XMovementPossible = false;
+		YMovementPossible = false;
+	}
+
+	void MonsterMoveX()
+	{
+		if (Path.x > 0) // Move Left
 		{
 			EventMonsterPositionX -= grid.IntervalX;
 			monsterPos.CurrentPosX -= 1;
 		}
 
-		if ((playerPos.CurrentPosX - monsterPos.CurrentPosX) > 0)
+		if (Path.x < 0) // Move Right
 		{
 			EventMonsterPositionX += grid.IntervalX;
 			monsterPos.CurrentPosX += 1;
 		}
 	}
 
-	void CalculateMonstersMovesY()
+	void MonsterMoveY()
 	{
-		if ((playerPos.CurrentPosY - monsterPos.CurrentPosY) < 0)
+		if (Path.y > 0) // Move Up
 		{
 			EventMonsterPositionY += grid.IntervalY;
 			monsterPos.CurrentPosY -= 1;
 		}
 
-		if ((playerPos.CurrentPosY - monsterPos.CurrentPosY) > 0)
+		if (Path.y < 0) // Move Down
 		{
 			EventMonsterPositionY -= grid.IntervalY;
 			monsterPos.CurrentPosY += 1;
@@ -503,11 +542,11 @@ public:
 
 		if (Ember::Input::IsKeyPressed(EM_KEY_Z))
 		{
-			CameraZoom += 0.05f;
+			CameraZoom += CameraSpeed * DT;
 		}
 		if (Ember::Input::IsKeyPressed(EM_KEY_X))
 		{
-			CameraZoom -= 0.05f;
+			CameraZoom -= CameraSpeed * DT;
 		}
 
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -540,7 +579,7 @@ public:
 				{
 					EventPlayerPositionX += grid.IntervalX;
 					playerPos.CurrentPosX += 1;
-					CalculateMonstersMovesX();
+					PathFind();
 				}
 			}
 			if (e.GetKeyCode() == EM_KEY_A)
@@ -549,7 +588,7 @@ public:
 				{
 					EventPlayerPositionX -= grid.IntervalX;
 					playerPos.CurrentPosX -= 1;
-					CalculateMonstersMovesX();
+					PathFind();
 				}
 			}
 			if (e.GetKeyCode() == EM_KEY_W)
@@ -558,7 +597,7 @@ public:
 				{
 					EventPlayerPositionY += grid.IntervalY;
 					playerPos.CurrentPosY -= 1;
-					CalculateMonstersMovesY();
+					PathFind();
 				}
 			}
 			if (e.GetKeyCode() == EM_KEY_S)
@@ -567,7 +606,7 @@ public:
 				{
 					EventPlayerPositionY -= grid.IntervalY;
 					playerPos.CurrentPosY += 1;
-					CalculateMonstersMovesY();
+					PathFind();
 				}
 			}
 			EM_LOG_DEBUG("Player: X: {0}, Y: {1}", playerPos.CurrentPosX, playerPos.CurrentPosY);
@@ -592,6 +631,7 @@ public:
 	{
 		//PushLayer(new ExampleLayer);
 		PushLayer(new GameLayer);
+		PushOverlay(new Ember::ImGuiLayer);
 	}
 
 	~GameApplication()

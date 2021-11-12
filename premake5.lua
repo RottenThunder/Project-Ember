@@ -13,10 +13,12 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "vendor/glfw/include"
 IncludeDir["GLAD"] = "vendor/glad/include"
 IncludeDir["GLM"] = "Ember/vendor/glm"
+IncludeDir["ImGui"] = "Ember/vendor/imgui"
 
 group "Dependencies"
 	include "vendor/glfw"
 	include "vendor/glad"
+	include "Ember/vendor/imgui"
 group ""
 
 project "Ember"
@@ -46,6 +48,7 @@ project "Ember"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.GLM}",
+		"%{IncludeDir.ImGui}",
 		"vendor/spdlog/include"
 	}
 
@@ -53,6 +56,7 @@ project "Ember"
 	{
 		"GLFW",
 		"GLAD",
+		"ImGui",
 		"opengl32.lib"
 	}
 

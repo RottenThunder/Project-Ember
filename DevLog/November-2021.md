@@ -25,3 +25,8 @@
     - The camera is now able to be moved by keyboard input
     - The camera can now zoom in and out
     - The enemy (Blue square) is now moving
+
+## Day 29 (12/11/2021)
+- Commit "ImGui and Pathfinding"
+    - The Enemy now uses a pathfinding algorithm to find the optimal route to the player (tracking him)
+    - ImGui has been successfully implemented and has been hooked up the event system, meaning that the UI windows ImGui creates can be moved and be intercated with

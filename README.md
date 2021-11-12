@@ -1,7 +1,7 @@
 # Project Ember [![License](https://img.shields.io/github/license/RottenThunder/Project-Ember.svg)](https://github.com/RottenThunder/Project-Ember/blob/master/LICENSE)
 
 ## About
-Project Ember is an A-Level (Year 12) Computer Science Project that is focused on designing a game that is powered by a game engine. This game engine will be named after the project. Note that this project will only be targeting Windows for the time being, Multi-Platform support will be coming soon!!!
+Project Ember is an A-Level (Year 12) Computer Science Project that is focused on designing a game that is powered by a game engine. This game engine will be named after the project. Note that this project will only be targeting Windows for the time being.
 
 ## Licensing
 [BSD 3-Clause License](https://github.com/RottenThunder/Project-Ember/blob/master/LICENSE)
@@ -20,10 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 24 (07/11/2021)
-- Commit "Orthographic Camera"
-    - The Engine can now create an orthographic camera and the camera can be moved freely
-
 ### Day 26 (09/11/2021)
 - Commit "Transforms"
     - Every object rendered in the game engine now has a transform, which means the object can be moved
@@ -34,3 +30,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - The camera is now able to be moved by keyboard input
     - The camera can now zoom in and out
     - The enemy (Blue square) is now moving
+
+### Day 29 (12/11/2021)
+- Commit "ImGui and Pathfinding"
+    - The Enemy now uses a pathfinding algorithm to find the optimal route to the player (tracking him)
+    - ImGui has been successfully implemented and has been hooked up the event system, meaning that the UI windows ImGui creates can be moved and be intercated with
