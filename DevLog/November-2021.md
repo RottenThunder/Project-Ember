@@ -30,3 +30,7 @@
 - Commit "ImGui and Pathfinding"
     - The Enemy now uses a pathfinding algorithm to find the optimal route to the player (tracking him)
     - ImGui has been successfully implemented and has been hooked up the event system, meaning that the UI windows ImGui creates can be moved and be intercated with
+
+## Day 31 (14/11/2021)
+- Commit "Shader Abstraction"
+    - Shaders are being abstracted, aswell as uniforms can now be changed dynamically

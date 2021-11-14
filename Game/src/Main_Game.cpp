@@ -1,5 +1,6 @@
 #include <Ember.h>
 #include "glm/gtc/matrix_transform.hpp"
+#include "Ember/Platform/OpenGL/OpenGLShader.h"
 #include "EntityPos.h"
 #include "Grid.h"
 #include "Random.h"
@@ -13,6 +14,7 @@ private:
 	std::shared_ptr<Ember::IndexBuffer> squareIndexBuffer;
 	std::shared_ptr<Ember::Shader> squareShader;
 	glm::vec3 squarePosition;
+	glm::vec3 squareColour = { 0.9f, 0.1f, 0.4f };
 	//--------------------------------------------------
 
 	//---TRIANGLE---------------------------------------
@@ -82,13 +84,15 @@ public:
 			in vec3 v_Position;
 			in vec4 v_Colour;
 
+			uniform vec3 u_Colour;
+
 			void main()
 			{
-				Colour = vec4(v_Position * 0.5 + 0.5, 1.0);
+				Colour = vec4(u_Colour, 1.0);
 			}
 		)";
 
-		squareShader.reset(new Ember::Shader(vertexSrcSquare, fragmentSrcSquare));
+		squareShader.reset(Ember::Shader::Create(vertexSrcSquare, fragmentSrcSquare));
 
 		//--------------------------------------------------
 
@@ -139,11 +143,11 @@ public:
 
 			void main()
 			{
-				Colour = vec4(1.0, 0.0, 0.0, 1.0);
+				Colour = vec4(0.0, 1.0, 0.0, 1.0);
 			}
 		)";
 
-		triangleShader.reset(new Ember::Shader(vertexSrcTriangle, fragmentSrcTriangle));
+		triangleShader.reset(Ember::Shader::Create(vertexSrcTriangle, fragmentSrcTriangle));
 
 		//--------------------------------------------------
 	}
@@ -193,14 +197,17 @@ public:
 		}
 
 		glm::mat4 squaretransform = glm::translate(glm::mat4(1.0f), squarePosition);
-		//static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		glm::mat4 triangletransform = glm::translate(glm::mat4(1.0f), trianglePosition);
 
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareShader)->Bind();
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Colour", squareColour);
+
 		Ember::Renderer::BeginScene(OrthoCamera);
-		Ember::Renderer::Submit(squareShader, squareVertexArray, squaretransform);
+		//Ember::Renderer::Submit(squareShader, squareVertexArray, squaretransform);
 		Ember::Renderer::Submit(triangleShader, triangleVertexArray, triangletransform);
 
-		/*
+
 		for (uint8_t j = 0; j < 5; j++)
 		{
 			for (uint8_t i = 0; i < 5; i++)
@@ -210,7 +217,7 @@ public:
 				Ember::Renderer::Submit(squareShader, squareVertexArray, squaretransform);
 			}
 		}
-		*/
+
 
 		Ember::Renderer::EndScene();
 	}
@@ -338,7 +345,7 @@ public:
 			}
 		)";
 
-		backgroundShader.reset(new Ember::Shader(vertexSrcBackground, fragmentSrcBackground));
+		backgroundShader.reset(Ember::Shader::Create(vertexSrcBackground, fragmentSrcBackground));
 
 		//--------------------------------------------------
 
@@ -392,7 +399,7 @@ public:
 			}
 		)";
 
-		playerShader.reset(new Ember::Shader(vertexSrcPlayer, fragmentSrcPlayer));
+		playerShader.reset(Ember::Shader::Create(vertexSrcPlayer, fragmentSrcPlayer));
 
 		//--------------------------------------------------
 
@@ -447,7 +454,7 @@ public:
 			}
 		)";
 
-		monsterShader.reset(new Ember::Shader(vertexSrcMonster, fragmentSrcMonster));
+		monsterShader.reset(Ember::Shader::Create(vertexSrcMonster, fragmentSrcMonster));
 
 		//--------------------------------------------------
 
