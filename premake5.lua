@@ -60,6 +60,11 @@ project "Ember"
 		"opengl32.lib"
 	}
 
+	defines
+	{
+		"IMGUI_API=__declspec(dllexport)"
+	}
+
 	filter "system:windows"
 		systemversion "latest"
 
@@ -126,7 +131,13 @@ project "Game"
 	{
 		"Ember/src",
 		"vendor/spdlog/include",
+		"Ember/vendor",
 		"%{IncludeDir.GLM}"
+	}
+
+	defines
+	{
+		"IMGUI_API=__declspec(dllimport)"
 	}
 
 	links

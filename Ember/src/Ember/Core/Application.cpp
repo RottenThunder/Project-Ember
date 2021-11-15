@@ -17,6 +17,9 @@ namespace Ember
 
 		MainWindow = std::unique_ptr<Window>(Window::Create());
 		MainWindow->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
+
+		imguiLayer = new ImGuiLayer();
+		PushOverlay(imguiLayer);
 	}
 
 	Application::~Application()
@@ -34,6 +37,11 @@ namespace Ember
 
 			for (Layer* layer : layerStack)
 				layer->OnUpdate(deltaTime);
+
+			imguiLayer->Begin();
+			for (Layer* layer : layerStack)
+				layer->OnImGuiRender();
+			imguiLayer->End();
 
 			MainWindow->OnUpdate();
 		}

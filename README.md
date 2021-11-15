@@ -20,12 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 28 (11/11/2021)
-- Commit "Game Dev - Camera Zoom"
-    - The camera is now able to be moved by keyboard input
-    - The camera can now zoom in and out
-    - The enemy (Blue square) is now moving
-
 ### Day 29 (12/11/2021)
 - Commit "ImGui and Pathfinding"
     - The Enemy now uses a pathfinding algorithm to find the optimal route to the player (tracking him)
@@ -34,3 +28,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ### Day 31 (14/11/2021)
 - Commit "Shader Abstraction"
     - Shaders are being abstracted, aswell as uniforms can now be changed dynamically
+
+### Day 32 (15/11/2021)
+- Commit "ImGui Docking"
+    - ImGui now has the ability to dock any ui window it creates inside of the window
+    - Any Layer can now have access to ImGui Renderering

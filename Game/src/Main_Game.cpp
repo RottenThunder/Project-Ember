@@ -1,5 +1,7 @@
 #include <Ember.h>
+#include "imgui/imgui.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Ember/Platform/OpenGL/OpenGLShader.h"
 #include "EntityPos.h"
 #include "Grid.h"
@@ -150,6 +152,13 @@ public:
 		triangleShader.reset(Ember::Shader::Create(vertexSrcTriangle, fragmentSrcTriangle));
 
 		//--------------------------------------------------
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::ColorEdit3("Square Colour", glm::value_ptr(squareColour));
+		ImGui::End();
 	}
 
 	void OnUpdate(Ember::DeltaTime DT) override
@@ -638,7 +647,6 @@ public:
 	{
 		//PushLayer(new ExampleLayer);
 		PushLayer(new GameLayer);
-		PushOverlay(new Ember::ImGuiLayer);
 	}
 
 	~GameApplication()

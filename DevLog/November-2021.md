@@ -34,3 +34,8 @@
 ## Day 31 (14/11/2021)
 - Commit "Shader Abstraction"
     - Shaders are being abstracted, aswell as uniforms can now be changed dynamically
+
+## Day 32 (15/11/2021)
+- Commit "ImGui Docking"
+    - ImGui now has the ability to dock any ui window it creates inside of the window
+    - Any Layer can now have access to ImGui Renderering

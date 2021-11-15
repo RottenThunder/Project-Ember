@@ -4,6 +4,7 @@
 #include "LayerStack.h"
 #include "DeltaTime.h"
 #include "Ember/Events/EventSystem.h"
+#include "Ember/ImGui/ImGuiLayer.h"
 
 namespace Ember
 {
@@ -12,6 +13,7 @@ namespace Ember
 	private:
 		static Application* Instance;
 		std::unique_ptr<Window> MainWindow;
+		ImGuiLayer* imguiLayer;
 		bool Running = true;
 		bool OnWindowClose(WindowCloseEvent& e);
 		LayerStack layerStack;

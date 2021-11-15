@@ -5,7 +5,6 @@ namespace Ember
 {
 	LayerStack::LayerStack()
 	{
-		LayerInsert = Layers.begin();
 	}
 
 	LayerStack::~LayerStack()
@@ -16,7 +15,8 @@ namespace Ember
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		LayerInsert = Layers.emplace(LayerInsert, layer);
+		Layers.emplace(Layers.begin() + LayerInsertIndex, layer);
+		LayerInsertIndex++;
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
@@ -30,7 +30,7 @@ namespace Ember
 		if (it != Layers.end())
 		{
 			Layers.erase(it);
-			LayerInsert--;
+			LayerInsertIndex--;
 		}
 	}
 

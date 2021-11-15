@@ -9,7 +9,7 @@ namespace Ember
 	{
 	private:
 		std::vector<Layer*> Layers;
-		std::vector<Layer*>::iterator LayerInsert;
+		uint32_t LayerInsertIndex = 0;
 	public:
 		LayerStack();
 		~LayerStack();
