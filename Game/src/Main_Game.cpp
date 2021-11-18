@@ -11,19 +11,19 @@ class ExampleLayer : public Ember::Layer
 {
 private:
 	//---SQUARE-----------------------------------------
-	std::shared_ptr<Ember::VertexArray> squareVertexArray;
-	std::shared_ptr<Ember::VertexBuffer> squareVertexBuffer;
-	std::shared_ptr<Ember::IndexBuffer> squareIndexBuffer;
-	std::shared_ptr<Ember::Shader> squareShader;
+	Ember::Ref<Ember::VertexArray> squareVertexArray;
+	Ember::Ref<Ember::VertexBuffer> squareVertexBuffer;
+	Ember::Ref<Ember::IndexBuffer> squareIndexBuffer;
+	Ember::Ref<Ember::Shader> squareShader;
 	glm::vec3 squarePosition;
 	glm::vec3 squareColour = { 0.9f, 0.1f, 0.4f };
 	//--------------------------------------------------
 
 	//---TRIANGLE---------------------------------------
-	std::shared_ptr<Ember::VertexArray> triangleVertexArray;
-	std::shared_ptr<Ember::VertexBuffer> triangleVertexBuffer;
-	std::shared_ptr<Ember::IndexBuffer> triangleIndexBuffer;
-	std::shared_ptr<Ember::Shader> triangleShader;
+	Ember::Ref<Ember::VertexArray> triangleVertexArray;
+	Ember::Ref<Ember::VertexBuffer> triangleVertexBuffer;
+	Ember::Ref<Ember::IndexBuffer> triangleIndexBuffer;
+	Ember::Ref<Ember::Shader> triangleShader;
 	glm::vec3 trianglePosition;
 	//--------------------------------------------------
 
@@ -258,30 +258,36 @@ private:
 	glm::vec2 Path = glm::vec2({ 0.0f, 0.0f });
 	bool XMovementPossible = false;
 	bool YMovementPossible = false;
+	ImVec4 RedTextColour = ImVec4({ 1.0f, 0.0f, 0.0f, 1.0f });
+	ImVec4 YellowTextColour = ImVec4({ 1.0f, 1.0f, 0.0f, 1.0f });
+	bool AllowColourChange = false;
 
 	//---BACKGROUND-------------------------------------
-	std::shared_ptr<Ember::VertexArray> backgroundVertexArray;
-	std::shared_ptr<Ember::VertexBuffer> backgroundVertexBuffer;
-	std::shared_ptr<Ember::IndexBuffer> backgroundIndexBuffer;
-	std::shared_ptr<Ember::Shader> backgroundShader;
+	Ember::Ref<Ember::VertexArray> backgroundVertexArray;
+	Ember::Ref<Ember::VertexBuffer> backgroundVertexBuffer;
+	Ember::Ref<Ember::IndexBuffer> backgroundIndexBuffer;
+	Ember::Ref<Ember::Shader> backgroundShader;
+	glm::vec3 backgroundColour = { 0.0f, 1.0f, 0.0f };
 	//--------------------------------------------------
 
 	//---PLAYER-----------------------------------------
-	std::shared_ptr<Ember::VertexArray> playerVertexArray;
-	std::shared_ptr<Ember::VertexBuffer> playerVertexBuffer;
-	std::shared_ptr<Ember::IndexBuffer> playerIndexBuffer;
-	std::shared_ptr<Ember::Shader> playerShader;
+	Ember::Ref<Ember::VertexArray> playerVertexArray;
+	Ember::Ref<Ember::VertexBuffer> playerVertexBuffer;
+	Ember::Ref<Ember::IndexBuffer> playerIndexBuffer;
+	Ember::Ref<Ember::Shader> playerShader;
 	float_t EventPlayerPositionX = 0.0f;
 	float_t EventPlayerPositionY = 0.0f;
+	glm::vec3 playerColour = { 1.0f, 0.0f, 0.0f };
 	//--------------------------------------------------
 
 	//---MONSTER----------------------------------------
-	std::shared_ptr<Ember::VertexArray> monsterVertexArray;
-	std::shared_ptr<Ember::VertexBuffer> monsterVertexBuffer;
-	std::shared_ptr<Ember::IndexBuffer> monsterIndexBuffer;
-	std::shared_ptr<Ember::Shader> monsterShader;
+	Ember::Ref<Ember::VertexArray> monsterVertexArray;
+	Ember::Ref<Ember::VertexBuffer> monsterVertexBuffer;
+	Ember::Ref<Ember::IndexBuffer> monsterIndexBuffer;
+	Ember::Ref<Ember::Shader> monsterShader;
 	float_t EventMonsterPositionX = 0.0f;
 	float_t EventMonsterPositionY = 0.0f;
+	glm::vec3 monsterColour = { 0.0f, 0.0f, 1.0f };
 	//--------------------------------------------------
 
 	//---CAMERA-----------------------------------------
@@ -330,12 +336,10 @@ public:
 			uniform mat4 u_ViewProjection;
 			uniform mat4 u_Transform;
 
-			out vec3 v_Position;
 			out vec4 v_Colour;
 
 			void main()
 			{
-				v_Position = a_Position;
 				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 			}
 		)";
@@ -345,12 +349,13 @@ public:
 
 			layout(location = 0) out vec4 Colour;
 
-			in vec3 v_Position;
 			in vec4 v_Colour;
+
+			uniform vec3 u_Colour;
 
 			void main()
 			{
-				Colour = vec4(v_Position * 0.5 + 0.5, 1.0);
+				Colour = vec4(u_Colour, 1.0);
 			}
 		)";
 
@@ -402,9 +407,11 @@ public:
 
 			layout(location = 0) out vec4 Colour;
 
+			uniform vec3 u_Colour;
+
 			void main()
 			{
-				Colour = vec4(1.0, 0.0, 0.0, 1.0);
+				Colour = vec4(u_Colour, 1.0);
 			}
 		)";
 
@@ -457,9 +464,11 @@ public:
 
 			layout(location = 0) out vec4 Colour;
 
+			uniform vec3 u_Colour;
+
 			void main()
 			{
-				Colour = vec4(0.0, 0.0, 1.0, 1.0);
+				Colour = vec4(u_Colour, 1.0);
 			}
 		)";
 
@@ -535,6 +544,46 @@ public:
 		}
 	}
 
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("UI Test Window");
+		ImGui::TextColored(YellowTextColour, "Controls");
+		ImGui::NewLine();
+		ImGui::Text("WASD - Move Player");
+		ImGui::Text("Arrow Keys - Move Camera");
+		ImGui::Text("Z - Zoom Camera In");
+		ImGui::Text("X - Zoom Camera Out");
+		ImGui::NewLine();
+		ImGui::TextColored(RedTextColour, "Try Changing The Colours!!!");
+		ImGui::Checkbox("Allow Colour Change", &AllowColourChange);
+		if (AllowColourChange)
+		{
+			ImGui::ColorEdit3("Background Colour", glm::value_ptr(backgroundColour));
+			ImGui::ColorEdit3("Player Colour", glm::value_ptr(playerColour));
+			ImGui::ColorEdit3("Monster Colour", glm::value_ptr(monsterColour));
+		}
+		ImGui::Button("Reset Colours");
+		if (ImGui::IsItemDeactivated())
+		{
+			backgroundColour = glm::vec3({ 0.0f, 1.0f, 0.0f });
+			playerColour = glm::vec3({ 1.0f, 0.0f, 0.0f });
+			monsterColour = glm::vec3({ 0.0f, 0.0f, 1.0f });
+		}
+		ImGui::Button("Reset Positions");
+		if (ImGui::IsItemDeactivated())
+		{
+			EventPlayerPositionX = 0.0f;
+			EventPlayerPositionY = 0.0f;
+			EventMonsterPositionX = 0.0f;
+			EventMonsterPositionY = 0.0f;
+			playerPos.CurrentPosX = 0;
+			playerPos.CurrentPosY = 0;
+			monsterPos.CurrentPosX = monsterPos.MaxPosX;
+			monsterPos.CurrentPosY = monsterPos.MaxPosY;
+		}
+		ImGui::End();
+	}
+
 	void OnUpdate(Ember::DeltaTime DT) override
 	{
 		//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
@@ -573,12 +622,18 @@ public:
 
 		Ember::Renderer::BeginScene(OrthoCamera);
 
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(backgroundShader)->Bind();
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(backgroundShader)->UploadUniformFloat3("u_Colour", backgroundColour);
 		Ember::Renderer::Submit(backgroundShader, backgroundVertexArray);
 
 		glm::mat4 playertransform = glm::translate(glm::mat4(1.0f), glm::vec3(EventPlayerPositionX, EventPlayerPositionY, 0.0f));
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(playerShader)->Bind();
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(playerShader)->UploadUniformFloat3("u_Colour", playerColour);
 		Ember::Renderer::Submit(playerShader, playerVertexArray, playertransform);
 
 		glm::mat4 monstertransform = glm::translate(glm::mat4(1.0f), glm::vec3(EventMonsterPositionX, EventMonsterPositionY, 0.0f));
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(monsterShader)->Bind();
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(monsterShader)->UploadUniformFloat3("u_Colour", monsterColour);
 		Ember::Renderer::Submit(monsterShader, monsterVertexArray, monstertransform);
 
 		Ember::Renderer::EndScene();

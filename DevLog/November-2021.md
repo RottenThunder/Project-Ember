@@ -39,3 +39,7 @@
 - Commit "ImGui Docking"
     - ImGui now has the ability to dock any ui window it creates inside of the window
     - Any Layer can now have access to ImGui Renderering
+
+## Day 35 (18/11/2021)
+- Commit "Ref Counting"
+    - The engine now has a Reference Counting system for std::shared_ptr and std::unique_ptr

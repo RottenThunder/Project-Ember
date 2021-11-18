@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 #ifdef EM_PLATFORM_WINDOWS
 
@@ -37,3 +38,12 @@
 #define BIT(x) (1 << x)
 
 #define EM_BIND_EVENT_FUNC(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace Ember
+{
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}

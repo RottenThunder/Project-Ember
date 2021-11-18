@@ -12,7 +12,7 @@ namespace Ember
 	{
 	private:
 		static Application* Instance;
-		std::unique_ptr<Window> MainWindow;
+		Scope<Window> MainWindow;
 		ImGuiLayer* imguiLayer;
 		bool Running = true;
 		bool OnWindowClose(WindowCloseEvent& e);
