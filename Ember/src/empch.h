@@ -10,6 +10,7 @@
 
 //---DATA STRUCTURES--------------------------------
 #include <string>
+#include <array>
 #include <vector>
 //--------------------------------------------------
 

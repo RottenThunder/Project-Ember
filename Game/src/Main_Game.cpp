@@ -14,7 +14,8 @@ private:
 	Ember::Ref<Ember::VertexArray> squareVertexArray;
 	Ember::Ref<Ember::VertexBuffer> squareVertexBuffer;
 	Ember::Ref<Ember::IndexBuffer> squareIndexBuffer;
-	Ember::Ref<Ember::Shader> squareShader;
+	Ember::Ref<Ember::Shader> squareShader, squareTextureShader;
+	Ember::Ref<Ember::Texture2D> squareTexture, squareTexture2;
 	glm::vec3 squarePosition;
 	glm::vec3 squareColour = { 0.9f, 0.1f, 0.4f };
 	//--------------------------------------------------
@@ -39,18 +40,19 @@ public:
 
 		squareVertexArray.reset(Ember::VertexArray::Create());
 
-		float_t SquareVertices[3 * 4] =
+		float_t SquareVertices[5 * 4] =
 		{
-			-0.5f, -0.5f, 0.0f, //Bottom-Left
-			0.5f, -0.5f, 0.0f, //Bottom-Right
-			-0.5f, 0.5f, 0.0f, //Top-Left
-			0.5f, 0.5f, 0.0f //Top-Right
+			-0.5f, -0.5f, 0.0f, /*Bottom-Left*/ 0.0f, 0.0f,
+			0.5f, -0.5f, 0.0f, /*Bottom-Right*/ 1.0f, 0.0f,
+			-0.5f, 0.5f, 0.0f, /*Top-Left*/ 0.0f, 1.0f,
+			0.5f, 0.5f, 0.0f, /*Top-Right*/ 1.0f, 1.0f
 		};
 
 		squareVertexBuffer.reset(Ember::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices)));
 
 		squareVertexBuffer->SetLayout({
-			{ Ember::ShaderDataType::Vec3, "a_Position", false }
+			{ Ember::ShaderDataType::Vec3, "a_Position", false },
+			{ Ember::ShaderDataType::Vec2, "a_TexCoord", false }
 			});
 
 		squareVertexArray->AddVertexBuffer(squareVertexBuffer);
@@ -95,6 +97,48 @@ public:
 		)";
 
 		squareShader.reset(Ember::Shader::Create(vertexSrcSquare, fragmentSrcSquare));
+
+
+		std::string vertexSrcSquareTexture = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
+			}
+		)";
+
+		std::string fragmentSrcSquareTexture = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 Colour;
+
+			in vec2 v_TexCoord;
+
+			uniform sampler2D u_Texture;
+
+			void main()
+			{
+				Colour = texture(u_Texture, v_TexCoord);
+			}
+		)";
+
+		squareTextureShader.reset(Ember::Shader::Create(vertexSrcSquareTexture, fragmentSrcSquareTexture));
+
+		squareTexture = Ember::Texture2D::Create("assets/textures/Checkerboard.png");
+		squareTexture2 = Ember::Texture2D::Create("assets/textures/TestCharacter_0001.png");
+
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareTextureShader)->Bind();
+		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareTextureShader)->UploadUniformInt("u_Texture", 0);
 
 		//--------------------------------------------------
 
@@ -213,10 +257,16 @@ public:
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Colour", squareColour);
 
 		Ember::Renderer::BeginScene(OrthoCamera);
-		//Ember::Renderer::Submit(squareShader, squareVertexArray, squaretransform);
-		Ember::Renderer::Submit(triangleShader, triangleVertexArray, triangletransform);
 
+		squareTexture->Bind();
+		Ember::Renderer::Submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		squareTexture2->Bind();
+		Ember::Renderer::Submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
+		//Triangle
+		//Ember::Renderer::Submit(triangleShader, triangleVertexArray, triangletransform);
+
+		/* Grid
 		for (uint8_t j = 0; j < 5; j++)
 		{
 			for (uint8_t i = 0; i < 5; i++)
@@ -226,6 +276,7 @@ public:
 				Ember::Renderer::Submit(squareShader, squareVertexArray, squaretransform);
 			}
 		}
+		*/
 
 
 		Ember::Renderer::EndScene();
@@ -253,14 +304,17 @@ private:
 	Random random;
 	PlayerPos playerPos;
 	MonsterPos monsterPos;
-	uint8_t gridX = 40;
-	uint8_t gridY = 40;
+	uint8_t gridX = 50;
+	uint8_t gridY = 50;
 	glm::vec2 Path = glm::vec2({ 0.0f, 0.0f });
 	bool XMovementPossible = false;
 	bool YMovementPossible = false;
 	ImVec4 RedTextColour = ImVec4({ 1.0f, 0.0f, 0.0f, 1.0f });
 	ImVec4 YellowTextColour = ImVec4({ 1.0f, 1.0f, 0.0f, 1.0f });
 	bool AllowColourChange = false;
+	bool SeePlayerPosition = false;
+	bool SeeMonsterPosition = false;
+	bool GameOver = false;
 
 	//---BACKGROUND-------------------------------------
 	Ember::Ref<Ember::VertexArray> backgroundVertexArray;
@@ -554,20 +608,38 @@ public:
 		ImGui::Text("Z - Zoom Camera In");
 		ImGui::Text("X - Zoom Camera Out");
 		ImGui::NewLine();
-		ImGui::TextColored(RedTextColour, "Try Changing The Colours!!!");
-		ImGui::Checkbox("Allow Colour Change", &AllowColourChange);
-		if (AllowColourChange)
+		if (!GameOver)
 		{
-			ImGui::ColorEdit3("Background Colour", glm::value_ptr(backgroundColour));
-			ImGui::ColorEdit3("Player Colour", glm::value_ptr(playerColour));
-			ImGui::ColorEdit3("Monster Colour", glm::value_ptr(monsterColour));
+			ImGui::TextColored(RedTextColour, "Try Changing The Colours!!!");
+			ImGui::Checkbox("Allow Colour Change", &AllowColourChange);
+			if (AllowColourChange)
+			{
+				ImGui::ColorEdit3("Background Colour", glm::value_ptr(backgroundColour));
+				ImGui::ColorEdit3("Player Colour", glm::value_ptr(playerColour));
+				ImGui::ColorEdit3("Monster Colour", glm::value_ptr(monsterColour));
+			}
+			ImGui::Checkbox("See Player Position", &SeePlayerPosition);
+			if (SeePlayerPosition)
+			{
+				ImGui::Text("(%i, %i)", playerPos.CurrentPosX, playerPos.CurrentPosY);
+			}
+			ImGui::Checkbox("See Monster Position", &SeeMonsterPosition);
+			if (SeeMonsterPosition)
+			{
+				ImGui::Text("(%i, %i)", monsterPos.CurrentPosX, monsterPos.CurrentPosY);
+			}
+			ImGui::Button("Reset Colours");
+			if (ImGui::IsItemDeactivated())
+			{
+				backgroundColour = glm::vec3({ 0.0f, 1.0f, 0.0f });
+				playerColour = glm::vec3({ 1.0f, 0.0f, 0.0f });
+				monsterColour = glm::vec3({ 0.0f, 0.0f, 1.0f });
+			}
 		}
-		ImGui::Button("Reset Colours");
-		if (ImGui::IsItemDeactivated())
+		else
 		{
-			backgroundColour = glm::vec3({ 0.0f, 1.0f, 0.0f });
-			playerColour = glm::vec3({ 1.0f, 0.0f, 0.0f });
-			monsterColour = glm::vec3({ 0.0f, 0.0f, 1.0f });
+			ImGui::TextColored(RedTextColour, "Game Over!");
+			ImGui::NewLine();
 		}
 		ImGui::Button("Reset Positions");
 		if (ImGui::IsItemDeactivated())
@@ -580,7 +652,9 @@ public:
 			playerPos.CurrentPosY = 0;
 			monsterPos.CurrentPosX = monsterPos.MaxPosX;
 			monsterPos.CurrentPosY = monsterPos.MaxPosY;
+			GameOver = false;
 		}
+		ImGui::Text("%i x %i Grid", gridX, gridY);
 		ImGui::End();
 	}
 
@@ -643,48 +717,49 @@ public:
 	{
 		if (event.GetEventType() == Ember::EventType::KeyPressed)
 		{
-			Ember::KeyPressedEvent& e = (Ember::KeyPressedEvent&)event;
-			if (e.GetKeyCode() == EM_KEY_D)
+			if (!GameOver)
 			{
-				if (playerPos.CurrentPosX != playerPos.MaxPosX)
+				Ember::KeyPressedEvent& e = (Ember::KeyPressedEvent&)event;
+				if (e.GetKeyCode() == EM_KEY_D)
 				{
-					EventPlayerPositionX += grid.IntervalX;
-					playerPos.CurrentPosX += 1;
-					PathFind();
+					if (playerPos.CurrentPosX != playerPos.MaxPosX)
+					{
+						EventPlayerPositionX += grid.IntervalX;
+						playerPos.CurrentPosX += 1;
+						PathFind();
+					}
 				}
-			}
-			if (e.GetKeyCode() == EM_KEY_A)
-			{
-				if (playerPos.CurrentPosX != 0)
+				if (e.GetKeyCode() == EM_KEY_A)
 				{
-					EventPlayerPositionX -= grid.IntervalX;
-					playerPos.CurrentPosX -= 1;
-					PathFind();
+					if (playerPos.CurrentPosX != 0)
+					{
+						EventPlayerPositionX -= grid.IntervalX;
+						playerPos.CurrentPosX -= 1;
+						PathFind();
+					}
 				}
-			}
-			if (e.GetKeyCode() == EM_KEY_W)
-			{
-				if (playerPos.CurrentPosY != 0)
+				if (e.GetKeyCode() == EM_KEY_W)
 				{
-					EventPlayerPositionY += grid.IntervalY;
-					playerPos.CurrentPosY -= 1;
-					PathFind();
+					if (playerPos.CurrentPosY != 0)
+					{
+						EventPlayerPositionY += grid.IntervalY;
+						playerPos.CurrentPosY -= 1;
+						PathFind();
+					}
 				}
-			}
-			if (e.GetKeyCode() == EM_KEY_S)
-			{
-				if (playerPos.CurrentPosY != playerPos.MaxPosY)
+				if (e.GetKeyCode() == EM_KEY_S)
 				{
-					EventPlayerPositionY -= grid.IntervalY;
-					playerPos.CurrentPosY += 1;
-					PathFind();
+					if (playerPos.CurrentPosY != playerPos.MaxPosY)
+					{
+						EventPlayerPositionY -= grid.IntervalY;
+						playerPos.CurrentPosY += 1;
+						PathFind();
+					}
 				}
-			}
-			EM_LOG_DEBUG("Player: X: {0}, Y: {1}", playerPos.CurrentPosX, playerPos.CurrentPosY);
-			EM_LOG_DEBUG("Monster: X: {0}, Y: {1}", monsterPos.CurrentPosX, monsterPos.CurrentPosY);
-			if ((playerPos.CurrentPosX == monsterPos.CurrentPosX) && (playerPos.CurrentPosY == monsterPos.CurrentPosY))
-			{
-				EM_LOG_ERROR("GAME OVER!");
+				if ((playerPos.CurrentPosX == monsterPos.CurrentPosX) && (playerPos.CurrentPosY == monsterPos.CurrentPosY))
+				{
+					GameOver = true;
+				}
 			}
 		}
 	}

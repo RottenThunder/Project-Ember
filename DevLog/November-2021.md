@@ -43,3 +43,8 @@
 ## Day 35 (18/11/2021)
 - Commit "Ref Counting"
     - The engine now has a Reference Counting system for std::shared_ptr and std::unique_ptr
+
+## Day 38 (21/11/2021)
+- Commit "Textures & Blending"
+    - The engine can now render textures
+    - Textures with the Alpha channel are also supported (for example: .png)

@@ -20,10 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 31 (14/11/2021)
-- Commit "Shader Abstraction"
-    - Shaders are being abstracted, aswell as uniforms can now be changed dynamically
-
 ### Day 32 (15/11/2021)
 - Commit "ImGui Docking"
     - ImGui now has the ability to dock any ui window it creates inside of the window
@@ -32,3 +28,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ### Day 35 (18/11/2021)
 - Commit "Ref Counting"
     - The engine now has a Reference Counting system for std::shared_ptr and std::unique_ptr
+
+### Day 38 (21/11/2021)
+- Commit "Textures & Blending"
+    - The engine can now render textures
+    - Textures with the Alpha channel are also supported (for example: .png)

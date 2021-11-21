@@ -6,6 +6,10 @@ namespace Ember
 {
 	Renderer::SceneData* Renderer::sceneData = new Renderer::SceneData;
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{

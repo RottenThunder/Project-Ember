@@ -16,6 +16,8 @@ namespace Ember
 
 		static SceneData* sceneData;
 	public:
+		static void Init();
+
 		static void BeginScene(OrthographicCamera& camera);
 		static void EndScene();
 

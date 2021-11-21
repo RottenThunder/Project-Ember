@@ -8,6 +8,11 @@ namespace Ember
 	private:
 		static RendererAPI* rendererAPI;
 	public:
+		inline static void Init()
+		{
+			rendererAPI->Init();
+		}
+
 		inline static void SetClearColour(const glm::vec4& colour)
 		{
 			rendererAPI->SetClearColour(colour);

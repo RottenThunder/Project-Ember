@@ -13,6 +13,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "vendor/glfw/include"
 IncludeDir["GLAD"] = "vendor/glad/include"
 IncludeDir["GLM"] = "Ember/vendor/glm"
+IncludeDir["STB_IMAGE"] = "Ember/vendor/stb_image"
 IncludeDir["ImGui"] = "Ember/vendor/imgui"
 
 group "Dependencies"
@@ -38,6 +39,8 @@ project "Ember"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -49,6 +52,7 @@ project "Ember"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.STB_IMAGE}",
 		"vendor/spdlog/include"
 	}
 

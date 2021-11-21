@@ -18,6 +18,8 @@ namespace Ember
 		MainWindow = std::unique_ptr<Window>(Window::Create());
 		MainWindow->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
 
+		Renderer::Init();
+
 		imguiLayer = new ImGuiLayer();
 		PushOverlay(imguiLayer);
 	}
