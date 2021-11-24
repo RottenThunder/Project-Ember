@@ -1,12 +1,15 @@
 #pragma once
 //---EMBER.H----------------------------------------
 
-//---CORE-------------------------------------------
-
-
+#ifndef EM_ENTRYPOINT
+#define EM_ENTRYPOINT
 //---Entry Point------------------------------------
 #include "Ember/Core/EntryPoint.h"
 //--------------------------------------------------
+#endif
+
+//---CORE-------------------------------------------
+
 
 //---For Creating An Application--------------------
 #include "Ember/Core/Application.h"

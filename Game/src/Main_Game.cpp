@@ -3,7 +3,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "Ember/Platform/OpenGL/OpenGLShader.h"
-#include "EntityPos.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "CollisionHandler.h"
+#include "Test(EntityPos).h"
 #include "Grid.h"
 #include "Random.h"
 
@@ -297,7 +300,7 @@ public:
 
 
 
-class GameLayer : public Ember::Layer
+class TestGameLayer : public Ember::Layer
 {
 private:
 	Grid grid;
@@ -351,8 +354,8 @@ private:
 	float_t CameraZoom = 0.0f;
 	//--------------------------------------------------
 public:
-	GameLayer()
-		: Layer("Game"), OrthoCamera(-3.2f, 3.2f, -1.8f, 1.8f), CameraPosition(0.0f)
+	TestGameLayer()
+		: Layer("TestGame"), OrthoCamera(-3.2f, 3.2f, -1.8f, 1.8f), CameraPosition(0.0f)
 	{
 		grid.InitNewGrid(gridX, gridY);
 
@@ -767,6 +770,105 @@ public:
 
 
 
+class GameLayer : public Ember::Layer
+{
+private:
+	Player player;
+	Enemy enemy;
+	CollisionHandler collisionHandler;
+
+	//---CAMERA-----------------------------------------
+	Ember::OrthographicCamera OrthoCamera;
+	//--------------------------------------------------
+public:
+	GameLayer()
+		: Layer("Game"), OrthoCamera(-6.4f, 6.4f, -3.6f, 3.6f)
+	{
+		player.Init();
+		enemy.Init();
+		enemy.EnemyPosition = { -4.0f, 0.0f, 0.0f };
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("Player Colliders");
+		ImGui::Text("Top Left: %i", player.TopLeftColliding);
+		ImGui::Text("Top Right: %i", player.TopRightColliding);
+		ImGui::Text("Bottom Left: %i", player.BottomLeftColliding);
+		ImGui::Text("Bottom Right: %i", player.BottomRightColliding);
+		ImGui::NewLine();
+		ImGui::Text("CanMove+X: %i", collisionHandler.CanMovePositiveX);
+		ImGui::Text("CanMove-X: %i", collisionHandler.CanMoveNegativeX);
+		ImGui::Text("CanMove+Y: %i", collisionHandler.CanMovePositiveY);
+		ImGui::Text("CanMove-Y: %i", collisionHandler.CanMoveNegativeY);
+		ImGui::End();
+	}
+
+	void OnUpdate(Ember::DeltaTime DT) override
+	{
+		//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
+		player.SetColliderValues();
+		enemy.SetColliderValues();
+
+		Ember::RenderCommand::SetClearColour({ 0.0f, 1.0f, 0.0f, 1.0f });
+		Ember::RenderCommand::Clear();
+
+		collisionHandler.HandleCollisionsForPlayer(player, enemy.MinColliderPosition, enemy.MaxColliderPosition);
+		collisionHandler.BlockMovementForPlayer(player, enemy.MinColliderPosition, enemy.MaxColliderPosition);
+
+		if (collisionHandler.CanMovePositiveX)
+		{
+			if (Ember::Input::IsKeyPressed(EM_KEY_D))
+			{
+				player.PlayerPosition.x += player.PlayerSpeed * DT;
+			}
+		}
+		if (collisionHandler.CanMoveNegativeX)
+		{
+			if (Ember::Input::IsKeyPressed(EM_KEY_A))
+			{
+				player.PlayerPosition.x -= player.PlayerSpeed * DT;
+			}
+		}
+		if (collisionHandler.CanMovePositiveY)
+		{
+			if (Ember::Input::IsKeyPressed(EM_KEY_W))
+			{
+				player.PlayerPosition.y += player.PlayerSpeed * DT;
+			}
+		}
+		if (collisionHandler.CanMoveNegativeY)
+		{
+			if (Ember::Input::IsKeyPressed(EM_KEY_S))
+			{
+				player.PlayerPosition.y -= player.PlayerSpeed * DT;
+			}
+		}
+
+		player.UpdateTransform();
+		enemy.UpdateTransform();
+
+		Ember::Renderer::BeginScene(OrthoCamera);
+
+		enemy.EnemyTexture->Bind();
+		Ember::Renderer::Submit(enemy.EnemyTextureShader, enemy.EnemyVertexArray, enemy.EnemyTransform);
+
+		player.PlayerTexture->Bind();
+		Ember::Renderer::Submit(player.PlayerTextureShader, player.PlayerVertexArray, player.PlayerTransform);
+
+		Ember::Renderer::EndScene();
+	}
+
+	void OnEvent(Ember::Event& event) override
+	{
+
+	}
+};
+
+
+
+
+
 
 
 
@@ -776,6 +878,7 @@ public:
 	GameApplication()
 	{
 		//PushLayer(new ExampleLayer);
+		//PushLayer(new TestGameLayer);
 		PushLayer(new GameLayer);
 	}
 

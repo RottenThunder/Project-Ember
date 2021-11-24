@@ -48,3 +48,8 @@
 - Commit "Textures & Blending"
     - The engine can now render textures
     - Textures with the Alpha channel are also supported (for example: .png)
+
+## Day 41 (24/11/2021)
+- Commit "Game Dev - Starting a Collision System"
+    - I've been experimenting how to make a basic Collision System and had no luck yet
+    - Entities collide but unfortunately the way in which it blocks movement is not working correctly

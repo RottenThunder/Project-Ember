@@ -20,11 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 32 (15/11/2021)
-- Commit "ImGui Docking"
-    - ImGui now has the ability to dock any ui window it creates inside of the window
-    - Any Layer can now have access to ImGui Renderering
-
 ### Day 35 (18/11/2021)
 - Commit "Ref Counting"
     - The engine now has a Reference Counting system for std::shared_ptr and std::unique_ptr
@@ -33,3 +28,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Textures & Blending"
     - The engine can now render textures
     - Textures with the Alpha channel are also supported (for example: .png)
+
+### Day 41 (24/11/2021)
+- Commit "Game Dev - Starting a Collision System"
+    - I've been experimenting how to make a basic Collision System and had no luck yet
+    - Entities collide but unfortunately the way in which it blocks movement is not working correctly
