@@ -20,10 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 35 (18/11/2021)
-- Commit "Ref Counting"
-    - The engine now has a Reference Counting system for std::shared_ptr and std::unique_ptr
-
 ### Day 38 (21/11/2021)
 - Commit "Textures & Blending"
     - The engine can now render textures
@@ -33,3 +29,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Game Dev - Starting a Collision System"
     - I've been experimenting how to make a basic Collision System and had no luck yet
     - Entities collide but unfortunately the way in which it blocks movement is not working correctly
+
+### Day 45 (28/11/2021)
+- Commit "Game Dev - Mostly Finished Collision System"
+    - I've managed to mostly finish the collision system for the game
+    - There is still a few more tweaks that i still need to do
