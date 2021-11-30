@@ -20,11 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 38 (21/11/2021)
-- Commit "Textures & Blending"
-    - The engine can now render textures
-    - Textures with the Alpha channel are also supported (for example: .png)
-
 ### Day 41 (24/11/2021)
 - Commit "Game Dev - Starting a Collision System"
     - I've been experimenting how to make a basic Collision System and had no luck yet
@@ -34,3 +29,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Game Dev - Mostly Finished Collision System"
     - I've managed to mostly finish the collision system for the game
     - There is still a few more tweaks that i still need to do
+
+### Day 47 (30/11/2021)
+- Commit "Game Dev - Fully Finished Collision System"
+    - I've managed to finish the collision system for the game
+    - I also made the camera follow the player

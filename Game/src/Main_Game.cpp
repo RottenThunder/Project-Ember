@@ -777,27 +777,43 @@ private:
 	bool CanMovePositiveY = true;
 	bool CanMoveNegativeY = true;
 	Entity enemy;
-	std::array<Entity, 10> TopWall;
-	std::array<Entity, 10> SideWall;
+	std::array<Entity, 12> NorthWall;
+	std::array<Entity, 6> WestWall;
+	std::array<Entity, 6> EastWall;
+	std::array<Entity, 12> SouthWall;
+
 	Ember::OrthographicCamera OrthoCamera;
 public:
 	GameLayer()
-		: Layer("Game"), OrthoCamera(-6.4f, 6.4f, -3.6f, 3.6f)
+		: Layer("Game"), OrthoCamera(-9.6f, 9.6f, -5.4f, 5.4f)
 	{
 		player.Init(true, "assets/textures/Pokemon_Player_Front.png");
 		enemy.Init(true, "assets/textures/Pokemon_NPC_Front.png");
 		enemy.EntityPosition.x = 3.0f;
-		for (float_t i = 0; i < TopWall.size(); i++)
+		enemy.EntityPosition.y = -1.0f;
+		for (float_t i = 0; i < NorthWall.size(); i++)
 		{
-			TopWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
-			TopWall[i].EntityPosition.x = -5.0f + i;
-			TopWall[i].EntityPosition.y = 3.0f;
+			NorthWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
+			NorthWall[i].EntityPosition.x = -5.5f + i;
+			NorthWall[i].EntityPosition.y = 3.0f;
 		}
-		for (float_t i = 0; i < SideWall.size(); i++)
+		for (float_t i = 0; i < WestWall.size(); i++)
 		{
-			SideWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
-			SideWall[i].EntityPosition.y = -5.0f + i;
-			SideWall[i].EntityPosition.x = -3.0f;
+			WestWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
+			WestWall[i].EntityPosition.y = -5.0f + i;
+			WestWall[i].EntityPosition.x = -5.5f;
+		}
+		for (float_t i = 0; i < EastWall.size(); i++)
+		{
+			EastWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
+			EastWall[i].EntityPosition.y = -5.0f + i;
+			EastWall[i].EntityPosition.x = 5.5f;
+		}
+		for (float_t i = 0; i < SouthWall.size(); i++)
+		{
+			SouthWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
+			SouthWall[i].EntityPosition.x = -5.5f + i;
+			SouthWall[i].EntityPosition.y = -3.0f;
 		}
 	}
 
@@ -805,15 +821,39 @@ public:
 	{
 		ImGui::Begin("Player Stats");
 		ImGui::Text("Position: %f, %f", player.EntityPosition.x, player.EntityPosition.y);
-		ImGui::Text("CanMovePositiveX: %i", CanMovePositiveX);
-		ImGui::Text("CanMovePositiveY: %i", CanMovePositiveY);
-		ImGui::Text("CanMoveNegativeX: %i", CanMoveNegativeX);
-		ImGui::Text("CanMoveNegativeY: %i", CanMoveNegativeY);
-		ImGui::NewLine();
-		ImGui::Text("BL: %i", player.ColliderActiveBL);
-		ImGui::Text("BR: %i", player.ColliderActiveBR);
-		ImGui::Text("TL: %i", player.ColliderActiveTL);
-		ImGui::Text("TR: %i", player.ColliderActiveTR);
+		if (CanMovePositiveX)
+		{
+			ImGui::Text("CanMovePositiveX: True");
+		}
+		else
+		{
+			ImGui::Text("CanMovePositiveX: False");
+		}
+		if (CanMoveNegativeX)
+		{
+			ImGui::Text("CanMoveNegativeX: True");
+		}
+		else
+		{
+			ImGui::Text("CanMoveNegativeX: False");
+		}
+		if (CanMovePositiveY)
+		{
+			ImGui::Text("CanMovePositiveY: True");
+		}
+		else
+		{
+			ImGui::Text("CanMovePositiveY: False");
+		}
+		if (CanMoveNegativeY)
+		{
+			ImGui::Text("CanMoveNegativeY: True");
+		}
+		else
+		{
+			ImGui::Text("CanMoveNegativeY: False");
+		}
+
 		ImGui::End();
 	}
 
@@ -821,7 +861,7 @@ public:
 	{
 		//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
 
-		Ember::RenderCommand::SetClearColour({ 0.0f, 1.0f, 0.0f, 1.0f });
+		Ember::RenderCommand::SetClearColour({ 1.0f, 0.84f, 0.0f, 1.0f });
 		Ember::RenderCommand::Clear();
 
 		if (CanMovePositiveX)
@@ -853,42 +893,60 @@ public:
 			}
 		}
 
-		CanMovePositiveX = true;
-		CanMovePositiveY = true;
-		CanMoveNegativeX = true;
-		CanMoveNegativeY = true;
-
 		Ember::Renderer::BeginScene(OrthoCamera);
 
 		enemy.UpdateTransform();
 		enemy.EntityTexture->Bind();
 		Ember::Renderer::Submit(enemy.EntityTextureShader, enemy.EntityVertexArray, enemy.EntityTransform);
 
-		for (uint8_t i = 0; i < TopWall.size(); i++)
+		for (uint8_t i = 0; i < NorthWall.size(); i++)
 		{
-			TopWall[i].UpdateTransform();
-			TopWall[i].EntityTexture->Bind();
-			Ember::Renderer::Submit(TopWall[i].EntityTextureShader, TopWall[i].EntityVertexArray, TopWall[i].EntityTransform);
+			NorthWall[i].UpdateTransform();
+			NorthWall[i].EntityTexture->Bind();
+			Ember::Renderer::Submit(NorthWall[i].EntityTextureShader, NorthWall[i].EntityVertexArray, NorthWall[i].EntityTransform);
 		}
-		for (uint8_t i = 0; i < SideWall.size(); i++)
+		for (uint8_t i = 0; i < WestWall.size(); i++)
 		{
-			SideWall[i].UpdateTransform();
-			SideWall[i].EntityTexture->Bind();
-			Ember::Renderer::Submit(SideWall[i].EntityTextureShader, SideWall[i].EntityVertexArray, SideWall[i].EntityTransform);
+			WestWall[i].UpdateTransform();
+			WestWall[i].EntityTexture->Bind();
+			Ember::Renderer::Submit(WestWall[i].EntityTextureShader, WestWall[i].EntityVertexArray, WestWall[i].EntityTransform);
+		}
+		for (uint8_t i = 0; i < EastWall.size(); i++)
+		{
+			EastWall[i].UpdateTransform();
+			EastWall[i].EntityTexture->Bind();
+			Ember::Renderer::Submit(EastWall[i].EntityTextureShader, EastWall[i].EntityVertexArray, EastWall[i].EntityTransform);
+		}
+		for (uint8_t i = 0; i < SouthWall.size(); i++)
+		{
+			SouthWall[i].UpdateTransform();
+			SouthWall[i].EntityTexture->Bind();
+			Ember::Renderer::Submit(SouthWall[i].EntityTextureShader, SouthWall[i].EntityVertexArray, SouthWall[i].EntityTransform);
 		}
 
 		player.UpdateTransform();
-		player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY, enemy.EntityPosition);
-		for (uint8_t i = 0; i < TopWall.size(); i++)
+		player.CalculateCollisions(enemy.EntityPosition);
+		for (uint8_t i = 0; i < NorthWall.size(); i++)
 		{
-			player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY, TopWall[i].EntityPosition);
+			player.CalculateCollisions(NorthWall[i].EntityPosition);
 		}
-		for (uint8_t i = 0; i < SideWall.size(); i++)
+		for (uint8_t i = 0; i < WestWall.size(); i++)
 		{
-			player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY, SideWall[i].EntityPosition);
+			player.CalculateCollisions(WestWall[i].EntityPosition);
 		}
+		for (uint8_t i = 0; i < EastWall.size(); i++)
+		{
+			player.CalculateCollisions(EastWall[i].EntityPosition);
+		}
+		for (uint8_t i = 0; i < SouthWall.size(); i++)
+		{
+			player.CalculateCollisions(SouthWall[i].EntityPosition);
+		}
+		player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY);
 		player.EntityTexture->Bind();
 		Ember::Renderer::Submit(player.EntityTextureShader, player.EntityVertexArray, player.EntityTransform);
+
+		OrthoCamera.SetPosition(player.EntityPosition);
 
 		Ember::Renderer::EndScene();
 	}

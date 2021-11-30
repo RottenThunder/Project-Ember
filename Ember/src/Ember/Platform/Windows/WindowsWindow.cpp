@@ -51,7 +51,7 @@ namespace Ember
 		context->Init();
 
 		glfwSetWindowUserPointer(window, &windowData);
-		SetVSync(true);
+		SetVSync(false);
 
 		// Setting Event Callbacks (GLFW)
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* _window, int32_t width, int32_t height)

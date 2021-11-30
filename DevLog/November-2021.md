@@ -58,3 +58,8 @@
 - Commit "Game Dev - Mostly Finished Collision System"
     - I've managed to mostly finish the collision system for the game
     - There is still a few more tweaks that i still need to do
+
+## Day 47 (30/11/2021)
+- Commit "Game Dev - Fully Finished Collision System"
+    - I've managed to finish the collision system for the game
+    - I also made the camera follow the player
