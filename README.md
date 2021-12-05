@@ -20,11 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 41 (24/11/2021)
-- Commit "Game Dev - Starting a Collision System"
-    - I've been experimenting how to make a basic Collision System and had no luck yet
-    - Entities collide but unfortunately the way in which it blocks movement is not working correctly
-
 ### Day 45 (28/11/2021)
 - Commit "Game Dev - Mostly Finished Collision System"
     - I've managed to mostly finish the collision system for the game
@@ -34,3 +29,7 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Game Dev - Fully Finished Collision System"
     - I've managed to finish the collision system for the game
     - I also made the camera follow the player
+
+### Day 52 (05/12/2021)
+- Commit "Shader Asset Files"
+    - I've added the functionality to make the shader code be read from a file

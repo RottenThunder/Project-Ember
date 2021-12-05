@@ -3,13 +3,20 @@
 #include "Ember/Core/Core.h"
 #include <glm/glm.hpp>
 
+// Need to Remove This!!!
+typedef unsigned int GLenum;
+
 namespace Ember
 {
 	class EMBER_API OpenGLShader : public Shader
 	{
 	private:
 		uint32_t RendererID;
+		void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
+		std::string ReadFile(const std::string& filePath);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
 	public:
+		OpenGLShader(const std::string& filePath);
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 

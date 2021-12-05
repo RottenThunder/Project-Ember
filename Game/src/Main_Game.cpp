@@ -7,6 +7,7 @@
 #include "Test(EntityPos).h"
 #include "Grid.h"
 #include "Random.h"
+#include "LevelFileReader.h"
 
 class ExampleLayer : public Ember::Layer
 {
@@ -16,7 +17,7 @@ private:
 	Ember::Ref<Ember::VertexBuffer> squareVertexBuffer;
 	Ember::Ref<Ember::IndexBuffer> squareIndexBuffer;
 	Ember::Ref<Ember::Shader> squareShader, squareTextureShader;
-	Ember::Ref<Ember::Texture2D> squareTexture, squareTexture2;
+	Ember::Ref<Ember::Texture2D> squareTexture;
 	glm::vec3 squarePosition;
 	glm::vec3 squareColour = { 0.9f, 0.1f, 0.4f };
 	//--------------------------------------------------
@@ -99,44 +100,9 @@ public:
 
 		squareShader.reset(Ember::Shader::Create(vertexSrcSquare, fragmentSrcSquare));
 
+		squareTextureShader.reset(Ember::Shader::Create("assets/shaders/Texture.glsl"));
 
-		std::string vertexSrcSquareTexture = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec2 v_TexCoord;
-
-			void main()
-			{
-				v_TexCoord = a_TexCoord;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
-			}
-		)";
-
-		std::string fragmentSrcSquareTexture = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 Colour;
-
-			in vec2 v_TexCoord;
-
-			uniform sampler2D u_Texture;
-
-			void main()
-			{
-				Colour = texture(u_Texture, v_TexCoord);
-			}
-		)";
-
-		squareTextureShader.reset(Ember::Shader::Create(vertexSrcSquareTexture, fragmentSrcSquareTexture));
-
-		squareTexture = Ember::Texture2D::Create("assets/textures/Checkerboard.png");
-		squareTexture2 = Ember::Texture2D::Create("assets/textures/TestCharacter_0001.png");
+		squareTexture = Ember::Texture2D::Create("assets/textures/Checkerboard_RGB.png");
 
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareTextureShader)->Bind();
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareTextureShader)->UploadUniformInt("u_Texture", 0);
@@ -260,8 +226,6 @@ public:
 		Ember::Renderer::BeginScene(OrthoCamera);
 
 		squareTexture->Bind();
-		Ember::Renderer::Submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-		squareTexture2->Bind();
 		Ember::Renderer::Submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//Triangle
@@ -771,17 +735,13 @@ public:
 class GameLayer : public Ember::Layer
 {
 private:
+	LevelFileReader fileReader;
 	Entity player;
 	bool CanMovePositiveX = true;
 	bool CanMoveNegativeX = true;
 	bool CanMovePositiveY = true;
 	bool CanMoveNegativeY = true;
 	Entity enemy;
-	std::array<Entity, 12> NorthWall;
-	std::array<Entity, 6> WestWall;
-	std::array<Entity, 6> EastWall;
-	std::array<Entity, 12> SouthWall;
-
 	Ember::OrthographicCamera OrthoCamera;
 public:
 	GameLayer()
@@ -791,30 +751,8 @@ public:
 		enemy.Init(true, "assets/textures/Pokemon_NPC_Front.png");
 		enemy.EntityPosition.x = 3.0f;
 		enemy.EntityPosition.y = -1.0f;
-		for (float_t i = 0; i < NorthWall.size(); i++)
-		{
-			NorthWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
-			NorthWall[i].EntityPosition.x = -5.5f + i;
-			NorthWall[i].EntityPosition.y = 3.0f;
-		}
-		for (float_t i = 0; i < WestWall.size(); i++)
-		{
-			WestWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
-			WestWall[i].EntityPosition.y = -5.0f + i;
-			WestWall[i].EntityPosition.x = -5.5f;
-		}
-		for (float_t i = 0; i < EastWall.size(); i++)
-		{
-			EastWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
-			EastWall[i].EntityPosition.y = -5.0f + i;
-			EastWall[i].EntityPosition.x = 5.5f;
-		}
-		for (float_t i = 0; i < SouthWall.size(); i++)
-		{
-			SouthWall[i].Init(false, "assets/textures/Checkerboard_RGB.png");
-			SouthWall[i].EntityPosition.x = -5.5f + i;
-			SouthWall[i].EntityPosition.y = -3.0f;
-		}
+		//fileReader.Init("assets/levels/Room1.level");
+		//fileReader.Read("assets/levels/Room1.level");
 	}
 
 	void OnImGuiRender() override
@@ -899,49 +837,8 @@ public:
 		enemy.EntityTexture->Bind();
 		Ember::Renderer::Submit(enemy.EntityTextureShader, enemy.EntityVertexArray, enemy.EntityTransform);
 
-		for (uint8_t i = 0; i < NorthWall.size(); i++)
-		{
-			NorthWall[i].UpdateTransform();
-			NorthWall[i].EntityTexture->Bind();
-			Ember::Renderer::Submit(NorthWall[i].EntityTextureShader, NorthWall[i].EntityVertexArray, NorthWall[i].EntityTransform);
-		}
-		for (uint8_t i = 0; i < WestWall.size(); i++)
-		{
-			WestWall[i].UpdateTransform();
-			WestWall[i].EntityTexture->Bind();
-			Ember::Renderer::Submit(WestWall[i].EntityTextureShader, WestWall[i].EntityVertexArray, WestWall[i].EntityTransform);
-		}
-		for (uint8_t i = 0; i < EastWall.size(); i++)
-		{
-			EastWall[i].UpdateTransform();
-			EastWall[i].EntityTexture->Bind();
-			Ember::Renderer::Submit(EastWall[i].EntityTextureShader, EastWall[i].EntityVertexArray, EastWall[i].EntityTransform);
-		}
-		for (uint8_t i = 0; i < SouthWall.size(); i++)
-		{
-			SouthWall[i].UpdateTransform();
-			SouthWall[i].EntityTexture->Bind();
-			Ember::Renderer::Submit(SouthWall[i].EntityTextureShader, SouthWall[i].EntityVertexArray, SouthWall[i].EntityTransform);
-		}
-
 		player.UpdateTransform();
 		player.CalculateCollisions(enemy.EntityPosition);
-		for (uint8_t i = 0; i < NorthWall.size(); i++)
-		{
-			player.CalculateCollisions(NorthWall[i].EntityPosition);
-		}
-		for (uint8_t i = 0; i < WestWall.size(); i++)
-		{
-			player.CalculateCollisions(WestWall[i].EntityPosition);
-		}
-		for (uint8_t i = 0; i < EastWall.size(); i++)
-		{
-			player.CalculateCollisions(EastWall[i].EntityPosition);
-		}
-		for (uint8_t i = 0; i < SouthWall.size(); i++)
-		{
-			player.CalculateCollisions(SouthWall[i].EntityPosition);
-		}
 		player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY);
 		player.EntityTexture->Bind();
 		Ember::Renderer::Submit(player.EntityTextureShader, player.EntityVertexArray, player.EntityTransform);
