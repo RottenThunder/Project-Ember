@@ -12,11 +12,15 @@
 class ExampleLayer : public Ember::Layer
 {
 private:
+	//---SHADER LIBRARY---------------------------------
+	Ember::ShaderLibrary shaderLibrary;
+	//--------------------------------------------------
+
 	//---SQUARE-----------------------------------------
 	Ember::Ref<Ember::VertexArray> squareVertexArray;
 	Ember::Ref<Ember::VertexBuffer> squareVertexBuffer;
 	Ember::Ref<Ember::IndexBuffer> squareIndexBuffer;
-	Ember::Ref<Ember::Shader> squareShader, squareTextureShader;
+	Ember::Ref<Ember::Shader> squareShader/*, squareTextureShader*/;
 	Ember::Ref<Ember::Texture2D> squareTexture;
 	glm::vec3 squarePosition;
 	glm::vec3 squareColour = { 0.9f, 0.1f, 0.4f };
@@ -98,9 +102,9 @@ public:
 			}
 		)";
 
-		squareShader.reset(Ember::Shader::Create(vertexSrcSquare, fragmentSrcSquare));
+		squareShader = Ember::Shader::Create("SquareShader", vertexSrcSquare, fragmentSrcSquare);
 
-		squareTextureShader.reset(Ember::Shader::Create("assets/shaders/Texture.glsl"));
+		auto squareTextureShader = shaderLibrary.Load("assets/shaders/Texture.glsl");
 
 		squareTexture = Ember::Texture2D::Create("assets/textures/Checkerboard_RGB.png");
 
@@ -160,7 +164,7 @@ public:
 			}
 		)";
 
-		triangleShader.reset(Ember::Shader::Create(vertexSrcTriangle, fragmentSrcTriangle));
+		triangleShader = Ember::Shader::Create("TriangleShader", vertexSrcTriangle, fragmentSrcTriangle);
 
 		//--------------------------------------------------
 	}
@@ -224,6 +228,8 @@ public:
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Colour", squareColour);
 
 		Ember::Renderer::BeginScene(OrthoCamera);
+
+		auto squareTextureShader = shaderLibrary.Get("Texture");
 
 		squareTexture->Bind();
 		Ember::Renderer::Submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
@@ -378,7 +384,7 @@ public:
 			}
 		)";
 
-		backgroundShader.reset(Ember::Shader::Create(vertexSrcBackground, fragmentSrcBackground));
+		backgroundShader = Ember::Shader::Create("BackgroundShader", vertexSrcBackground, fragmentSrcBackground);
 
 		//--------------------------------------------------
 
@@ -434,7 +440,7 @@ public:
 			}
 		)";
 
-		playerShader.reset(Ember::Shader::Create(vertexSrcPlayer, fragmentSrcPlayer));
+		playerShader = Ember::Shader::Create("PlayerShader", vertexSrcPlayer, fragmentSrcPlayer);
 
 		//--------------------------------------------------
 
@@ -491,7 +497,7 @@ public:
 			}
 		)";
 
-		monsterShader.reset(Ember::Shader::Create(vertexSrcMonster, fragmentSrcMonster));
+		monsterShader = Ember::Shader::Create("MonsterShader", vertexSrcMonster, fragmentSrcMonster);
 
 		//--------------------------------------------------
 

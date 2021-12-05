@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include "Ember/Core/Core.h"
 
 namespace Ember
@@ -12,7 +13,22 @@ namespace Ember
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
 
-		static Shader* Create(const std::string& filePath);
-		static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+		virtual const std::string& GetName() const = 0;
+
+		static Ref<Shader> Create(const std::string& filePath);
+		static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+	};
+
+	class EMBER_API ShaderLibrary
+	{
+	private:
+		std::unordered_map<std::string, Ref<Shader>> Shaders;
+	public:
+		void Add(const std::string& name, const Ref<Shader>& shader);
+		void Add(const Ref<Shader>& shader);
+		Ref<Shader> Load(const std::string& filePath);
+		Ref<Shader> Load(const std::string& name, const std::string& filePath);
+		Ref<Shader> Get(const std::string& name);
+		bool Exists(const std::string& name) const;
 	};
 }

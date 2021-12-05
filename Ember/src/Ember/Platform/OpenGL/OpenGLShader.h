@@ -12,16 +12,19 @@ namespace Ember
 	{
 	private:
 		uint32_t RendererID;
+		std::string Name;
 		void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
 		std::string ReadFile(const std::string& filePath);
 		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
 	public:
 		OpenGLShader(const std::string& filePath);
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
+
+		virtual const std::string& GetName() const override { return Name; }
 
 		void UploadUniformInt(const std::string& name, int32_t value);
 

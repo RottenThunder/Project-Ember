@@ -20,11 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 45 (28/11/2021)
-- Commit "Game Dev - Mostly Finished Collision System"
-    - I've managed to mostly finish the collision system for the game
-    - There is still a few more tweaks that i still need to do
-
 ### Day 47 (30/11/2021)
 - Commit "Game Dev - Fully Finished Collision System"
     - I've managed to finish the collision system for the game
@@ -33,3 +28,5 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ### Day 52 (05/12/2021)
 - Commit "Shader Asset Files"
     - I've added the functionality to make the shader code be read from a file
+- Commit "Shader Library"
+    - I've added a shader library system for the engine because some shaders can be reused for other objects

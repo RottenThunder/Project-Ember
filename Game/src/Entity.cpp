@@ -25,7 +25,7 @@ void Entity::Init(bool createCharacter, const std::string& textureFilePath)
 
 	EntityVertexArray->SetIndexBuffer(EntityIndexBuffer);
 
-	EntityTextureShader.reset(Ember::Shader::Create("assets/shaders/Texture.glsl"));
+	EntityTextureShader = Ember::Shader::Create("assets/shaders/Texture.glsl");
 
 	EntityTexture = Ember::Texture2D::Create(textureFilePath);
 
