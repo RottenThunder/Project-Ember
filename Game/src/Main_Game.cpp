@@ -742,6 +742,8 @@ class GameLayer : public Ember::Layer
 {
 private:
 	LevelFileReader fileReader;
+	std::unordered_map<uint32_t, std::string> MapData;
+	std::vector<Entity> Map;
 	Entity player;
 	bool CanMovePositiveX = true;
 	bool CanMoveNegativeX = true;
@@ -755,10 +757,21 @@ public:
 	{
 		player.Init(true, "assets/textures/Pokemon_Player_Front.png");
 		enemy.Init(true, "assets/textures/Pokemon_NPC_Front.png");
+		player.EntityPosition.x = 9.0f;
+		player.EntityPosition.y = -4.0f;
 		enemy.EntityPosition.x = 3.0f;
 		enemy.EntityPosition.y = -1.0f;
-		//fileReader.Init("assets/levels/Room1.level");
-		//fileReader.Read("assets/levels/Room1.level");
+		MapData = fileReader.Init("assets/levels/Room1.level");
+		Map.reserve(fileReader.GetCurrentWidth() * fileReader.GetCurrentHeight());
+		for (const auto& n : MapData)
+		{
+			Map.emplace_back();
+			Map.back().Init(false, n.second);
+			int16_t tempY = ((n.first - 1) / fileReader.GetCurrentWidth()) * (-1);
+			uint16_t tempX = (n.first - 1) - ((tempY * (-1)) * fileReader.GetCurrentWidth());
+			Map.back().EntityPosition.x = tempX;
+			Map.back().EntityPosition.y = tempY;
+		}
 	}
 
 	void OnImGuiRender() override
@@ -839,12 +852,19 @@ public:
 
 		Ember::Renderer::BeginScene(OrthoCamera);
 
+		for (auto x : Map)
+		{
+			x.UpdateTransform();
+			x.EntityTexture->Bind();
+			Ember::Renderer::Submit(x.EntityTextureShader, x.EntityVertexArray, x.EntityTransform);
+		}
+
 		enemy.UpdateTransform();
 		enemy.EntityTexture->Bind();
 		Ember::Renderer::Submit(enemy.EntityTextureShader, enemy.EntityVertexArray, enemy.EntityTransform);
+		player.CalculateCollisions(enemy.EntityPosition);
 
 		player.UpdateTransform();
-		player.CalculateCollisions(enemy.EntityPosition);
 		player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY);
 		player.EntityTexture->Bind();
 		Ember::Renderer::Submit(player.EntityTextureShader, player.EntityVertexArray, player.EntityTransform);

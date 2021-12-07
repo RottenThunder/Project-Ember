@@ -1,21 +1,22 @@
 #pragma once
-#include <vector>
 #include <fstream>
 #include "Entity.h"
 
 class LevelFileReader
 {
 private:
-	std::fstream file;
-	int8_t character1;
-	int8_t character2;
-	uint16_t lineCount = 0;
-	uint16_t codeCount = 0;
-	uint8_t codeCountTemp = 0;
-	std::vector<Entity> RowOfEntities;
+	std::ifstream file;
+	uint16_t width;
+	uint16_t height;
+
+	std::unordered_map<std::string, std::string> TileDataBase =
+	{
+		{"00", "assets/textures/Checkerboard_RGB.png"}
+	};
+
 public:
-	void Init(const std::string& levelFile);
-	void Read(const std::string& levelFile);
-	uint16_t GetLineCount();
-	uint16_t GetCodeCount();
+	std::unordered_map<uint32_t, std::string> Init(const std::string& levelFile);
+
+	uint16_t GetCurrentWidth();
+	uint16_t GetCurrentHeight();
 };

@@ -1,62 +1,55 @@
 #include "LevelFileReader.h"
 
-void LevelFileReader::Init(const std::string& levelFile)
+std::unordered_map<uint32_t, std::string> LevelFileReader::Init(const std::string& levelFile)
 {
-	lineCount = 0;
-	codeCount = 0;
-	codeCountTemp = 0;
+	std::unordered_map<uint32_t, std::string> mapData;
 	file.open(levelFile, std::ios::in);
-	while (!(file.eof()))
+	if (file.is_open())
 	{
-		file >> character1;
-		if (character1 == 47)
+		std::string currentLine;
+		std::string strWidth;
+		std::string strHeight;
+		std::getline(file, currentLine);
+		size_t diff1 = currentLine.find("x");
+		size_t diff2 = currentLine.find("/");
+		for (size_t i = 0; i < diff1; i++)
 		{
-			lineCount++;
+			strWidth.append(1, currentLine.at(i));
 		}
-		if (lineCount == 0)
+		for (size_t i = diff1 + 1; i < diff2; i++)
 		{
-			if ((character1 >= 48 && character1 <= 57) || (character1 >= 65 && character1 <= 70))
+			strHeight.append(1, currentLine.at(i));
+		}
+		width = std::stoi(strWidth);
+		height = std::stoi(strHeight);
+
+		uint32_t k = 0;
+
+		for (uint16_t i = 0; i < height; i++)
+		{
+			std::getline(file, currentLine);
+
+			for (uint32_t j = 0; j < currentLine.size(); j = j + 3)
 			{
-				codeCountTemp++;
-			}
-			if (codeCountTemp == 2)
-			{
-				codeCountTemp = 0;
-				codeCount++;
+				k++;
+				std::string hexCode;
+				hexCode.append(1, currentLine.at(j));
+				hexCode.append(1, currentLine.at(j + 1));
+				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(hexCode);
+				mapData.insert(std::pair(k, temp->second));
 			}
 		}
 	}
-	lineCount--;
 	file.close();
+	return mapData;
 }
 
-void LevelFileReader::Read(const std::string& levelFile)
+uint16_t LevelFileReader::GetCurrentWidth()
 {
-	file.open(levelFile, std::ios::in);
-
-	for (uint16_t i = 0; i < codeCount; i++)
-	{
-		file >> character1;
-		file >> character2;
-		//Function to check Both characters
-		if (character1 == 48 && character2 == 48)
-		{
-			Entity entity;
-			RowOfEntities.push_back(entity);
-			RowOfEntities.at(i).Init(false, "assets/textures/Checkerboard_RGB.png");
-		}
-		file >> character1;
-	}
-
-	file.close();
+	return width;
 }
 
-uint16_t LevelFileReader::GetLineCount()
+uint16_t LevelFileReader::GetCurrentHeight()
 {
-	return lineCount;
-}
-
-uint16_t LevelFileReader::GetCodeCount()
-{
-	return codeCount;
+	return height;
 }
