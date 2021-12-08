@@ -35,11 +35,11 @@ private:
 	//--------------------------------------------------
 
 	//---CAMERA-----------------------------------------
-	Ember::OrthographicCamera OrthoCamera;
+	Ember::OrthographicCameraController OrthoCameraController;
 	//--------------------------------------------------
 public:
 	ExampleLayer()
-		: Layer("Example"), OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f), squarePosition(0.0f), trianglePosition(0.0f)
+		: Layer("Example"), OrthoCameraController(16.0f / 9.0f, true), squarePosition(0.0f), trianglePosition(0.0f)
 	{
 
 		//---SQUARE-----------------------------------------
@@ -106,7 +106,7 @@ public:
 
 		auto squareTextureShader = shaderLibrary.Load("assets/shaders/Texture.glsl");
 
-		squareTexture = Ember::Texture2D::Create("assets/textures/Checkerboard_RGB.png");
+		squareTexture = Ember::Texture2D::Create("assets/textures/Checkerboard_Tile.png");
 
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareTextureShader)->Bind();
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareTextureShader)->UploadUniformInt("u_Texture", 0);
@@ -180,6 +180,8 @@ public:
 	{
 		EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
 
+		OrthoCameraController.OnUpdate(DT);
+
 		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ember::RenderCommand::Clear();
 
@@ -227,7 +229,7 @@ public:
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareShader)->Bind();
 		std::dynamic_pointer_cast<Ember::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Colour", squareColour);
 
-		Ember::Renderer::BeginScene(OrthoCamera);
+		Ember::Renderer::BeginScene(OrthoCameraController.GetCamera());
 
 		auto squareTextureShader = shaderLibrary.Get("Texture");
 
@@ -260,6 +262,8 @@ public:
 			Ember::KeyPressedEvent& e = (Ember::KeyPressedEvent&)event;
 			EM_LOG_WARN("{0}", char(e.GetKeyCode()));
 		}
+
+		OrthoCameraController.OnEvent(event);
 	}
 };
 

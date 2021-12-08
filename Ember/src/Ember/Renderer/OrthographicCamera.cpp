@@ -10,6 +10,12 @@ namespace Ember
 		ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 	}
 
+	void OrthographicCamera::SetProjection(float_t left, float_t right, float_t bottom, float_t top)
+	{
+		ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+	}
+
 	void OrthographicCamera::RecalculateViewMatrix()
 	{
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), Position) *

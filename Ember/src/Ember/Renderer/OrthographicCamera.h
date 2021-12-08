@@ -17,6 +17,7 @@ namespace Ember
 	public:
 		OrthographicCamera(float_t left, float_t right, float_t bottom, float_t top);
 
+		void SetProjection(float_t left, float_t right, float_t bottom, float_t top);
 		void SetPosition(const glm::vec3& position) { Position = position; RecalculateViewMatrix(); }
 		void SetRotation(float rotation) { Rotation = rotation; RecalculateViewMatrix(); }
 

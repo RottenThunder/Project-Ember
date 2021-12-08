@@ -11,7 +11,12 @@ private:
 
 	std::unordered_map<std::string, std::string> TileDataBase =
 	{
-		{"00", "assets/textures/Checkerboard_RGB.png"}
+		{"00", "assets/textures/Black_Tile.png"},
+		{"01", "assets/textures/Checkerboard_Tile.png"},
+		{"0A", "assets/textures/Dungeon_Wall_TL_Corner.png"},
+		{"0B", "assets/textures/Dungeon_Wall_TR_Corner.png"},
+		{"0C", "assets/textures/Dungeon_Wall_BL_Corner.png"},
+		{"0D", "assets/textures/Dungeon_Wall_BR_Corner.png"}
 	};
 
 public:

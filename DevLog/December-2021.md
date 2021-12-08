@@ -10,3 +10,7 @@
 - Commit "Game Dev - Constructing Maps"
     - Maps can now be read from a file and rendered on screen in the correct position
     - I am using a custom file extension for files with map data in it. I have named them ".level" files
+
+## Day 55 (08/12/2021)
+- Commit "Camera Controllers"
+    - Added a Orthographic Camera Controller class to make controlling the camera a little bit more easier

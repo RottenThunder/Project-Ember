@@ -1,12 +1,10 @@
 #pragma once
 //---EMBER.H----------------------------------------
 
-#ifndef EM_ENTRYPOINT
-#define EM_ENTRYPOINT
+
 //---Entry Point------------------------------------
 #include "Ember/Core/EntryPoint.h"
 //--------------------------------------------------
-#endif
 
 //---CORE-------------------------------------------
 
@@ -17,6 +15,10 @@
 
 //---For Creating an Orthographic Camera------------
 #include "Ember/Renderer/OrthographicCamera.h"
+//--------------------------------------------------
+
+//---For Controlling an Orthographic Camera---------
+#include "Ember/Renderer/OrthographicCameraController.h"
 //--------------------------------------------------
 
 //---For Calculating Delta Time---------------------
