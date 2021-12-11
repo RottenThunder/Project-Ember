@@ -14,3 +14,9 @@
 ## Day 55 (08/12/2021)
 - Commit "Camera Controllers"
     - Added a Orthographic Camera Controller class to make controlling the camera a little bit more easier
+
+## Day 58 (11/12/2021)
+- Commit "Window Resizing, More Game Dev & General Maintenance"
+    - The Engine now can change the viewport of the window whenever the window resizes
+    - "Room1.level" was made and now the map is fully constructed with the correct tiles
+    - Some general maintenance has been performed on minor parts of the engine

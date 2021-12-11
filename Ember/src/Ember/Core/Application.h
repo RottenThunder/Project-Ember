@@ -15,7 +15,9 @@ namespace Ember
 		Scope<Window> MainWindow;
 		ImGuiLayer* imguiLayer;
 		bool Running = true;
+		bool Minimized = false;
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 		LayerStack layerStack;
 		long double LastFrameTime = 0.0f;
 	public:

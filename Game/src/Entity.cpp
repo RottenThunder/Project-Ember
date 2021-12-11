@@ -2,7 +2,7 @@
 
 void Entity::Init(bool createCharacter, const std::string& textureFilePath)
 {
-	EntityVertexArray.reset(Ember::VertexArray::Create());
+	EntityVertexArray = Ember::VertexArray::Create();
 
 	if (createCharacter)
 	{

@@ -82,8 +82,9 @@ namespace Ember
 			EM_FATAL_ASSERT(ShaderTypeFromString(type), "Invalid Shader Type Specified!");
 
 			size_t nextLinePosition = source.find_first_not_of("\r\n", eol);
+			EM_FATAL_ASSERT(nextLinePosition != std::string::npos, "Shader File Syntax Error");
 			position = source.find(typeToken, nextLinePosition);
-			shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePosition, position - (nextLinePosition == std::string::npos ? source.size() - 1 : nextLinePosition));
+			shaderSources[ShaderTypeFromString(type)] = (position == std::string::npos) ? source.substr(nextLinePosition) : source.substr(nextLinePosition, position - nextLinePosition);
 		}
 
 		return shaderSources;
@@ -152,7 +153,10 @@ namespace Ember
 		}
 
 		for (auto id : glShaderIDs)
+		{
 			glDetachShader(program, id);
+			glDeleteShader(id);
+		}
 
 		RendererID = program;
 	}

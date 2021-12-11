@@ -11,6 +11,11 @@ namespace Ember
 		RenderCommand::Init();
 	}
 
+	void Renderer::OnWindowResize(uint16_t width, uint16_t height)
+	{
+		RenderCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
 		sceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();

@@ -10,7 +10,10 @@ namespace Ember
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : Layers)
+		{
+			layer->OnDetach();
 			delete layer;
+		}
 	}
 
 	void LayerStack::PushLayer(Layer* layer)

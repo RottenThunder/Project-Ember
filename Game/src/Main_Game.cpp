@@ -1,8 +1,10 @@
 #include <Ember.h>
+#include <Ember/Core/EntryPoint.h>
 #include "imgui/imgui.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "Ember/Platform/OpenGL/OpenGLShader.h"
+#include "Sandbox2D.h"
 #include "Entity.h"
 #include "Test(EntityPos).h"
 #include "Grid.h"
@@ -44,7 +46,7 @@ public:
 
 		//---SQUARE-----------------------------------------
 
-		squareVertexArray.reset(Ember::VertexArray::Create());
+		squareVertexArray = Ember::VertexArray::Create();
 
 		float_t SquareVertices[5 * 4] =
 		{
@@ -117,7 +119,7 @@ public:
 
 		//---TRIANGLE---------------------------------------
 
-		triangleVertexArray.reset(Ember::VertexArray::Create());
+		triangleVertexArray = Ember::VertexArray::Create();
 
 		float_t TriangleVertices[3 * 3] =
 		{
@@ -334,7 +336,7 @@ public:
 		//---BACKGROUND-----------------------------------------
 
 
-		backgroundVertexArray.reset(Ember::VertexArray::Create());
+		backgroundVertexArray = Ember::VertexArray::Create();
 
 		float_t BackgroundVertices[3 * 4] =
 		{
@@ -402,7 +404,7 @@ public:
 		playerPos.MaxPosX = gridX - 1;
 		playerPos.MaxPosY = gridY - 1;
 
-		playerVertexArray.reset(Ember::VertexArray::Create());
+		playerVertexArray = Ember::VertexArray::Create();
 
 		playerVertexBuffer.reset(Ember::VertexBuffer::Create(grid.TopLeftVertices, sizeof(grid.TopLeftVertices)));
 
@@ -459,7 +461,7 @@ public:
 		monsterPos.MaxPosX = gridX - 1;
 		monsterPos.MaxPosY = gridY - 1;
 
-		monsterVertexArray.reset(Ember::VertexArray::Create());
+		monsterVertexArray = Ember::VertexArray::Create();
 
 		monsterVertexBuffer.reset(Ember::VertexBuffer::Create(grid.BottomRightVertices, sizeof(grid.BottomRightVertices)));
 
@@ -757,7 +759,7 @@ private:
 	Ember::OrthographicCamera OrthoCamera;
 public:
 	GameLayer()
-		: Layer("Game"), OrthoCamera(-9.6f, 9.6f, -5.4f, 5.4f)
+		: Layer("Game"), OrthoCamera(-9.6f, 9.6f, -5.4, 5.4f)
 	{
 		player.Init(true, "assets/textures/Pokemon_Player_Front.png");
 		enemy.Init(true, "assets/textures/Pokemon_NPC_Front.png");
@@ -771,10 +773,10 @@ public:
 		{
 			Map.emplace_back();
 			Map.back().Init(false, n.second);
-			int16_t tempY = ((n.first - 1) / fileReader.GetCurrentWidth()) * (-1);
-			uint16_t tempX = (n.first - 1) - ((tempY * (-1)) * fileReader.GetCurrentWidth());
+			int16_t tempY = n.first / fileReader.GetCurrentWidth();
+			uint16_t tempX = n.first - (tempY * fileReader.GetCurrentWidth());
 			Map.back().EntityPosition.x = tempX;
-			Map.back().EntityPosition.y = tempY;
+			Map.back().EntityPosition.y = -tempY;
 		}
 	}
 
@@ -897,6 +899,7 @@ public:
 	GameApplication()
 	{
 		//PushLayer(new ExampleLayer);
+		//PushLayer(new Sandbox2D);
 		//PushLayer(new TestGameLayer);
 		PushLayer(new GameLayer);
 	}

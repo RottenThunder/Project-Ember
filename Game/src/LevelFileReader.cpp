@@ -31,12 +31,12 @@ std::unordered_map<uint32_t, std::string> LevelFileReader::Init(const std::strin
 
 			for (uint32_t j = 0; j < currentLine.size(); j = j + 3)
 			{
-				k++;
-				std::string hexCode;
-				hexCode.append(1, currentLine.at(j));
-				hexCode.append(1, currentLine.at(j + 1));
-				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(hexCode);
+				std::string tileCode;
+				tileCode.append(1, currentLine.at(j));
+				tileCode.append(1, currentLine.at(j + 1));
+				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(tileCode);
 				mapData.insert(std::pair(k, temp->second));
+				k++;
 			}
 		}
 	}

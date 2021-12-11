@@ -37,8 +37,11 @@ namespace Ember
 			DeltaTime deltaTime = time - LastFrameTime;
 			LastFrameTime = time;
 
-			for (Layer* layer : layerStack)
-				layer->OnUpdate(deltaTime);
+			if (!Minimized)
+			{
+				for (Layer* layer : layerStack)
+					layer->OnUpdate(deltaTime);
+			}
 
 			imguiLayer->Begin();
 			for (Layer* layer : layerStack)
@@ -75,6 +78,7 @@ namespace Ember
 	{
 		EventDispatcher eventDispatcher(e);
 		eventDispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
+		eventDispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OnWindowResize));
 
 		//EM_LOG_TRACE("{0}", e);
 
@@ -90,5 +94,19 @@ namespace Ember
 	{
 		Running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			Minimized = true;
+			return false;
+		}
+
+		Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 }
