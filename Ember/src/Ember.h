@@ -61,6 +61,10 @@
 #include "Ember/Renderer/Renderer.h"
 //--------------------------------------------------
 
+//---For 2D Rendering-------------------------------
+#include "Ember/Renderer/Renderer2D.h"
+//--------------------------------------------------
+
 //---For Executing Rendering-Related Commands-------
 #include "Ember/Renderer/RenderCommand.h"
 //--------------------------------------------------

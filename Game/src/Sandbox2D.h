@@ -7,6 +7,7 @@ private:
 	Ember::OrthographicCameraController OrthoCameraController;
 	Ember::Ref<Ember::VertexArray> squareVertexArray;
 	Ember::Ref<Ember::Shader> squareShader;
+	Ember::Ref<Ember::Texture2D> CheckerboardTexture;
 	glm::vec4 squareColour = { 0.9f, 0.1f, 0.4f, 1.0f };
 public:
 	Sandbox2D();
