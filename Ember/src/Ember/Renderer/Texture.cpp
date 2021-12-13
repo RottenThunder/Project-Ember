@@ -19,4 +19,19 @@ namespace Ember
 		EM_FATAL_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
+
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:
+			EM_FATAL_ASSERT(false, "RendererAPI::None is not currently supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL:
+			return std::make_shared<OpenGLTexture2D>(width, height);
+		}
+
+		EM_FATAL_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
 }

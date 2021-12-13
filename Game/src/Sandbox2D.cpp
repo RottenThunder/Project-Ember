@@ -37,7 +37,7 @@ void Sandbox2D::OnUpdate(Ember::DeltaTime DT)
 
 	Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Ember::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 0.35f, 1.73f }, { 0.1f, 0.2f, 0.9f, 1.0f });
-	Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, CheckerboardTexture);
+	Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, CheckerboardTexture, { 1.0f, 0.2f, 0.1f, 1.0f });
 
 	Ember::Renderer2D::EndScene();
 }

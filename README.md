@@ -20,10 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 55 (08/12/2021)
-- Commit "Camera Controllers"
-    - Added a Orthographic Camera Controller class to make controlling the camera a little bit more easier
-
 ### Day 58 (11/12/2021)
 - Commit "Window Resizing, More Game Dev & General Maintenance"
     - The Engine now can change the viewport of the window whenever the window resizes
@@ -35,3 +31,9 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - The Renderer has now been re-enginneered to support more of a 2D-Style Renderer approach
     - An Example of this new approach is making a draw call a lot easier to use. All you have to do is call Ember::Renderer2D::DrawQuad() with the position, size and colour/texture of the Quad to be drawn
     - The Game code now has to be refactored to use the new Renderer2D
+
+### Day 60 (13/12/2021)
+- Commit "2 in 1 Shaders"
+    - The Renderer now uses 1 Shader to render the shader and texture at the same time
+    - This gives way to adding tints to textures
+    - The Game Code has been refactored to use the new Renderer2D

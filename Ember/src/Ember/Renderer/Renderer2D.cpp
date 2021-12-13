@@ -10,8 +10,8 @@ namespace Ember
 	struct Renderer2DStorage
 	{
 		Ref<VertexArray> QuadVertexArray;
-		Ref<Shader> FlatColourShader;
 		Ref<Shader> TextureShader;
+		Ref<Texture2D> WhiteTexture;
 	};
 
 	static Renderer2DStorage* Data;
@@ -46,7 +46,10 @@ namespace Ember
 
 		Data->QuadVertexArray->SetIndexBuffer(squareIndexBuffer);
 
-		Data->FlatColourShader = Shader::Create("assets/shaders/FlatColour.glsl");
+		Data->WhiteTexture = Texture2D::Create(1, 1);
+		uint32_t whiteTextureData = 0xffffffff;
+		Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
 		Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 		Data->TextureShader->Bind();
 		Data->TextureShader->SetInt("u_Texture", 0);
@@ -59,9 +62,6 @@ namespace Ember
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
-		Data->FlatColourShader->Bind();
-		Data->FlatColourShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
 		Data->TextureShader->Bind();
 		Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
@@ -78,11 +78,11 @@ namespace Ember
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& colour)
 	{
-		Data->FlatColourShader->Bind();
-		Data->FlatColourShader->SetFloat4("u_Colour", colour);
+		Data->TextureShader->SetFloat4("u_Colour", colour);
+		Data->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		Data->FlatColourShader->SetMat4("u_Transform", transform);
+		Data->TextureShader->SetMat4("u_Transform", transform);
 
 		Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(Data->QuadVertexArray);
@@ -93,14 +93,30 @@ namespace Ember
 		DrawQuad({ position.x, position.y, 0.0f }, size, texture);
 	}
 
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& colourTint)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, colourTint);
+	}
+
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
-		Data->TextureShader->Bind();
+		Data->TextureShader->SetFloat4("u_Colour", glm::vec4(1.0f));
+		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		Data->TextureShader->SetMat4("u_Transform", transform);
 
+		Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& colourTint)
+	{
+		Data->TextureShader->SetFloat4("u_Colour", colourTint);
 		texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		Data->TextureShader->SetMat4("u_Transform", transform);
 
 		Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(Data->QuadVertexArray);

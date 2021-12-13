@@ -1,7 +1,6 @@
 #include "empch.h"
 #include "OpenGLTexture.h"
 #include "stb_image.h"
-#include <glad/glad.h>
 
 namespace Ember
 {
@@ -27,6 +26,9 @@ namespace Ember
 			dataFormat = GL_RGB;
 		}
 
+		InternalFormat = internalFormat;
+		DataFormat = dataFormat;
+
 		EM_FATAL_ASSERT(internalFormat & dataFormat, "Format Not Supported!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &RendererID);
@@ -43,9 +45,32 @@ namespace Ember
 		stbi_image_free(data);
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+		: Width(width), Height(height)
+	{
+		InternalFormat = GL_RGBA8;
+		DataFormat = GL_RGBA;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &RendererID);
+		glTextureStorage2D(RendererID, 1, InternalFormat, Width, Height);
+
+		glTextureParameteri(RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTextureParameteri(RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		glDeleteTextures(1, &RendererID);
+	}
+
+	void OpenGLTexture2D::SetData(void* data, uint32_t size)
+	{
+		uint32_t bytesPerPixel = DataFormat == GL_RGBA ? 4 : 3;
+		EM_FATAL_ASSERT(size == Width * Height * bytesPerPixel, "Data must cover the entire Texture!!!");
+		glTextureSubImage2D(RendererID, 0, 0, 0, Width, Height, DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const

@@ -761,8 +761,8 @@ public:
 	GameLayer()
 		: Layer("Game"), OrthoCamera(-9.6f, 9.6f, -5.4, 5.4f)
 	{
-		player.Init(true, "assets/textures/Pokemon_Player_Front.png");
-		enemy.Init(true, "assets/textures/Pokemon_NPC_Front.png");
+		player.EntityTexture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Front.png");
+		enemy.EntityTexture = Ember::Texture2D::Create("assets/textures/Pokemon_NPC_Front.png");
 		player.EntityPosition.x = 9.0f;
 		player.EntityPosition.y = -4.0f;
 		enemy.EntityPosition.x = 3.0f;
@@ -772,7 +772,7 @@ public:
 		for (const auto& n : MapData)
 		{
 			Map.emplace_back();
-			Map.back().Init(false, n.second);
+			Map.back().EntityTexture = Ember::Texture2D::Create(n.second);
 			int16_t tempY = n.first / fileReader.GetCurrentWidth();
 			uint16_t tempX = n.first - (tempY * fileReader.GetCurrentWidth());
 			Map.back().EntityPosition.x = tempX;
@@ -856,28 +856,22 @@ public:
 			}
 		}
 
-		Ember::Renderer::BeginScene(OrthoCamera);
+		Ember::Renderer2D::BeginScene(OrthoCamera);
 
 		for (auto x : Map)
 		{
-			x.UpdateTransform();
-			x.EntityTexture->Bind();
-			Ember::Renderer::Submit(x.EntityTextureShader, x.EntityVertexArray, x.EntityTransform);
+			Ember::Renderer2D::DrawQuad({ x.EntityPosition.x, x.EntityPosition.y, -0.1f }, { 1.0f, 1.0f }, x.EntityTexture);
 		}
 
-		enemy.UpdateTransform();
-		enemy.EntityTexture->Bind();
-		Ember::Renderer::Submit(enemy.EntityTextureShader, enemy.EntityVertexArray, enemy.EntityTransform);
+		Ember::Renderer2D::DrawQuad(enemy.EntityPosition, { 1.0f, 2.0f }, enemy.EntityTexture);
 		player.CalculateCollisions(enemy.EntityPosition);
 
-		player.UpdateTransform();
 		player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY);
-		player.EntityTexture->Bind();
-		Ember::Renderer::Submit(player.EntityTextureShader, player.EntityVertexArray, player.EntityTransform);
+		Ember::Renderer2D::DrawQuad({ player.EntityPosition.x, player.EntityPosition.y, 0.1f }, { 1.0f, 2.0f }, player.EntityTexture);
 
 		OrthoCamera.SetPosition(player.EntityPosition);
 
-		Ember::Renderer::EndScene();
+		Ember::Renderer2D::EndScene();
 	}
 
 	void OnEvent(Ember::Event& event) override
