@@ -35,7 +35,8 @@ std::unordered_map<uint32_t, std::string> LevelFileReader::Init(const std::strin
 				tileCode.append(1, currentLine.at(j));
 				tileCode.append(1, currentLine.at(j + 1));
 				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(tileCode);
-				mapData.insert(std::pair(k, temp->second));
+				std::string wholeData = temp->first + "_" + temp->second;
+				mapData.insert(std::pair(k, wholeData));
 				k++;
 			}
 		}

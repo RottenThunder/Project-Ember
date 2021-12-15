@@ -20,12 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 58 (11/12/2021)
-- Commit "Window Resizing, More Game Dev & General Maintenance"
-    - The Engine now can change the viewport of the window whenever the window resizes
-    - "Room1.level" was made and now the map is fully constructed with the correct tiles
-    - Some general maintenance has been performed on minor parts of the engine
-
 ### Day 59 (12/12/2021)
 - Commit "Renderer2D!!!"
     - The Renderer has now been re-enginneered to support more of a 2D-Style Renderer approach
@@ -37,3 +31,9 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - The Renderer now uses 1 Shader to render the shader and texture at the same time
     - This gives way to adding tints to textures
     - The Game Code has been refactored to use the new Renderer2D
+
+### Day 62 (15/12/2021)
+- Commit "Profiling & More Game Dev"
+    - Profiling capabilities have now been added to the engine
+    - The results of the profiling session is stored in a .json file, which then can be viewed by a web browser
+    - Tilemaps now have collisions attached to them

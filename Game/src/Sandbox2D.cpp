@@ -21,6 +21,8 @@ void Sandbox2D::OnDetach()
 
 void Sandbox2D::OnImGuiRender()
 {
+	EM_PROFILE_FUNCTION();
+
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Colour", glm::value_ptr(squareColour));
 	ImGui::End();
@@ -28,18 +30,29 @@ void Sandbox2D::OnImGuiRender()
 
 void Sandbox2D::OnUpdate(Ember::DeltaTime DT)
 {
-	OrthoCameraController.OnUpdate(DT);
+	EM_PROFILE_FUNCTION();
 
-	Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
-	Ember::RenderCommand::Clear();
+	{
+		EM_PROFILE_SCOPE("CameraController::OnUpdate()");
+		OrthoCameraController.OnUpdate(DT);
+	}
 
-	Ember::Renderer2D::BeginScene(OrthoCameraController.GetCamera());
+	{
+		EM_PROFILE_SCOPE("Render Prep");
+		Ember::RenderCommand::SetClearColour({ 0.1f, 0.1f, 0.1f, 1.0f });
+		Ember::RenderCommand::Clear();
+	}
 
-	Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-	Ember::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 0.35f, 1.73f }, { 0.1f, 0.2f, 0.9f, 1.0f });
-	Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, CheckerboardTexture, { 1.0f, 0.2f, 0.1f, 1.0f });
+	{
+		EM_PROFILE_SCOPE("Render Draw");
+		Ember::Renderer2D::BeginScene(OrthoCameraController.GetCamera());
 
-	Ember::Renderer2D::EndScene();
+		Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		Ember::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 0.35f, 1.73f }, { 0.1f, 0.2f, 0.9f, 1.0f });
+		Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, CheckerboardTexture, { 1.0f, 0.2f, 0.1f, 1.0f });
+
+		Ember::Renderer2D::EndScene();
+	}
 }
 
 void Sandbox2D::OnEvent(Ember::Event& event)

@@ -32,3 +32,9 @@
     - The Renderer now uses 1 Shader to render the shader and texture at the same time
     - This gives way to adding tints to textures
     - The Game Code has been refactored to use the new Renderer2D
+
+## Day 62 (15/12/2021)
+- Commit "Profiling & More Game Dev"
+    - Profiling capabilities have now been added to the engine
+    - The results of the profiling session is stored in a .json file, which then can be viewed by a web browser
+    - Tilemaps now have collisions attached to them

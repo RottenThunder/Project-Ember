@@ -759,20 +759,27 @@ private:
 	Ember::OrthographicCamera OrthoCamera;
 public:
 	GameLayer()
-		: Layer("Game"), OrthoCamera(-9.6f, 9.6f, -5.4, 5.4f)
+		: Layer("Game"), OrthoCamera(-11.2f, 11.2f, -6.3f, 6.3f)
 	{
 		player.EntityTexture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Front.png");
 		enemy.EntityTexture = Ember::Texture2D::Create("assets/textures/Pokemon_NPC_Front.png");
 		player.EntityPosition.x = 9.0f;
 		player.EntityPosition.y = -4.0f;
 		enemy.EntityPosition.x = 3.0f;
-		enemy.EntityPosition.y = -1.0f;
+		enemy.EntityPosition.y = -7.0f;
 		MapData = fileReader.Init("assets/levels/Room1.level");
-		Map.reserve(fileReader.GetCurrentWidth() * fileReader.GetCurrentHeight());
+		//Map.reserve(fileReader.GetCurrentWidth() * fileReader.GetCurrentHeight());
 		for (const auto& n : MapData)
 		{
 			Map.emplace_back();
-			Map.back().EntityTexture = Ember::Texture2D::Create(n.second);
+			for (uint32_t i = 0; i < fileReader.CollidingTileDataBase.size(); i++)
+			{
+				if (n.second.substr(0, 2) == fileReader.CollidingTileDataBase[i])
+				{
+					Map.back().IsCollidable = true;
+				}
+			}
+			Map.back().EntityTexture = Ember::Texture2D::Create(n.second.substr(3));
 			int16_t tempY = n.first / fileReader.GetCurrentWidth();
 			uint16_t tempX = n.first - (tempY * fileReader.GetCurrentWidth());
 			Map.back().EntityPosition.x = tempX;
@@ -784,39 +791,10 @@ public:
 	{
 		ImGui::Begin("Player Stats");
 		ImGui::Text("Position: %f, %f", player.EntityPosition.x, player.EntityPosition.y);
-		if (CanMovePositiveX)
-		{
-			ImGui::Text("CanMovePositiveX: True");
-		}
-		else
-		{
-			ImGui::Text("CanMovePositiveX: False");
-		}
-		if (CanMoveNegativeX)
-		{
-			ImGui::Text("CanMoveNegativeX: True");
-		}
-		else
-		{
-			ImGui::Text("CanMoveNegativeX: False");
-		}
-		if (CanMovePositiveY)
-		{
-			ImGui::Text("CanMovePositiveY: True");
-		}
-		else
-		{
-			ImGui::Text("CanMovePositiveY: False");
-		}
-		if (CanMoveNegativeY)
-		{
-			ImGui::Text("CanMoveNegativeY: True");
-		}
-		else
-		{
-			ImGui::Text("CanMoveNegativeY: False");
-		}
-
+		ImGui::Text("CanMovePositiveX: %i", CanMovePositiveX);
+		ImGui::Text("CanMoveNegativeX: %i", CanMoveNegativeX);
+		ImGui::Text("CanMovePositiveY: %i", CanMovePositiveY);
+		ImGui::Text("CanMoveNegativeY: %i", CanMoveNegativeY);
 		ImGui::End();
 	}
 
@@ -861,6 +839,10 @@ public:
 		for (auto x : Map)
 		{
 			Ember::Renderer2D::DrawQuad({ x.EntityPosition.x, x.EntityPosition.y, -0.1f }, { 1.0f, 1.0f }, x.EntityTexture);
+			if (x.IsCollidable)
+			{
+				player.CalculateCollisions({ x.EntityPosition.x, x.EntityPosition.y + 0.5f, x.EntityPosition.z });
+			}
 		}
 
 		Ember::Renderer2D::DrawQuad(enemy.EntityPosition, { 1.0f, 2.0f }, enemy.EntityTexture);

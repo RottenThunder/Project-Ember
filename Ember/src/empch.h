@@ -16,6 +16,7 @@
 
 //---EMBER INCLUDES---------------------------------
 #include "Ember/Debug/Log.h"
+#include "Ember/Debug/Instrumentor.h"
 //--------------------------------------------------
 
 //---PLATFORM SPECIFIC INCLUDES---------------------

@@ -32,7 +32,13 @@ private:
 		{"1H", "assets/textures/Dungeon_Wall_West.png"}
 	};
 
+
 public:
+	std::array<std::string, 8> CollidingTileDataBase =
+	{
+		"1A", "1B", "1C", "1D", "1E", "1F", "1G", "1H"
+	};
+
 	std::unordered_map<uint32_t, std::string> Init(const std::string& levelFile);
 
 	uint16_t GetCurrentWidth();

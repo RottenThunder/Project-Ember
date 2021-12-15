@@ -13,6 +13,7 @@ private:
 public:
 	glm::u8vec4 NumberOfCollisions = { 0, 0, 0, 0 }; //X is +x, Y is +y, Z is -x, W is -y
 	glm::u8vec4 CollidersActive = { 0, 0, 0, 0 }; //X is Top-Left, Y is Top-Right, Z is Bottom-Left, W is Bottom-Right
+	bool IsCollidable = false;
 	Ember::Ref<Ember::VertexArray> EntityVertexArray;
 	Ember::Ref<Ember::VertexBuffer> EntityVertexBuffer;
 	Ember::Ref<Ember::IndexBuffer> EntityIndexBuffer;
