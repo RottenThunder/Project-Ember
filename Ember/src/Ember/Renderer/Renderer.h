@@ -17,6 +17,8 @@ namespace Ember
 		static SceneData* sceneData;
 	public:
 		static void Init();
+		static void Terminate();
+
 		static void OnWindowResize(uint16_t width, uint16_t height);
 
 		static void BeginScene(OrthographicCamera& camera);

@@ -13,6 +13,8 @@ namespace Ember
 
 	void OpenGLContext::Init()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(WindowHandle);
 		int32_t gladStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		EM_FATAL_ASSERT(gladStatus, "Failed to Initialize Glad!!!");
@@ -24,6 +26,8 @@ namespace Ember
 
 	void OpenGLContext::SwapBuffers()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(WindowHandle);
 	}
 }

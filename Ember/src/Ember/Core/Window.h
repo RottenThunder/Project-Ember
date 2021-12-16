@@ -38,7 +38,7 @@ namespace Ember
 
 		virtual void OnUpdate() = 0;
 
-		static Window* Create(const WindowProperties& props = WindowProperties());
+		static Scope<Window> Create(const WindowProperties& props = WindowProperties());
 	};
 
 }

@@ -20,12 +20,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 59 (12/12/2021)
-- Commit "Renderer2D!!!"
-    - The Renderer has now been re-enginneered to support more of a 2D-Style Renderer approach
-    - An Example of this new approach is making a draw call a lot easier to use. All you have to do is call Ember::Renderer2D::DrawQuad() with the position, size and colour/texture of the Quad to be drawn
-    - The Game code now has to be refactored to use the new Renderer2D
-
 ### Day 60 (13/12/2021)
 - Commit "2 in 1 Shaders"
     - The Renderer now uses 1 Shader to render the shader and texture at the same time
@@ -37,3 +31,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - Profiling capabilities have now been added to the engine
     - The results of the profiling session is stored in a .json file, which then can be viewed by a web browser
     - Tilemaps now have collisions attached to them
+
+### Day 63 (16/12/2021)
+- Commit "Instrumentation & Improved 2D Rendering API"
+    - Improved Profiling and Improved 2D Rendering API has been implemented to the engine
+    - The engine can now draw rotated quads

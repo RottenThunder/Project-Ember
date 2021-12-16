@@ -19,6 +19,8 @@ namespace Ember
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
 	{
+		EM_PROFILE_FUNCTION();
+
 		std::string source = ReadFile(filePath);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
@@ -34,6 +36,8 @@ namespace Ember
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 		: Name(name)
 	{
+		EM_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -42,11 +46,15 @@ namespace Ember
 
 	OpenGLShader::~OpenGLShader()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glDeleteProgram(RendererID);
 	}
 
 	std::string OpenGLShader::ReadFile(const std::string& filePath)
 	{
+		EM_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream in(filePath, std::ios::in | std::ios::binary);
 		if (in)
@@ -67,6 +75,8 @@ namespace Ember
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
+		EM_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -92,6 +102,8 @@ namespace Ember
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		EM_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 		EM_FATAL_ASSERT(shaderSources.size() <= 2, "A Maximum of 2 Shaders can be compiled at once!");
 		std::array<GLenum, 2> glShaderIDs;
@@ -163,31 +175,50 @@ namespace Ember
 
 	void OpenGLShader::Bind() const
 	{
+		EM_PROFILE_FUNCTION();
+
 		glUseProgram(RendererID);
 	}
 
 	void OpenGLShader::UnBind() const
 	{
+		EM_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int32_t value)
 	{
+		EM_PROFILE_FUNCTION();
+
 		UploadUniformInt(name, value);
+	}
+
+	void OpenGLShader::SetFloat(const std::string& name, float_t value)
+	{
+		EM_PROFILE_FUNCTION();
+
+		UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
 	{
+		EM_PROFILE_FUNCTION();
+
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
 	{
+		EM_PROFILE_FUNCTION();
+
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
+		EM_PROFILE_FUNCTION();
+
 		UploadUniformMat4(name, value);
 	}
 

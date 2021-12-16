@@ -38,26 +38,36 @@ namespace Ember
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &RendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &RendererID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		EM_PROFILE_FUNCTION();
+
 		glBindVertexArray(RendererID);
 	}
 
 	void OpenGLVertexArray::UnBind() const
 	{
+		EM_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
+		EM_PROFILE_FUNCTION();
+
 		EM_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
 		glBindVertexArray(RendererID);
@@ -75,6 +85,8 @@ namespace Ember
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
+		EM_PROFILE_FUNCTION();
+
 		glBindVertexArray(RendererID);
 		indexBuffer->Bind();
 		Index_Buffer = indexBuffer;

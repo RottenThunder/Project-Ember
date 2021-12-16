@@ -12,6 +12,8 @@ namespace Ember
 
 	Application::Application()
 	{
+		EM_PROFILE_FUNCTION();
+
 		EM_ASSERT(!Instance, "Application already exists!");
 		Instance = this;
 
@@ -26,27 +28,42 @@ namespace Ember
 
 	Application::~Application()
 	{
+		EM_PROFILE_FUNCTION();
 
+		Renderer::Terminate();
 	}
 
 	void Application::Run()
 	{
+		EM_PROFILE_FUNCTION();
+
 		while (Running)
 		{
+			EM_PROFILE_SCOPE("RunLoop");
+
 			double time = glfwGetTime(); //TODO: Find Platform Specific Time Functions. For example, Windows = QueryPerformanceCounter()
 			DeltaTime deltaTime = time - LastFrameTime;
 			LastFrameTime = time;
 
 			if (!Minimized)
 			{
-				for (Layer* layer : layerStack)
-					layer->OnUpdate(deltaTime);
+				{
+					EM_PROFILE_SCOPE("LayerStatck OnUpdate");
+
+					for (Layer* layer : layerStack)
+						layer->OnUpdate(deltaTime);
+				}
+
+				imguiLayer->Begin();
+				{
+					EM_PROFILE_SCOPE("LayerStatck OnImGuiRender");
+
+					for (Layer* layer : layerStack)
+						layer->OnImGuiRender();
+				}
+				imguiLayer->End();
 			}
 
-			imguiLayer->Begin();
-			for (Layer* layer : layerStack)
-				layer->OnImGuiRender();
-			imguiLayer->End();
 
 			MainWindow->OnUpdate();
 		}
@@ -54,28 +71,38 @@ namespace Ember
 
 	void Application::PushLayer(Layer* layer)
 	{
+		EM_PROFILE_FUNCTION();
+
 		layerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
+		EM_PROFILE_FUNCTION();
+
 		layerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PopLayer(Layer* layer)
 	{
+		EM_PROFILE_FUNCTION();
+
 		layerStack.PopLayer(layer);
 	}
 
 	void Application::PopOverlay(Layer* layer)
 	{
+		EM_PROFILE_FUNCTION();
+
 		layerStack.PopOverlay(layer);
 	}
 
 	void Application::OnEvent(Event& e)
 	{
+		EM_PROFILE_FUNCTION();
+
 		EventDispatcher eventDispatcher(e);
 		eventDispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
 		eventDispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OnWindowResize));
@@ -98,6 +125,8 @@ namespace Ember
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		EM_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			Minimized = true;

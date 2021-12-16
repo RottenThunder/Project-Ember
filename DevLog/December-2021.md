@@ -38,3 +38,8 @@
     - Profiling capabilities have now been added to the engine
     - The results of the profiling session is stored in a .json file, which then can be viewed by a web browser
     - Tilemaps now have collisions attached to them
+
+## Day 63 (16/12/2021)
+- Commit "Instrumentation & Improved 2D Rendering API"
+    - Improved Profiling and Improved 2D Rendering API has been implemented to the engine
+    - The engine can now draw rotated quads

@@ -9,8 +9,15 @@ namespace Ember
 
 	void Renderer::Init()
 	{
+		EM_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
+	}
+
+	void Renderer::Terminate()
+	{
+
 	}
 
 	void Renderer::OnWindowResize(uint16_t width, uint16_t height)

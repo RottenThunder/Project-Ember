@@ -13,6 +13,8 @@ namespace Ember
 
 	void OrthographicCameraController::OnUpdate(DeltaTime dt)
 	{
+		EM_PROFILE_FUNCTION();
+
 		if (Input::IsKeyPressed(EM_KEY_A))
 			CameraPosition.x -= CameraTranslationSpeed * dt;
 		else if (Input::IsKeyPressed(EM_KEY_D))
@@ -40,6 +42,8 @@ namespace Ember
 
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
+		EM_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(EM_BIND_EVENT_FUNC(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(EM_BIND_EVENT_FUNC(OrthographicCameraController::OnWindowResized));
@@ -47,6 +51,8 @@ namespace Ember
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		EM_PROFILE_FUNCTION();
+
 		ZoomLevel -= e.GetYOffset() * 0.25f;
 		ZoomLevel = std::max(ZoomLevel, 0.25f);
 		Camera.SetProjection(-AspectRatio * ZoomLevel, AspectRatio * ZoomLevel, -ZoomLevel, ZoomLevel);
@@ -55,6 +61,8 @@ namespace Ember
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		EM_PROFILE_FUNCTION();
+
 		AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		Camera.SetProjection(-AspectRatio * ZoomLevel, AspectRatio * ZoomLevel, -ZoomLevel, ZoomLevel);
 		return false;

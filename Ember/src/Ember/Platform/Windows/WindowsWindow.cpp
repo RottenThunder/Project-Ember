@@ -15,21 +15,27 @@ namespace Ember
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
 	{
+		EM_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		EM_PROFILE_FUNCTION();
+
 		Terminate();
 	}
 
-	Window* Window::Create(const WindowProperties& props)
+	Scope<Window> Window::Create(const WindowProperties& props)
 	{
-		return new WindowsWindow(props);
+		return std::make_unique<WindowsWindow>(props);
 	}
 
 	void WindowsWindow::Init(const WindowProperties& props)
 	{
+		EM_PROFILE_FUNCTION();
+
 		windowData.Title = props.Title;
 		windowData.Width = props.Width;
 		windowData.Height = props.Height;
@@ -143,18 +149,24 @@ namespace Ember
 
 	void WindowsWindow::Terminate()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		EM_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enable)
 	{
+		EM_PROFILE_FUNCTION();
+
 		if (enable)
 			glfwSwapInterval(1);
 		else

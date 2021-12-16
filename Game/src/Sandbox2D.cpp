@@ -11,12 +11,14 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	EM_PROFILE_FUNCTION();
+
 	CheckerboardTexture = Ember::Texture2D::Create("assets/textures/Checkerboard_Tile.png");
 }
 
 void Sandbox2D::OnDetach()
 {
-
+	EM_PROFILE_FUNCTION();
 }
 
 void Sandbox2D::OnImGuiRender()
@@ -32,10 +34,7 @@ void Sandbox2D::OnUpdate(Ember::DeltaTime DT)
 {
 	EM_PROFILE_FUNCTION();
 
-	{
-		EM_PROFILE_SCOPE("CameraController::OnUpdate()");
-		OrthoCameraController.OnUpdate(DT);
-	}
+	OrthoCameraController.OnUpdate(DT);
 
 	{
 		EM_PROFILE_SCOPE("Render Prep");
@@ -49,7 +48,7 @@ void Sandbox2D::OnUpdate(Ember::DeltaTime DT)
 
 		Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Ember::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 0.35f, 1.73f }, { 0.1f, 0.2f, 0.9f, 1.0f });
-		Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, CheckerboardTexture, { 1.0f, 0.2f, 0.1f, 1.0f });
+		Ember::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, glm::radians(45.0f), CheckerboardTexture, { 1.0f, 0.2f, 0.1f, 1.0f }, 10.0f);
 
 		Ember::Renderer2D::EndScene();
 	}
