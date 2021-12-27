@@ -124,7 +124,7 @@ namespace Ember
 	};
 }
 
-#define EM_PROFILE 1
+#define EM_PROFILE 0
 #if EM_PROFILE
 #define EM_PROFILE_BEGIN_SESSION(name, filepath) ::Ember::Instrumentor::Get().BeginSession(name, filepath)
 #define EM_PROFILE_END_SESSION() ::Ember::Instrumentor::Get().EndSession()

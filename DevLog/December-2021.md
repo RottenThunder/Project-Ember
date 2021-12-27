@@ -43,3 +43,10 @@
 - Commit "Instrumentation & Improved 2D Rendering API"
     - Improved Profiling and Improved 2D Rendering API has been implemented to the engine
     - The engine can now draw rotated quads
+
+## Day 74 (27/12/2021)
+- Commit "The Beginning of Batch Rendering"
+    - The Engine can now batch render colours and different geomemtry
+    - This majorly improves performance
+    - Most of the "Main_Game.cpp" file had to be commented out, so in the future i need to take of that
+    - For now, The engine is rendering 4 different quads on the screen (Scroll back to move the camera!!!)

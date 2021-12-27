@@ -10,11 +10,14 @@ namespace Ember
 		uint32_t RendererID;
 		BufferLayout Layout;
 	public:
+		OpenGLVertexBuffer(uint32_t size);
 		OpenGLVertexBuffer(float_t* vertices, uint32_t size);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
+
+		virtual void SetData(const void* data, uint32_t size) override;
 
 		virtual const BufferLayout& GetLayout() const override { return Layout; }
 		virtual void SetLayout(const BufferLayout& layout) override { Layout = layout; }
