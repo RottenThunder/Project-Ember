@@ -15,8 +15,8 @@ namespace Ember
 		static void Flush();
 
 		//Primitives
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& colour, float_t tilingFactor = 1.0f);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& colour, float_t tilingFactor = 1.0f);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& colour);
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& colour);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float_t tilingFactor = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float_t tilingFactor = 1.0f);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& colourTint, float_t tilingFactor = 1.0f);

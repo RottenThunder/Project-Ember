@@ -50,3 +50,8 @@
     - This majorly improves performance
     - Most of the "Main_Game.cpp" file had to be commented out, so in the future i need to take of that
     - For now, The engine is rendering 4 different quads on the screen (Scroll back to move the camera!!!)
+
+## Day 75 (28/12/2021)
+- Commit "Batch Rendering Textures"
+    - The Engine can now batch render textures together
+    - There is a wierd error that occurs when the program deletes textures, it does not seem to be fatal
