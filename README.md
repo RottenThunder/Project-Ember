@@ -24,11 +24,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 63 (16/12/2021)
-- Commit "Instrumentation & Improved 2D Rendering API"
-    - Improved Profiling and Improved 2D Rendering API has been implemented to the engine
-    - The engine can now draw rotated quads
-
 ### Day 74 (27/12/2021)
 - Commit "The Beginning of Batch Rendering"
     - The Engine can now batch render colours and different geomemtry
@@ -40,3 +35,7 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Batch Rendering Textures"
     - The Engine can now batch render textures together
     - There is a wierd error that occurs when the program deletes textures, it does not seem to be fatal
+
+### Day 79 (01/01/2022)
+- Commit "Batch Rendering Rotation"
+    - The Engine can now batch render rotated quads

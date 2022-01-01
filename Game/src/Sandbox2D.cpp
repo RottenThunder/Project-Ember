@@ -44,8 +44,13 @@ void Sandbox2D::OnUpdate(Ember::DeltaTime DT)
 
 	{
 		EM_PROFILE_SCOPE("Render Draw");
+
+		static float rotation = 0.0f;
+		rotation += DT * 50.0f;
+
 		Ember::Renderer2D::BeginScene(OrthoCameraController.GetCamera());
 
+		Ember::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Ember::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Ember::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 0.35f, 1.73f }, { 0.1f, 0.2f, 0.9f, 1.0f });
 		Ember::Renderer2D::DrawQuad({ -2.0f, -1.0f }, { 0.85f, 1.0f }, { 0.3f, 0.5f, 0.3f, 1.0f });
@@ -54,7 +59,7 @@ void Sandbox2D::OnUpdate(Ember::DeltaTime DT)
 		Ember::Renderer2D::DrawQuad({ -5.0f, -5.0f, -0.1f }, { 10.0f, 10.0f }, CheckerboardTexture, 10.0f);
 		Ember::Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, CheckerboardTexture, 20.0f);
 
-		//Ember::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, glm::radians(45.0f), CheckerboardTexture, { 1.0f, 0.2f, 0.1f, 1.0f }, 10.0f);
+		Ember::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, rotation, CheckerboardTexture, { 0.8f, 0.2f, 0.3f, 1.0f });
 
 		Ember::Renderer2D::EndScene();
 	}
