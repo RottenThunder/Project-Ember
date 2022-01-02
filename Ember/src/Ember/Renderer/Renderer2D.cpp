@@ -18,9 +18,9 @@ namespace Ember
 
 	struct Renderer2DData
 	{
-		const uint32_t MaxQuads = 10000;
-		const uint32_t MaxVertices = MaxQuads * 4;
-		const uint32_t MaxIndices = MaxQuads * 6;
+		static const uint32_t MaxQuads = 10000;
+		static const uint32_t MaxVertices = MaxQuads * 4;
+		static const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32; // Need to Query the GPU to get this value in the future
 
 		Ref<VertexArray> QuadVertexArray;
@@ -36,6 +36,8 @@ namespace Ember
 		uint32_t TextureSlotIndex = 1; // 0 = white texture
 
 		glm::vec4 QuadVertexPositions[4];
+
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2DData Data;
@@ -133,6 +135,17 @@ namespace Ember
 			Data.TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(Data.QuadVertexArray, Data.QuadIndexCount);
+		Data.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::FlushAndReset()
+	{
+		EndScene();
+
+		Data.QuadIndexCount = 0;
+		Data.QuadVertexBufferPtr = Data.QuadVertexBufferBase;
+
+		Data.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& colour)
@@ -143,6 +156,9 @@ namespace Ember
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& colour)
 	{
 		EM_PROFILE_FUNCTION();
+
+		if (Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
 
 		const float texIndex = 0.0f; // White Texture
 
@@ -178,6 +194,8 @@ namespace Ember
 		Data.QuadVertexBufferPtr++;
 
 		Data.QuadIndexCount += 6;
+
+		Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float_t tilingFactor)
@@ -188,6 +206,9 @@ namespace Ember
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float_t tilingFactor)
 	{
 		EM_PROFILE_FUNCTION();
+
+		if (Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
 
 		constexpr glm::vec4 colour = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -240,6 +261,8 @@ namespace Ember
 		Data.QuadVertexBufferPtr++;
 
 		Data.QuadIndexCount += 6;
+
+		Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& colourTint, float_t tilingFactor)
@@ -250,6 +273,9 @@ namespace Ember
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& colourTint, float_t tilingFactor)
 	{
 		EM_PROFILE_FUNCTION();
+
+		if (Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
 
 		float textureIndex = 0.0f;
 		for (uint32_t i = 1; i < Data.TextureSlotIndex; i++)
@@ -300,6 +326,8 @@ namespace Ember
 		Data.QuadVertexBufferPtr++;
 
 		Data.QuadIndexCount += 6;
+
+		Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float_t rotation, const glm::vec4& colour, float_t tilingFactor)
@@ -310,6 +338,9 @@ namespace Ember
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float_t rotation, const glm::vec4& colour, float_t tilingFactor)
 	{
 		EM_PROFILE_FUNCTION();
+
+		if (Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
 
 		const float textureIndex = 0.0f; // White Texture
 
@@ -346,6 +377,8 @@ namespace Ember
 		Data.QuadVertexBufferPtr++;
 
 		Data.QuadIndexCount += 6;
+
+		Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float_t rotation, const Ref<Texture2D>& texture, float_t tilingFactor)
@@ -356,6 +389,9 @@ namespace Ember
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float_t rotation, const Ref<Texture2D>& texture, float_t tilingFactor)
 	{
 		EM_PROFILE_FUNCTION();
+
+		if (Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
 
 		constexpr glm::vec4 colour = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -409,6 +445,8 @@ namespace Ember
 		Data.QuadVertexBufferPtr++;
 
 		Data.QuadIndexCount += 6;
+
+		Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float_t rotation, const Ref<Texture2D>& texture, const glm::vec4& colourTint, float_t tilingFactor)
@@ -419,6 +457,9 @@ namespace Ember
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float_t rotation, const Ref<Texture2D>& texture, const glm::vec4& colourTint, float_t tilingFactor)
 	{
 		EM_PROFILE_FUNCTION();
+
+		if (Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
 
 		float textureIndex = 0.0f;
 		for (uint32_t i = 1; i < Data.TextureSlotIndex; i++)
@@ -470,5 +511,17 @@ namespace Ember
 		Data.QuadVertexBufferPtr++;
 
 		Data.QuadIndexCount += 6;
+
+		Data.Stats.QuadCount++;
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&Data.Stats, 0, sizeof(Statistics));
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return Data.Stats;
 	}
 }

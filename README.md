@@ -24,13 +24,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 74 (27/12/2021)
-- Commit "The Beginning of Batch Rendering"
-    - The Engine can now batch render colours and different geomemtry
-    - This majorly improves performance
-    - Most of the "Main_Game.cpp" file had to be commented out, so in the future i need to take of that
-    - For now, The engine is rendering 4 different quads on the screen (Scroll back to move the camera!!!)
-
 ### Day 75 (28/12/2021)
 - Commit "Batch Rendering Textures"
     - The Engine can now batch render textures together
@@ -39,3 +32,7 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ### Day 79 (01/01/2022)
 - Commit "Batch Rendering Rotation"
     - The Engine can now batch render rotated quads
+
+### Day 80 (02/01/2022)
+- Commit "Stats for the Batch Renderer"
+    - I've added some statistics for the batch renderer, so i can see how how many draw calls it takes to render a certain scene

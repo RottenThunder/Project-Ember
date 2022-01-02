@@ -89,6 +89,7 @@ namespace Ember
 	{
 		EM_PROFILE_FUNCTION();
 
-		glBindTextureUnit(slot, RendererID);
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, RendererID);
 	}
 }
