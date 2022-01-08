@@ -5,8 +5,8 @@
 
 namespace Ember
 {
-	OrthographicCameraController::OrthographicCameraController(float_t aspectRatio, bool rotation)
-		: AspectRatio(aspectRatio), Camera(-AspectRatio * ZoomLevel, AspectRatio* ZoomLevel, -ZoomLevel, ZoomLevel), Rotation(rotation)
+	OrthographicCameraController::OrthographicCameraController(float_t aspectRatio, float_t zoomLevel, bool rotation)
+		: AspectRatio(aspectRatio), ZoomLevel(zoomLevel), Camera(-AspectRatio * ZoomLevel, AspectRatio* ZoomLevel, -ZoomLevel, ZoomLevel), Rotation(rotation)
 	{
 
 	}

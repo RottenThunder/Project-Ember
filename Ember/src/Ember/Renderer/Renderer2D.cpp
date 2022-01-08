@@ -224,6 +224,9 @@ namespace Ember
 
 		if (textureIndex == 0.0f)
 		{
+			if (Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+				FlushAndReset();
+
 			textureIndex = (float)Data.TextureSlotIndex;
 			Data.TextureSlots[Data.TextureSlotIndex] = texture;
 			Data.TextureSlotIndex++;
@@ -289,6 +292,9 @@ namespace Ember
 
 		if (textureIndex == 0.0f)
 		{
+			if (Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+				FlushAndReset();
+
 			textureIndex = (float)Data.TextureSlotIndex;
 			Data.TextureSlots[Data.TextureSlotIndex] = texture;
 			Data.TextureSlotIndex++;
@@ -407,6 +413,9 @@ namespace Ember
 
 		if (textureIndex == 0.0f)
 		{
+			if (Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+				FlushAndReset();
+
 			textureIndex = (float)Data.TextureSlotIndex;
 			Data.TextureSlots[Data.TextureSlotIndex] = texture;
 			Data.TextureSlotIndex++;
@@ -473,6 +482,9 @@ namespace Ember
 
 		if (textureIndex == 0.0f)
 		{
+			if (Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+				FlushAndReset();
+
 			textureIndex = (float)Data.TextureSlotIndex;
 			Data.TextureSlots[Data.TextureSlotIndex] = texture;
 			Data.TextureSlotIndex++;

@@ -2,8 +2,8 @@
 
 void Entity::CalculateCollisions(const glm::vec3& ColliderCentre)
 {
-	glm::vec2 InternalMaxCoords = { EntityPosition.x + 0.5f, EntityPosition.y + 0.5f };
-	glm::vec2 InternalMinCoords = { EntityPosition.x - 0.5f, EntityPosition.y - 0.5f };
+	glm::vec2 InternalMaxCoords = { Position.x + 0.5f, Position.y + 0.5f };
+	glm::vec2 InternalMinCoords = { Position.x - 0.5f, Position.y - 0.5f };
 	glm::vec2 ExternalMaxCoords = { ColliderCentre.x + 0.5f, ColliderCentre.y + 0.5f };
 	glm::vec2 ExternalMinCoords = { ColliderCentre.x - 0.5f, ColliderCentre.y - 0.5f };
 

@@ -24,11 +24,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 75 (28/12/2021)
-- Commit "Batch Rendering Textures"
-    - The Engine can now batch render textures together
-    - There is a wierd error that occurs when the program deletes textures, it does not seem to be fatal
-
 ### Day 79 (01/01/2022)
 - Commit "Batch Rendering Rotation"
     - The Engine can now batch render rotated quads
@@ -36,3 +31,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ### Day 80 (02/01/2022)
 - Commit "Stats for the Batch Renderer"
     - I've added some statistics for the batch renderer, so i can see how how many draw calls it takes to render a certain scene
+
+### Day 86 (08/01/2022)
+- Commit "Game Development with the Batch Renderer"
+    - The Game Scene is back, and now being rendered by the batch renderer
+    - I have used all of the tiles from the game "The Legend of Zelda: A Link to the Past"
