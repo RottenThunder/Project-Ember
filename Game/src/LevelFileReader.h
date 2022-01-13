@@ -5,10 +5,7 @@
 class LevelFileReader
 {
 private:
-	std::ifstream file;
-	uint16_t width;
-	uint16_t height;
-
+	std::fstream file;
 	std::unordered_map<std::string, std::string> TileDataBase =
 	{
 		{"00", "assets/textures/Black_Tile.png"},
@@ -31,16 +28,6 @@ private:
 		{"1G", "assets/textures/Dungeon_Wall_South.png"},
 		{"1H", "assets/textures/Dungeon_Wall_West.png"}
 	};
-
-
 public:
-	std::array<std::string, 8> CollidingTileDataBase =
-	{
-		"1A", "1B", "1C", "1D", "1E", "1F", "1G", "1H"
-	};
-
-	std::unordered_map<uint32_t, std::string> Init(const std::string& levelFile);
-
-	uint16_t GetCurrentWidth();
-	uint16_t GetCurrentHeight();
+	std::vector<Entity> Read(const std::string& levelFile, int32_t xOffset = 0, int32_t yOffset = 0);
 };

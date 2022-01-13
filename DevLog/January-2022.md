@@ -12,3 +12,7 @@
 - Commit "Game Development with the Batch Renderer"
     - The Game Scene is back, and now being rendered by the batch renderer
     - I have used all of the tiles from the game "The Legend of Zelda: A Link to the Past"
+
+## Day 91 (13/01/2022)
+- Commit "Redesigned Level File Reader"
+    - The algorithm that read the ".level" files has been redesigned to be better

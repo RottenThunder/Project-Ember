@@ -18,24 +18,7 @@ void MainGame::OnAttach()
 	NPC.Position.x = 3.0f;
 	NPC.Position.y = -7.0f;
 
-	MapData = fileReader.Init("assets/levels/Room1.level");
-	//Map.reserve(fileReader.GetCurrentWidth() * fileReader.GetCurrentHeight());
-	for (const auto& n : MapData)
-	{
-		Map.emplace_back();
-		for (uint32_t i = 0; i < fileReader.CollidingTileDataBase.size(); i++)
-		{
-			if (n.second.substr(0, 2) == fileReader.CollidingTileDataBase[i])
-			{
-				Map.back().IsCollidable = true;
-			}
-		}
-		Map.back().Texture = Ember::Texture2D::Create(n.second.substr(3));
-		int16_t tempY = n.first / fileReader.GetCurrentWidth();
-		uint16_t tempX = n.first - (tempY * fileReader.GetCurrentWidth());
-		Map.back().Position.x = tempX;
-		Map.back().Position.y = -tempY;
-	}
+	Map = levelFileReader.Read("assets/levels/Room1.level");
 }
 
 void MainGame::OnDetach()
@@ -70,7 +53,7 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 {
 	//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
 
-	Ember::RenderCommand::SetClearColour({ 1.0f, 0.84f, 0.0f, 1.0f });
+	Ember::RenderCommand::SetClearColour({ 1.0f, 0.0f, 0.0f, 1.0f });
 	Ember::RenderCommand::Clear();
 
 	Ember::Renderer2D::ResetStats();
@@ -108,18 +91,18 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 
 	for (auto x : Map)
 	{
-		Ember::Renderer2D::DrawQuad({ x.Position.x, x.Position.y, -0.1f }, { 1.0f, 1.0f }, x.Texture);
+		Ember::Renderer2D::DrawQuad(x.Position, TileSize, x.Texture);
 		if (x.IsCollidable)
 		{
 			Player.CalculateCollisions({ x.Position.x, x.Position.y + 0.5f, x.Position.z });
 		}
 	}
 
-	Ember::Renderer2D::DrawQuad(NPC.Position, { 1.0f, 2.0f }, NPC.Texture);
+	Ember::Renderer2D::DrawQuad(NPC.Position, CharacterSize, NPC.Texture);
 	Player.CalculateCollisions(NPC.Position);
 
 	Player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY);
-	Ember::Renderer2D::DrawQuad(Player.Position, { 1.0f, 2.0f }, Player.Texture);
+	Ember::Renderer2D::DrawQuad(Player.Position, CharacterSize, Player.Texture);
 
 	OrthoCameraController.GetCamera().SetPosition(Player.Position);
 

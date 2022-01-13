@@ -1,56 +1,44 @@
 #include "LevelFileReader.h"
 
-std::unordered_map<uint32_t, std::string> LevelFileReader::Init(const std::string& levelFile)
+std::vector<Entity> LevelFileReader::Read(const std::string& levelFile, int32_t xOffset, int32_t yOffset)
 {
-	std::unordered_map<uint32_t, std::string> mapData;
-	file.open(levelFile, std::ios::in);
+	std::vector<Entity> currentMap;
+
+	file.open(levelFile, std::ios::in | std::ios::binary);
+
 	if (file.is_open())
 	{
 		std::string currentLine;
-		std::string strWidth;
-		std::string strHeight;
+		int32_t width, height;
+
 		std::getline(file, currentLine);
-		size_t diff1 = currentLine.find("x");
-		size_t diff2 = currentLine.find("/");
-		for (size_t i = 0; i < diff1; i++)
-		{
-			strWidth.append(1, currentLine.at(i));
-		}
-		for (size_t i = diff1 + 1; i < diff2; i++)
-		{
-			strHeight.append(1, currentLine.at(i));
-		}
-		width = std::stoi(strWidth);
-		height = std::stoi(strHeight);
+		width = std::stoi(currentLine.substr(4, 2));
 
-		uint32_t k = 0;
+		std::getline(file, currentLine);
+		height = std::stoi(currentLine.substr(4, 2));
 
-		for (uint16_t i = 0; i < height; i++)
+		for (int32_t row = 0; row < height; row++)
 		{
 			std::getline(file, currentLine);
 
-			for (uint32_t j = 0; j < currentLine.size(); j = j + 3)
+			for (int32_t pos = 0; pos < width; pos++)
 			{
-				std::string tileCode;
-				tileCode.append(1, currentLine.at(j));
-				tileCode.append(1, currentLine.at(j + 1));
-				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(tileCode);
-				std::string wholeData = temp->first + "_" + temp->second;
-				mapData.insert(std::pair(k, wholeData));
-				k++;
+				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(currentLine.substr(pos * 4, 2));
+
+				Entity e;
+				e.Position = { pos + xOffset, -row + yOffset, -0.1f };
+				e.Texture = Ember::Texture2D::Create(temp->second);
+				if (currentLine.substr((pos * 4) + 2, 1) == "1")
+				{
+					e.IsCollidable = true;
+				}
+
+				currentMap.push_back(e);
 			}
 		}
 	}
+
 	file.close();
-	return mapData;
-}
 
-uint16_t LevelFileReader::GetCurrentWidth()
-{
-	return width;
-}
-
-uint16_t LevelFileReader::GetCurrentHeight()
-{
-	return height;
+	return currentMap;
 }

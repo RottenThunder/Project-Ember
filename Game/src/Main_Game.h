@@ -7,16 +7,13 @@
 #include "Ember/Platform/OpenGL/OpenGLShader.h"
 #include "Sandbox2D.h"
 #include "Entity.h"
-#include "Test(EntityPos).h"
-#include "Grid.h"
 #include "Random.h"
 #include "LevelFileReader.h"
 
 class MainGame : public Ember::Layer
 {
 private:
-	LevelFileReader fileReader;
-	std::unordered_map<uint32_t, std::string> MapData;
+	LevelFileReader levelFileReader;
 	std::vector<Entity> Map;
 	Entity Player;
 	float_t playerSpeed = 2.0f;
@@ -26,6 +23,8 @@ private:
 	bool CanMoveNegativeY = true;
 	Entity NPC;
 	Ember::OrthographicCameraController OrthoCameraController;
+	glm::vec2 TileSize = { 1.0f, 1.0f };
+	glm::vec2 CharacterSize = { 1.0f, 2.0f };
 public:
 	MainGame();
 	virtual ~MainGame() = default;
