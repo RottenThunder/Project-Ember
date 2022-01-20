@@ -14,17 +14,13 @@ class MainGame : public Ember::Layer
 {
 private:
 	LevelFileReader levelFileReader;
-	std::vector<Entity> Map;
+	std::vector<Entity*> RoomMap;
+	std::vector<Entity*> OutsideMap;
 	Entity Player;
+	uint8_t CollisionCount = 0;
 	float_t playerSpeed = 2.0f;
-	bool CanMovePositiveX = true;
-	bool CanMoveNegativeX = true;
-	bool CanMovePositiveY = true;
-	bool CanMoveNegativeY = true;
 	Entity NPC;
 	Ember::OrthographicCameraController OrthoCameraController;
-	glm::vec2 TileSize = { 1.0f, 1.0f };
-	glm::vec2 CharacterSize = { 1.0f, 2.0f };
 public:
 	MainGame();
 	virtual ~MainGame() = default;

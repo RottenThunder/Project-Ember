@@ -16,3 +16,8 @@
 ## Day 91 (13/01/2022)
 - Commit "Redesigned Level File Reader"
     - The algorithm that read the ".level" files has been redesigned to be better
+
+## Day 98 (20/01/2022)
+- Commit "AABB Collisions"
+    - The collision system got reworked to include AABB - Axis Aligned Bounding Boxes
+    - I have also downloaded some tiles from [https://kenney.nl/](https://kenney.nl/), the exact sprites can be found here -> [https://kenney.nl/assets/rpg-base](https://kenney.nl/assets/rpg-base)

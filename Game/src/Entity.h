@@ -8,13 +8,10 @@
 class Entity
 {
 public:
-	glm::u8vec4 NumberOfCollisions = { 0, 0, 0, 0 }; //X is +x, Y is +y, Z is -x, W is -y
-	glm::u8vec4 CollidersActive = { 0, 0, 0, 0 }; //X is Top-Left, Y is Top-Right, Z is Bottom-Left, W is Bottom-Right
-	bool IsCollidable = false;
-	Ember::Ref<Ember::Texture2D> Texture;
-	glm::mat4 Transform;
 	glm::vec3 Position = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 TransformedPosition = { 0.0f, 0.0f, 0.0f };
+	Ember::Ref<Ember::Texture2D> Texture;
+	bool IsCollidable = false;
 
-	void CalculateCollisions(const glm::vec3& ColliderCentre);
-	void HandleCollisions(bool& CanMovePositiveX, bool& CanMoveNegativeX, bool& CanMovePositiveY, bool& CanMoveNegativeY);
+	uint8_t CalculateAABBCollisions(const glm::vec3& pos, float Qx, float Qy);
 };

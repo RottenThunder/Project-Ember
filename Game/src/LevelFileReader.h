@@ -26,8 +26,19 @@ private:
 		{"1E", "assets/textures/Dungeon_Wall_North.png"},
 		{"1F", "assets/textures/Dungeon_Wall_East.png"},
 		{"1G", "assets/textures/Dungeon_Wall_South.png"},
-		{"1H", "assets/textures/Dungeon_Wall_West.png"}
+		{"1H", "assets/textures/Dungeon_Wall_West.png"},
+
+		{"A0", "assets/textures/RPG_Tiles/rpgTile039.png"},
+		{"A1", "assets/textures/RPG_Tiles/rpgTile005.png"},
+		{"A2", "assets/textures/RPG_Tiles/rpgTile006.png"},
+		{"A3", "assets/textures/RPG_Tiles/rpgTile007.png"},
+		{"A4", "assets/textures/RPG_Tiles/rpgTile023.png"},
+		{"A5", "assets/textures/RPG_Tiles/rpgTile024.png"},
+		{"A6", "assets/textures/RPG_Tiles/rpgTile025.png"},
+		{"A7", "assets/textures/RPG_Tiles/rpgTile041.png"},
+		{"A8", "assets/textures/RPG_Tiles/rpgTile042.png"},
+		{"A9", "assets/textures/RPG_Tiles/rpgTile043.png"}
 	};
 public:
-	std::vector<Entity> Read(const std::string& levelFile, int32_t xOffset = 0, int32_t yOffset = 0);
+	std::vector<Entity*> Read(const std::string& levelFile, int32_t xOffset = 0, int32_t yOffset = 0);
 };

@@ -12,18 +12,18 @@ void MainGame::OnAttach()
 {
 	Player.Texture = Ember::Texture2D::Create("assets/textures/Link_Front.png");
 	NPC.Texture = Ember::Texture2D::Create("assets/textures/Zelda_NPC_Front.png");
-	Player.Position.x = 9.0f;
-	Player.Position.y = -4.0f;
-	Player.Position.z = 0.1f;
-	NPC.Position.x = 3.0f;
-	NPC.Position.y = -7.0f;
 
-	Map = levelFileReader.Read("assets/levels/Room1.level");
+	Player.Position = { 9.0f, -4.0f, 0.1f };
+	NPC.Position = { 3.0f, -7.0f, 0.0f };
+
+	RoomMap = levelFileReader.Read("assets/levels/Room1.level");
+	OutsideMap = levelFileReader.Read("assets/levels/Outside.level", 10, -40);
 }
 
 void MainGame::OnDetach()
 {
-
+	RoomMap.clear();
+	OutsideMap.clear();
 }
 
 void MainGame::OnImGuiRender()
@@ -41,68 +41,70 @@ void MainGame::OnImGuiRender()
 
 	ImGui::Text("Position: %f, %f", Player.Position.x, Player.Position.y);
 	ImGui::SliderFloat("Speed", &playerSpeed, 1.0f, 10.0f, "%.2f", 1.0f);
-	ImGui::Text("CanMovePositiveX: %i", CanMovePositiveX);
-	ImGui::Text("CanMoveNegativeX: %i", CanMoveNegativeX);
-	ImGui::Text("CanMovePositiveY: %i", CanMovePositiveY);
-	ImGui::Text("CanMoveNegativeY: %i", CanMoveNegativeY);
+	ImGui::Text("CollisionCount: %i", CollisionCount);
 
 	ImGui::End();
 }
 
 void MainGame::OnUpdate(Ember::DeltaTime DT)
 {
-	//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
+	EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
 
-	Ember::RenderCommand::SetClearColour({ 1.0f, 0.0f, 0.0f, 1.0f });
+	CollisionCount = 0;
+	Player.TransformedPosition = Player.Position;
+
+	Ember::RenderCommand::SetClearColour({ 0.25f, 0.25f, 0.25f, 1.0f });
 	Ember::RenderCommand::Clear();
 
 	Ember::Renderer2D::ResetStats();
 
-	if (CanMovePositiveX)
+	if (Ember::Input::IsKeyPressed(EM_KEY_D))
 	{
-		if (Ember::Input::IsKeyPressed(EM_KEY_D))
-		{
-			Player.Position.x += playerSpeed * DT;
-		}
+		Player.TransformedPosition.x += playerSpeed * DT;
 	}
-	if (CanMoveNegativeX)
+	if (Ember::Input::IsKeyPressed(EM_KEY_A))
 	{
-		if (Ember::Input::IsKeyPressed(EM_KEY_A))
-		{
-			Player.Position.x -= playerSpeed * DT;
-		}
+		Player.TransformedPosition.x -= playerSpeed * DT;
 	}
-	if (CanMovePositiveY)
+	if (Ember::Input::IsKeyPressed(EM_KEY_W))
 	{
-		if (Ember::Input::IsKeyPressed(EM_KEY_W))
-		{
-			Player.Position.y += playerSpeed * DT;
-		}
+		Player.TransformedPosition.y += playerSpeed * DT;
 	}
-	if (CanMoveNegativeY)
+	if (Ember::Input::IsKeyPressed(EM_KEY_S))
 	{
-		if (Ember::Input::IsKeyPressed(EM_KEY_S))
-		{
-			Player.Position.y -= playerSpeed * DT;
-		}
+		Player.TransformedPosition.y -= playerSpeed * DT;
 	}
 
 	Ember::Renderer2D::BeginScene(OrthoCameraController.GetCamera());
 
-	for (auto x : Map)
+	for (Entity* x : RoomMap)
 	{
-		Ember::Renderer2D::DrawQuad(x.Position, TileSize, x.Texture);
-		if (x.IsCollidable)
+		Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
+		if (x->IsCollidable)
 		{
-			Player.CalculateCollisions({ x.Position.x, x.Position.y + 0.5f, x.Position.z });
+			CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
 		}
 	}
+	/*
+	for (Entity* x : OutsideMap)
+	{
+		Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
+		if (x->IsCollidable)
+		{
+			CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+		}
+	}
+	*/
 
-	Ember::Renderer2D::DrawQuad(NPC.Position, CharacterSize, NPC.Texture);
-	Player.CalculateCollisions(NPC.Position);
+	Ember::Renderer2D::DrawQuad(NPC.Position, { 1.0f, 2.0f }, NPC.Texture);
+	CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, NPC.Position.x - 0.5f, NPC.Position.y - 1.0f);
 
-	Player.HandleCollisions(CanMovePositiveX, CanMoveNegativeX, CanMovePositiveY, CanMoveNegativeY);
-	Ember::Renderer2D::DrawQuad(Player.Position, CharacterSize, Player.Texture);
+	if (CollisionCount == 0)
+	{
+		Player.Position = Player.TransformedPosition;
+	}
+
+	Ember::Renderer2D::DrawQuad(Player.Position, { 1.0f, 2.0f }, Player.Texture);
 
 	OrthoCameraController.GetCamera().SetPosition(Player.Position);
 

@@ -1,8 +1,8 @@
 #include "LevelFileReader.h"
 
-std::vector<Entity> LevelFileReader::Read(const std::string& levelFile, int32_t xOffset, int32_t yOffset)
+std::vector<Entity*> LevelFileReader::Read(const std::string& levelFile, int32_t xOffset, int32_t yOffset)
 {
-	std::vector<Entity> currentMap;
+	std::vector<Entity*> currentMap;
 
 	file.open(levelFile, std::ios::in | std::ios::binary);
 
@@ -25,12 +25,12 @@ std::vector<Entity> LevelFileReader::Read(const std::string& levelFile, int32_t 
 			{
 				std::unordered_map<std::string, std::string>::const_iterator temp = TileDataBase.find(currentLine.substr(pos * 4, 2));
 
-				Entity e;
-				e.Position = { pos + xOffset, -row + yOffset, -0.1f };
-				e.Texture = Ember::Texture2D::Create(temp->second);
+				Entity* e = new Entity;
+				e->Position = { pos + xOffset, -row + yOffset, -0.1f };
+				e->Texture = Ember::Texture2D::Create(temp->second);
 				if (currentLine.substr((pos * 4) + 2, 1) == "1")
 				{
-					e.IsCollidable = true;
+					e->IsCollidable = true;
 				}
 
 				currentMap.push_back(e);
