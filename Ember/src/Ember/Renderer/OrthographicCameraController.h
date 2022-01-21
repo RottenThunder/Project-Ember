@@ -10,11 +10,11 @@ namespace Ember
 	{
 	private:
 		float_t AspectRatio;
-		bool Rotation;
 		float_t ZoomLevel;
+		bool Rotation;
 		float_t CameraTranslationSpeed = 1.0f;
-		float_t CameraRotationSpeed = 180.0f;
 		glm::vec3 CameraPosition = { 0.0f, 0.0f, 0.0f };
+		float_t CameraRotationSpeed = 180.0f;
 		float_t CameraRotation = 0.0f;
 		OrthographicCamera Camera;
 	public:

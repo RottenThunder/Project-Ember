@@ -20,7 +20,7 @@ private:
 	uint8_t CollisionCount = 0;
 	float_t playerSpeed = 2.0f;
 	Entity NPC;
-	Ember::OrthographicCameraController OrthoCameraController;
+	Ember::OrthographicCamera Camera;
 public:
 	MainGame();
 	virtual ~MainGame() = default;

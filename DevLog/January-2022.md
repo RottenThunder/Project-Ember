@@ -21,3 +21,7 @@
 - Commit "AABB Collisions"
     - The collision system got reworked to include AABB - Axis Aligned Bounding Boxes
     - I have also downloaded some tiles from [https://kenney.nl/](https://kenney.nl/), the exact sprites can be found here -> [https://kenney.nl/assets/rpg-base](https://kenney.nl/assets/rpg-base)
+
+## Day 99 (21/01/2022)
+- Commit "2D Culling"
+    - The Game now uses a culling system to only render what the camera sees

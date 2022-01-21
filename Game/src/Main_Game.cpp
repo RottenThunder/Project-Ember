@@ -3,7 +3,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 MainGame::MainGame()
-	: Layer("MainGame"), OrthoCameraController(16.0f / 9.0f, 6.0f)
+	: Layer("MainGame"), Camera(-12.8f, 12.8f, -7.2f, 7.2f)
 {
 
 }
@@ -75,26 +75,30 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 		Player.TransformedPosition.y -= playerSpeed * DT;
 	}
 
-	Ember::Renderer2D::BeginScene(OrthoCameraController.GetCamera());
+	Ember::Renderer2D::BeginScene(Camera);
 
 	for (Entity* x : RoomMap)
 	{
-		Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
-		if (x->IsCollidable)
+		if ((-12.8f + Player.Position.x) < (x->Position.x + 0.5f) && (12.8f + Player.Position.x) > (x->Position.x - 0.5f) && (-7.2f + Player.Position.y) < (x->Position.y + 0.5f) && (7.2f + Player.Position.y) > (x->Position.y - 0.5f))
 		{
-			CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+			Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
+			if (x->IsCollidable)
+			{
+				CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+			}
 		}
 	}
-	/*
 	for (Entity* x : OutsideMap)
 	{
-		Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
-		if (x->IsCollidable)
+		if ((-12.8f + Player.Position.x) < (x->Position.x + 0.5f) && (12.8f + Player.Position.x) > (x->Position.x - 0.5f) && (-7.2f + Player.Position.y) < (x->Position.y + 0.5f) && (7.2f + Player.Position.y) > (x->Position.y - 0.5f))
 		{
-			CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+			Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
+			if (x->IsCollidable)
+			{
+				CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+			}
 		}
 	}
-	*/
 
 	Ember::Renderer2D::DrawQuad(NPC.Position, { 1.0f, 2.0f }, NPC.Texture);
 	CollisionCount += Player.CalculateAABBCollisions(Player.TransformedPosition, NPC.Position.x - 0.5f, NPC.Position.y - 1.0f);
@@ -106,12 +110,12 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 
 	Ember::Renderer2D::DrawQuad(Player.Position, { 1.0f, 2.0f }, Player.Texture);
 
-	OrthoCameraController.GetCamera().SetPosition(Player.Position);
+	Camera.SetPosition(Player.Position);
 
 	Ember::Renderer2D::EndScene();
 }
 
 void MainGame::OnEvent(Ember::Event& event)
 {
-	OrthoCameraController.OnEvent(event);
+
 }
