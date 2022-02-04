@@ -37,7 +37,9 @@ private:
 		{"A6", "assets/textures/RPG_Tiles/rpgTile025.png"},
 		{"A7", "assets/textures/RPG_Tiles/rpgTile041.png"},
 		{"A8", "assets/textures/RPG_Tiles/rpgTile042.png"},
-		{"A9", "assets/textures/RPG_Tiles/rpgTile043.png"}
+		{"A9", "assets/textures/RPG_Tiles/rpgTile043.png"},
+		{"AA", "assets/textures/RPG_Tiles/rpgTile027.png"},
+		{"AB", "assets/textures/RPG_Tiles/rpgTile026.png"}
 	};
 public:
 	std::vector<Entity*> Read(const std::string& levelFile, int32_t xOffset = 0, int32_t yOffset = 0);

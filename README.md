@@ -24,10 +24,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 91 (13/01/2022)
-- Commit "Redesigned Level File Reader"
-    - The algorithm that read the ".level" files has been redesigned to be better
-
 ### Day 98 (20/01/2022)
 - Commit "AABB Collisions"
     - The collision system got reworked to include AABB - Axis Aligned Bounding Boxes
@@ -36,3 +32,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ### Day 99 (21/01/2022)
 - Commit "2D Culling"
     - The Game now uses a culling system to only render what the camera sees
+
+### Day 113 (04/02/2022)
+- Commit "Inventory System"
+    - The game now has an inventory system which can be seen by pressing "I"
+    - The Player is now a seperate class of it's own to accomadate the inventory being specific to only the player

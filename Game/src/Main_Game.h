@@ -6,7 +6,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Ember/Platform/OpenGL/OpenGLShader.h"
 #include "Sandbox2D.h"
-#include "Entity.h"
+#include "Player.h"
 #include "Random.h"
 #include "LevelFileReader.h"
 
@@ -14,13 +14,20 @@ class MainGame : public Ember::Layer
 {
 private:
 	LevelFileReader levelFileReader;
+	Random random;
 	std::vector<Entity*> RoomMap;
 	std::vector<Entity*> OutsideMap;
-	Entity Player;
-	uint8_t CollisionCount = 0;
-	float_t playerSpeed = 2.0f;
+	Player player;
 	Entity NPC;
+	uint8_t CollisionCount = 0;
 	Ember::OrthographicCamera Camera;
+
+	bool InventoryOpen = false;
+
+	uint16_t WindowWidth = 1280;
+	uint16_t WindowHeight = 720;
+
+	glm::vec2 PixelToWorldSpaceDivider;
 public:
 	MainGame();
 	virtual ~MainGame() = default;
@@ -31,6 +38,11 @@ public:
 	void OnImGuiRender() override;
 	void OnUpdate(Ember::DeltaTime DT) override;
 	void OnEvent(Ember::Event& event) override;
+
+	bool OnWindowResize(Ember::WindowResizeEvent& e);
+	bool OnKeyReleased(Ember::KeyReleasedEvent& e);
+
+	bool CalculateAABBCollisionsWithMouse(const glm::vec3& pos, float Qx, float Qy);
 };
 
 class GameApplication : public Ember::Application

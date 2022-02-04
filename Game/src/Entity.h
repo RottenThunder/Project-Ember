@@ -9,7 +9,6 @@ class Entity
 {
 public:
 	glm::vec3 Position = { 0.0f, 0.0f, 0.0f };
-	glm::vec3 TransformedPosition = { 0.0f, 0.0f, 0.0f };
 	Ember::Ref<Ember::Texture2D> Texture;
 	bool IsCollidable = false;
 
