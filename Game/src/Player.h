@@ -6,28 +6,41 @@ enum class PlayerFace : uint8_t
 	Down = 0, Left, Up, Right
 };
 
-class Player : public Entity
+class MiscPlayerData
+{
+public:
+	static std::unordered_map<uint16_t, std::string> CardTextureDatabase;
+	static std::unordered_map<uint16_t, std::string> CardNameDatabase;
+	static std::unordered_map<uint16_t, uint8_t> CardTierDatabase;
+};
+
+class CardInfo
 {
 private:
-	float_t InventorySlotPosX = -8.25f;
-	float_t InventorySlotPosY = 3.75f;
+	std::string Name;
+	uint8_t Tier;
+	uint16_t Effect;
+public:
+	std::string GetName() const { return Name; }
+	uint8_t GetTier() const { return Tier; }
+	uint16_t GetEffect() const { return Effect; }
+
+	void SetName(std::string name) { Name = name; }
+	void SetTier(uint8_t tier) { Tier = tier; }
+	void SetEffect(uint16_t effect) { Effect = effect; }
+};
+
+class Player : public Entity
+{
 public:
 	glm::vec3 TransformedPosition = { 0.0f, 0.0f, 0.0f };
 	float_t Speed = 2.0f;
+	float_t AttackPower = 3.0f;
 	PlayerFace Face = PlayerFace::Down;
 
-	std::unordered_map<uint16_t, std::string> ItemDataBase =
-	{
-		{0x0000, "assets/textures/UI/Coin.png"},
-		{0x0001, "assets/textures/UI/Torch.png"},
-		{0x0002, "assets/textures/UI/Potion.png"},
-		{0x0003, "assets/textures/UI/Sword.png"},
-		{0x0004, "assets/textures/UI/Axe.png"},
-		{0x0005, "assets/textures/UI/Bow.png"}
-	};
-
-	std::vector<Ember::Ref<Ember::Texture2D>> Inventory;
-	std::vector<glm::vec3> InventorySlotPositions;
-	void AddToInventory(uint16_t itemCode, uint8_t quantity);
-	void DeleteFromInventory(uint16_t itemCode, uint8_t quantity);
+	std::vector<Ember::Ref<Ember::Texture2D>> CurrentCards;
+	std::vector<CardInfo> CurrentCardsInfo;
+	std::vector<float_t> CardPos;
+	void AddToCurrentCards(uint16_t cardCode);
+	void RemoveFromCurrentCards(uint16_t cardIndex);
 };

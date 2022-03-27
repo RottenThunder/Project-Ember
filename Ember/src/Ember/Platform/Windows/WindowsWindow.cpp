@@ -69,6 +69,13 @@ namespace Ember
 				data.EventCallback(event);
 			});
 
+		glfwSetWindowPosCallback(window, [](GLFWwindow* _window, int32_t x, int32_t y)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(_window);
+				WindowMovedEvent event(x, y);
+				data.EventCallback(event);
+			});
+
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* _window)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(_window);

@@ -4,6 +4,29 @@
 
 namespace Ember
 {
+	class EMBER_API WindowMovedEvent : public Event
+	{
+	private:
+		uint16_t X;
+		uint16_t Y;
+	public:
+		WindowMovedEvent(uint16_t x, uint16_t y)
+			: X(x), Y(y) {}
+
+		inline uint16_t GetX() const { return X; }
+		inline uint16_t GetY() const { return Y; }
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowMovedEvent: " << X << ", " << Y;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(WindowMoved)
+			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	};
+
 	class EMBER_API WindowResizeEvent : public Event
 	{
 	private:

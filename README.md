@@ -24,11 +24,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 98 (20/01/2022)
-- Commit "AABB Collisions"
-    - The collision system got reworked to include AABB - Axis Aligned Bounding Boxes
-    - I have also downloaded some tiles from [https://kenney.nl/](https://kenney.nl/), the exact sprites can be found here -> [https://kenney.nl/assets/rpg-base](https://kenney.nl/assets/rpg-base)
-
 ### Day 99 (21/01/2022)
 - Commit "2D Culling"
     - The Game now uses a culling system to only render what the camera sees
@@ -37,3 +32,12 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 - Commit "Inventory System"
     - The game now has an inventory system which can be seen by pressing "I"
     - The Player is now a seperate class of it's own to accomadate the inventory being specific to only the player
+
+### Day 164 (27/03/2022)
+- Commit "So a lot has happened..."
+    - Inventory system has been deleted
+    - New game ideas were made (such as having cards in the game)
+    - New pixel art has been made
+    - The player has a way of attacking through the form of firing a projectile
+    - Other minor performance upgrades have been implemented
+    - And finally, i am so sorry for not updating the repository for a long time
