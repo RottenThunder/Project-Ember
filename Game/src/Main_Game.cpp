@@ -15,14 +15,29 @@ void MainGame::OnAttach()
 
 	player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Front.png");
 	player.Face = PlayerFace::Down;
+	player.Position = { 9.0f, -4.0f, 0.1f };
 	ProjectileTexture = Ember::Texture2D::Create("assets/textures/Projectile.png");
-	NPC.Texture = Ember::Texture2D::Create("assets/textures/Zelda_NPC_Front.png");
+
+	for (uint32_t i = 0; i < 30; i++)
+	{
+		Enemy newEnemy;
+		newEnemy.MaxHealth = Random::GenerateU32BitValue(1, 50);
+		newEnemy.Health = newEnemy.MaxHealth;
+		newEnemy.Texture = Ember::Texture2D::Create("assets/textures/Zelda_NPC_Front.png");
+		newEnemy.Position = { Random::GenerateU32BitValue(2, 38), Random::GenerateU32BitValue(2, 37) * -1.0f, 0.0f };
+		if (newEnemy.Position.x == 9.0f && newEnemy.Position.y == -4.0f)
+		{
+			EM_LOG_DEBUG("Could not make Enemy {0}", i);
+		}
+		else
+		{
+			Enemies.insert({ i, newEnemy });
+		}
+	}
+
 	player.AddToCurrentCards(0x0001);
 	player.AddToCurrentCards(0x0002);
 	player.AddToCurrentCards(0x0003);
-
-	player.Position = { 9.0f, -4.0f, 0.1f };
-	NPC.Position = { 10.0f, -10.0f, 0.0f };
 
 	RoomMap = levelFileReader.Read("assets/levels/Room1.level");
 	OutsideMap = levelFileReader.Read("assets/levels/Outside.level", 10, -40);
@@ -30,8 +45,6 @@ void MainGame::OnAttach()
 
 void MainGame::OnDetach()
 {
-	RoomMap.clear();
-	OutsideMap.clear();
 }
 
 void MainGame::OnImGuiRender()
@@ -60,6 +73,10 @@ void MainGame::OnImGuiRender()
 		ImGui::Text("ProjectileCount: %i", projectiles.size());
 		ImGui::Text("CollisionCount: %i", CollisionCount);
 		ImGui::Text("Amount of Cards Hold: %i", player.CurrentCards.size());
+
+		ImGui::NewLine();
+
+		ImGui::Text("Amount of Enemies Left: %i", Enemies.size());
 
 		ImGui::NewLine();
 
@@ -165,8 +182,18 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 		}
 	}
 
-	Ember::Renderer2D::DrawQuad(NPC.Position, { 1.0f, 2.0f }, NPC.Texture);
-	CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, NPC.Position.x - 0.5f, NPC.Position.y - 1.0f);
+	for (auto& [key, enemy] : Enemies)
+	{
+		if ((-12.8f + player.Position.x) < (enemy.Position.x + 0.5f) && (12.8f + player.Position.x) > (enemy.Position.x - 0.5f) && (-7.2f + player.Position.y) < (enemy.Position.y + 0.5f) && (7.2f + player.Position.y) > (enemy.Position.y - 1.0f))
+		{
+			if (enemy.Health / enemy.MaxHealth != 1.0f)
+			{
+				Ember::Renderer2D::DrawQuad({ enemy.Position.x, enemy.Position.y + 0.5f, enemy.Position.z }, { enemy.Health / enemy.MaxHealth, 0.25f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+			}
+			Ember::Renderer2D::DrawQuad(enemy.Position, { 1.0f, 2.0f }, enemy.Texture);
+			CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, enemy.Position.x - 0.5f, enemy.Position.y - 1.0f);
+		}
+	}
 
 	if (CollisionCount == 0)
 	{
@@ -176,18 +203,22 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 	{
 		if (newFace == PlayerFace::Down)
 		{
+			player.Texture.reset();
 			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Front.png");
 		}
 		if (newFace == PlayerFace::Left)
 		{
+			player.Texture.reset();
 			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Left.png");
 		}
 		if (newFace == PlayerFace::Up)
 		{
+			player.Texture.reset();
 			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Back.png");
 		}
 		if (newFace == PlayerFace::Right)
 		{
+			player.Texture.reset();
 			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Right.png");
 		}
 
@@ -196,22 +227,33 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 
 	Ember::Renderer2D::DrawQuad(player.Position, { 1.0f, 2.0f }, player.Texture);
 
+	uint32_t KeyToErase;
+
 	for (uint8_t i = 0; i < projectiles.size(); i++)
 	{
 		Ember::Renderer2D::DrawRotatedQuad(projectiles[i].Position, { 1.0f, 1.0f }, projectiles[i].Rotation, ProjectileTexture);
-		if (NPC.CalculateAABBCollisions(NPC.Position, projectiles[i].Position.x - 0.5f, projectiles[i].Position.y - 0.5f))
+
+		for (auto& [key, enemy] : Enemies)
 		{
-			EM_LOG_WARN("Projetile did {0} damage", player.AttackPower);
-			projectiles[i].CanDestroy = true;
+			if (enemy.CalculateAABBCollisions(enemy.Position, projectiles[i].Position.x - 0.5f, projectiles[i].Position.y - 0.5f))
+			{
+				enemy.Health -= player.AttackPower;
+				EM_LOG_WARN("Projetile did {0} damage, Enemy_{1} has {2} health left", player.AttackPower, key, enemy.Health);
+				projectiles[i].CanDestroy = true;
+				if (enemy.Health <= 0.0f)
+				{
+					KeyToErase = key;
+				}
+			}
 		}
+
 		projectiles[i].Travel(DT);
 	}
+	Enemies.erase(KeyToErase);
 	for (const auto& proj : projectiles)
 	{
 		if (proj.CanDestroy)
-		{
 			projectiles.erase(projectiles.begin());
-		}
 	}
 
 	Camera.SetPosition(player.Position);

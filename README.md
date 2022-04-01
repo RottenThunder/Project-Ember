@@ -24,10 +24,6 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
 ## Recent Devlog Updates
 (All DevLog Updates can be found in the [DevLog Folder](https://github.com/RottenThunder/Project-Ember/tree/master/DevLog))
 
-### Day 99 (21/01/2022)
-- Commit "2D Culling"
-    - The Game now uses a culling system to only render what the camera sees
-
 ### Day 113 (04/02/2022)
 - Commit "Inventory System"
     - The game now has an inventory system which can be seen by pressing "I"
@@ -41,3 +37,8 @@ Run the [GenerateProjects.bat](https://github.com/RottenThunder/Project-Ember/bl
     - The player has a way of attacking through the form of firing a projectile
     - Other minor performance upgrades have been implemented
     - And finally, i am so sorry for not updating the repository for a long time
+
+### Day 169 (01/04/2022)
+- Commit "Enemy Health Bars"
+    - Made an algorithm to randomly place enemies in world space
+    - Made a simple health bar system similar to the elder scrolls series

@@ -7,6 +7,7 @@
 #include "Ember/Platform/OpenGL/OpenGLShader.h"
 #include "Sandbox2D.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Projectile.h"
 #include "Random.h"
 #include "LevelFileReader.h"
@@ -23,11 +24,10 @@ private:
 	bool DebugTabOpen = true; //For Debug
 
 	LevelFileReader levelFileReader;
-	Random random;
 	std::vector<Entity*> RoomMap;
 	std::vector<Entity*> OutsideMap;
+	std::unordered_map<uint32_t, Enemy> Enemies;
 	Player player;
-	Entity NPC;
 	uint8_t CollisionCount = 0;
 	Ember::OrthographicCamera Camera;
 
