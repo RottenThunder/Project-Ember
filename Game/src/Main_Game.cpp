@@ -10,6 +10,9 @@ MainGame::MainGame()
 
 void MainGame::OnAttach()
 {
+	GameOverScreen = Ember::Texture2D::Create("assets/textures/GameOverScreen.png");
+	GameWonScreen = Ember::Texture2D::Create("assets/textures/GameWonScreen.png");
+
 	PixelToWorldSpaceDivider.x = WindowWidth / 25.6f;
 	PixelToWorldSpaceDivider.y = WindowHeight / 14.4f;
 
@@ -23,8 +26,9 @@ void MainGame::OnAttach()
 		Enemy newEnemy;
 		newEnemy.MaxHealth = Random::GenerateU32BitValue(1, 50);
 		newEnemy.Health = newEnemy.MaxHealth;
-		newEnemy.Texture = Ember::Texture2D::Create("assets/textures/Zelda_NPC_Front.png");
+		newEnemy.Texture = Ember::Texture2D::Create("assets/textures/Log_Front.png");
 		newEnemy.Position = { Random::GenerateU32BitValue(2, 38), Random::GenerateU32BitValue(2, 37) * -1.0f, 0.0f };
+		newEnemy.chaseRadius = (float)Random::GenerateU8BitValue(6, 9);
 		if (newEnemy.Position.x == 9.0f && newEnemy.Position.y == -4.0f)
 		{
 			EM_LOG_DEBUG("Could not make Enemy {0}", i);
@@ -59,6 +63,7 @@ void MainGame::OnImGuiRender()
 
 		auto stats = Ember::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Delta Time: %gms", deltaTime);
 		ImGui::Text("Draw Calls: %i", stats.DrawCalls);
 		ImGui::Text("Quads: %i", stats.QuadCount);
 		ImGui::Text("Vertices: %i", stats.GetTotalVertexCount());
@@ -101,6 +106,7 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 {
 	//EM_LOG_INFO("Delta Time: {0}s, {1}ms", DT.GetSeconds(), DT.GetMilliseconds());
 
+	deltaTime = DT.GetMilliseconds();
 	CollisionCount = 0;
 	player.TransformedPosition = player.Position;
 	PlayerFace newFace = player.Face;
@@ -133,130 +139,154 @@ void MainGame::OnUpdate(Ember::DeltaTime DT)
 
 	Ember::Renderer2D::BeginScene(Camera);
 
-	if (previewedCard.BeingPreviewed)
+	if (GameOver)
 	{
-		Ember::Renderer2D::DrawQuad({ player.Position.x, player.Position.y, 0.1f }, { 5.0f, 7.5f }, player.CurrentCards[previewedCard.index]);
-		if (MouseButton0Pressed)
-		{
-			previewedCard.BeingPreviewed = false;
-		}
+		Ember::Renderer2D::DrawQuad({ player.Position.x, player.Position.y, 0.4f }, { 25.6f, 14.4f }, GameOverScreen);
 	}
-
-	if (CurrentCardsOpen)
+	else if (GameWon)
 	{
-		for (uint8_t i = 0; i < player.CurrentCards.size(); i++)
+		Ember::Renderer2D::DrawQuad({ player.Position.x, player.Position.y, 0.4f }, { 25.6f, 14.4f }, GameWonScreen);
+	}
+	else
+	{
+		if (previewedCard.BeingPreviewed)
 		{
-			Ember::Renderer2D::DrawQuad({ player.Position.x + player.CardPos[i], player.Position.y - 5.5f, 0.3f }, { 2.0f, 3.0f }, player.CurrentCards[i]);
-			//EM_LOG_DEBUG("Name = {0}, Tier = {1}, Effect = {2}", player.CurrentCardsInfo.at(i).GetName(), player.CurrentCardsInfo.at(i).GetTier(), player.CurrentCardsInfo.at(i).GetEffect());
-			if (IsMouseOverCard(player.Position.x + player.CardPos[i], player.Position.y - 5.5f))
+			Ember::Renderer2D::DrawQuad({ player.Position.x, player.Position.y, 0.1f }, { 5.0f, 7.5f }, player.CurrentCards[previewedCard.index]);
+			if (MouseButton0Pressed)
 			{
-				if (!previewedCard.BeingPreviewed && MouseButton0Pressed)
+				previewedCard.BeingPreviewed = false;
+			}
+		}
+
+		if (CurrentCardsOpen)
+		{
+			for (uint8_t i = 0; i < player.CurrentCards.size(); i++)
+			{
+				Ember::Renderer2D::DrawQuad({ player.Position.x + player.CardPos[i], player.Position.y - 5.5f, 0.3f }, { 2.0f, 3.0f }, player.CurrentCards[i]);
+				//EM_LOG_DEBUG("Name = {0}, Tier = {1}, Effect = {2}", player.CurrentCardsInfo.at(i).GetName(), player.CurrentCardsInfo.at(i).GetTier(), player.CurrentCardsInfo.at(i).GetEffect());
+				if (IsMouseOverCard(player.Position.x + player.CardPos[i], player.Position.y - 5.5f))
 				{
-					previewedCard.BeingPreviewed = true;
-					previewedCard.index = i;
+					if (!previewedCard.BeingPreviewed && MouseButton0Pressed)
+					{
+						previewedCard.BeingPreviewed = true;
+						previewedCard.index = i;
+					}
 				}
 			}
 		}
-	}
 
-	for (Entity* x : RoomMap)
-	{
-		if ((-12.8f + player.Position.x) < (x->Position.x + 0.5f) && (12.8f + player.Position.x) > (x->Position.x - 0.5f) && (-7.2f + player.Position.y) < (x->Position.y + 0.5f) && (7.2f + player.Position.y) > (x->Position.y - 0.5f))
+		for (Entity* x : RoomMap)
 		{
-			Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
-			if (x->IsCollidable)
+			if ((-12.8f + player.Position.x) < (x->Position.x + 0.5f) && (12.8f + player.Position.x) > (x->Position.x - 0.5f) && (-7.2f + player.Position.y) < (x->Position.y + 0.5f) && (7.2f + player.Position.y) > (x->Position.y - 0.5f))
 			{
-				CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+				Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
+				if (x->IsCollidable)
+				{
+					CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+				}
 			}
 		}
-	}
-	for (Entity* x : OutsideMap)
-	{
-		if ((-12.8f + player.Position.x) < (x->Position.x + 0.5f) && (12.8f + player.Position.x) > (x->Position.x - 0.5f) && (-7.2f + player.Position.y) < (x->Position.y + 0.5f) && (7.2f + player.Position.y) > (x->Position.y - 0.5f))
+		for (Entity* x : OutsideMap)
 		{
-			Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
-			if (x->IsCollidable)
+			if ((-12.8f + player.Position.x) < (x->Position.x + 0.5f) && (12.8f + player.Position.x) > (x->Position.x - 0.5f) && (-7.2f + player.Position.y) < (x->Position.y + 0.5f) && (7.2f + player.Position.y) > (x->Position.y - 0.5f))
 			{
-				CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+				Ember::Renderer2D::DrawQuad(x->Position, { 1.0f, 1.0f }, x->Texture);
+				if (x->IsCollidable)
+				{
+					CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, x->Position.x - 0.5f, x->Position.y - 0.5f);
+				}
 			}
 		}
-	}
-
-	for (auto& [key, enemy] : Enemies)
-	{
-		if ((-12.8f + player.Position.x) < (enemy.Position.x + 0.5f) && (12.8f + player.Position.x) > (enemy.Position.x - 0.5f) && (-7.2f + player.Position.y) < (enemy.Position.y + 0.5f) && (7.2f + player.Position.y) > (enemy.Position.y - 1.0f))
-		{
-			if (enemy.Health / enemy.MaxHealth != 1.0f)
-			{
-				Ember::Renderer2D::DrawQuad({ enemy.Position.x, enemy.Position.y + 0.5f, enemy.Position.z }, { enemy.Health / enemy.MaxHealth, 0.25f }, { 1.0f, 0.0f, 0.0f, 1.0f });
-			}
-			Ember::Renderer2D::DrawQuad(enemy.Position, { 1.0f, 2.0f }, enemy.Texture);
-			CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, enemy.Position.x - 0.5f, enemy.Position.y - 1.0f);
-		}
-	}
-
-	if (CollisionCount == 0)
-	{
-		player.Position = player.TransformedPosition;
-	}
-	if (newFace != player.Face)
-	{
-		if (newFace == PlayerFace::Down)
-		{
-			player.Texture.reset();
-			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Front.png");
-		}
-		if (newFace == PlayerFace::Left)
-		{
-			player.Texture.reset();
-			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Left.png");
-		}
-		if (newFace == PlayerFace::Up)
-		{
-			player.Texture.reset();
-			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Back.png");
-		}
-		if (newFace == PlayerFace::Right)
-		{
-			player.Texture.reset();
-			player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Right.png");
-		}
-
-		player.Face = newFace;
-	}
-
-	Ember::Renderer2D::DrawQuad(player.Position, { 1.0f, 2.0f }, player.Texture);
-
-	uint32_t KeyToErase;
-
-	for (uint8_t i = 0; i < projectiles.size(); i++)
-	{
-		Ember::Renderer2D::DrawRotatedQuad(projectiles[i].Position, { 1.0f, 1.0f }, projectiles[i].Rotation, ProjectileTexture);
 
 		for (auto& [key, enemy] : Enemies)
 		{
-			if (enemy.CalculateAABBCollisions(enemy.Position, projectiles[i].Position.x - 0.5f, projectiles[i].Position.y - 0.5f))
+			if ((-12.8f + player.Position.x) < (enemy.Position.x + 0.5f) && (12.8f + player.Position.x) > (enemy.Position.x - 0.5f) && (-7.2f + player.Position.y) < (enemy.Position.y + 0.5f) && (7.2f + player.Position.y) > (enemy.Position.y - 1.0f))
 			{
-				enemy.Health -= player.AttackPower;
-				EM_LOG_WARN("Projetile did {0} damage, Enemy_{1} has {2} health left", player.AttackPower, key, enemy.Health);
-				projectiles[i].CanDestroy = true;
-				if (enemy.Health <= 0.0f)
+				if (enemy.Health / enemy.MaxHealth != 1.0f)
 				{
-					KeyToErase = key;
+					Ember::Renderer2D::DrawQuad({ enemy.Position.x, enemy.Position.y + 0.5f, enemy.Position.z }, { enemy.Health / enemy.MaxHealth, 0.25f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+				}
+				Ember::Renderer2D::DrawQuad(enemy.Position, { 2.0f, 2.0f }, enemy.Texture);
+				if (glm::distance(enemy.Position, player.Position) < enemy.chaseRadius)
+				{
+					glm::vec3 temp = glm::normalize(enemy.Position - player.Position);
+					enemy.Position.x -= temp.x * DT;
+					enemy.Position.y -= temp.y * DT;
+				}
+				CollisionCount += player.CalculateAABBCollisions(player.TransformedPosition, enemy.Position.x - 0.5f, enemy.Position.y - 1.0f);
+				if (glm::distance(enemy.Position, player.Position) < 0.2f)
+				{
+					GameOver = true;
 				}
 			}
 		}
 
-		projectiles[i].Travel(DT);
-	}
-	Enemies.erase(KeyToErase);
-	for (const auto& proj : projectiles)
-	{
-		if (proj.CanDestroy)
-			projectiles.erase(projectiles.begin());
-	}
+		if (CollisionCount == 0)
+		{
+			player.Position = player.TransformedPosition;
+		}
+		if (newFace != player.Face)
+		{
+			player.Texture.reset();
 
-	Camera.SetPosition(player.Position);
+			if (newFace == PlayerFace::Down)
+			{
+				player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Front.png");
+			}
+			if (newFace == PlayerFace::Left)
+			{
+				player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Left.png");
+			}
+			if (newFace == PlayerFace::Up)
+			{
+				player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Back.png");
+			}
+			if (newFace == PlayerFace::Right)
+			{
+				player.Texture = Ember::Texture2D::Create("assets/textures/Pokemon_Player_Right.png");
+			}
+
+			player.Face = newFace;
+		}
+
+		Ember::Renderer2D::DrawQuad(player.Position, { 1.0f, 2.0f }, player.Texture);
+
+		uint32_t KeyToErase;
+		for (auto& proj : projectiles)
+		{
+			Ember::Renderer2D::DrawRotatedQuad(proj.Position, { 1.0f, 1.0f }, proj.Rotation, ProjectileTexture);
+
+			for (auto& [key, enemy] : Enemies)
+			{
+				if (enemy.CalculateAABBCollisions(enemy.Position, proj.Position.x - 0.5f, proj.Position.y - 0.5f))
+				{
+					enemy.Health -= player.AttackPower;
+					EM_LOG_WARN("Projetile did {0} damage, Enemy_{1} has {2} health left", player.AttackPower, key, enemy.Health);
+					proj.CanDestroy = true;
+					if (enemy.Health <= 0.0f)
+					{
+						KeyToErase = key;
+					}
+				}
+			}
+
+			proj.Travel(DT);
+		}
+
+		Enemies.erase(KeyToErase);
+		if (Enemies.size() == 0)
+		{
+			GameWon = true;
+		}
+
+		for (const auto& proj : projectiles)
+		{
+			if (proj.CanDestroy)
+				projectiles.erase(projectiles.begin());
+		}
+
+		Camera.SetPosition(player.Position);
+	}
 
 	Ember::Renderer2D::EndScene();
 }
@@ -304,7 +334,59 @@ bool MainGame::OnKeyReleased(Ember::KeyReleasedEvent& e)
 
 	if (e.GetKeyCode() == EM_KEY_SPACE)
 	{
-		projectiles.emplace_back(glm::vec3(player.Position.x, player.Position.y, 0.2f), (uint8_t)player.Face, 5.0f, 10.0f);
+		if (GameOver)
+		{
+			GameOver = false;
+			Enemies.clear();
+			for (uint32_t i = 0; i < 30; i++)
+			{
+				Enemy newEnemy;
+				newEnemy.MaxHealth = Random::GenerateU32BitValue(1, 50);
+				newEnemy.Health = newEnemy.MaxHealth;
+				newEnemy.Texture = Ember::Texture2D::Create("assets/textures/Log_Front.png");
+				newEnemy.Position = { Random::GenerateU32BitValue(2, 38), Random::GenerateU32BitValue(2, 37) * -1.0f, 0.0f };
+				newEnemy.chaseRadius = (float)Random::GenerateU8BitValue(6, 9);
+				if (newEnemy.Position.x == 9.0f && newEnemy.Position.y == -4.0f)
+				{
+					EM_LOG_DEBUG("Could not make Enemy {0}", i);
+				}
+				else
+				{
+					Enemies.insert({ i, newEnemy });
+				}
+			}
+			player.Position = { 9.0f, -4.0f, 0.1f };
+		}
+		else if (GameWon)
+		{
+			GameWon = false;
+			Enemies.clear();
+			for (uint32_t i = 0; i < 30; i++)
+			{
+				Enemy newEnemy;
+				newEnemy.MaxHealth = Random::GenerateU32BitValue(1, 50);
+				newEnemy.Health = newEnemy.MaxHealth;
+				newEnemy.Texture = Ember::Texture2D::Create("assets/textures/Log_Front.png");
+				newEnemy.Position = { Random::GenerateU32BitValue(2, 38), Random::GenerateU32BitValue(2, 37) * -1.0f, 0.0f };
+				newEnemy.chaseRadius = (float)Random::GenerateU8BitValue(6, 9);
+				if (newEnemy.Position.x == 9.0f && newEnemy.Position.y == -4.0f)
+				{
+					EM_LOG_DEBUG("Could not make Enemy {0}", i);
+				}
+				else
+				{
+					Enemies.insert({ i, newEnemy });
+				}
+			}
+			player.Position = { 9.0f, -4.0f, 0.1f };
+		}
+		else
+		{
+			if (projectiles.size() < 5)
+			{
+				projectiles.emplace_back(glm::vec3(player.Position.x, player.Position.y, 0.2f), (uint8_t)player.Face, 5.0f, 10.0f);
+			}
+		}
 	}
 
 	if (e.GetKeyCode() == EM_KEY_1)

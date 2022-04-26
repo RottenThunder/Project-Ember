@@ -34,7 +34,7 @@ class Player : public Entity
 {
 public:
 	glm::vec3 TransformedPosition = { 0.0f, 0.0f, 0.0f };
-	float_t Speed = 2.0f;
+	float_t Speed = 3.0f;
 	float_t AttackPower = 3.0f;
 	PlayerFace Face = PlayerFace::Down;
 

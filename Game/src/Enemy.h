@@ -7,4 +7,5 @@ public:
 	float MaxHealth;
 	float Health;
 	Ember::Ref<Ember::Texture2D> EmptyHealthBar;
+	float chaseRadius;
 };

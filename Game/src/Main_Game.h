@@ -22,6 +22,11 @@ class MainGame : public Ember::Layer
 {
 private:
 	bool DebugTabOpen = true; //For Debug
+	double deltaTime;
+	bool GameOver = false;
+	bool GameWon = false;
+	Ember::Ref<Ember::Texture2D> GameOverScreen;
+	Ember::Ref<Ember::Texture2D> GameWonScreen;
 
 	LevelFileReader levelFileReader;
 	std::vector<Entity*> RoomMap;
